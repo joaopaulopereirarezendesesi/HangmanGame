@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Usuário</title>
+  </head>
+  <body>
+    <h2>Cadastro de Usuário</h2>
+    <form
+      action="../../Backend/cadastro.php"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label for="nickname">Nickname:</label>
+      <input type="text" id="nickname" name="nickname" required />
+      <label for="photo">Foto (Imagem):</label>
+      <input type="file" id="photo" name="photo" accept="image/*" required />
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+      <label for="password">Senha:</label>
+      <input type="password" id="password" name="password" required />
+      <input type="submit" value="Cadastrar" />
+    </form>
+  </body>
+</html>
