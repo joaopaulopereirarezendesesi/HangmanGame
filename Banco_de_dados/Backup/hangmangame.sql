@@ -99,7 +99,6 @@ CREATE TABLE `rounds` (
 CREATE TABLE `users` (
   `ID_U` bigint(20) UNSIGNED NOT NULL,
   `NICKNAME` varchar(50) NOT NULL,
-  `PHOTO` varchar(255) DEFAULT NULL,
   `EMAIL` varchar(100) DEFAULT NULL,
   `PASSWORD` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
