@@ -1,0 +1,52 @@
+Tela inicial: 
+Botão de se cadastrar;
+Botão de entrar sem cadastro;
+Caixa de texto para colocar o nome ao entrar sem cadastro;
+Salas que já existem;
+Botão de ranking;
+Botão de criar salas.
+
+Criar Salas:
+Tempo de espera;
+Privação de salas;
+Caixa de texto para input de senha;
+Números máximo de integrantes da sala;
+Caixa de texto para nome da sala;
+
+Jogo:
+Caixa de chute de letra e palavras;
+Caixa conversa;
+Forca;
+Pessoas na sala;
+
+Para o DESAFIADOR:
+Seleção de palvra:
+Botão de passar a vez;
+Caixa de texto de input da palavra; 
+Botão de exibição de critérios de pontuação para desafiador;
+Espera:
+Botão de dica;
+
+Critérios pontos:
+DESAFIADOR:
+150 pontos iniciais:
+Palavras com mais de 4 letras repitidas: -30 pontos
+Palavras com quantidades de letras igual ou maior que 4: -50 pontos
+Palavras com quantidade de letras igual a 5 até 7: +10 pontos
+Palavras com quantidade de letras igual a 8 até 11: +30 pontos
+Palavras com mais de 12 letras: +50pontos 
+Palavras com acentuação: +20 pontos
+Palavras com espaços: a cada espaço +10 pontos
+A cada dica dada: -10 pontos
+A cada minuto que o acerto levar: -10 pontos
+
+ADIVINHADOR:
+110 pontos inicias:
+A cada acerto de letra: +10 pontos
+A cada acerto de palavra (caso tenha espaços): +30 pontos
+A cada dica: -10 pontos
+Acerto sem dica: +10 pontos;
+
+
+
+
