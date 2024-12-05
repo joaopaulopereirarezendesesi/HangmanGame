@@ -14,10 +14,14 @@ Números máximo de integrantes da sala;
 Caixa de texto para nome da sala;
 
 Jogo:
+Para ADIVINHADORES:
 Caixa de chute de letra e palavras;
 Caixa conversa;
 Forca;
 Pessoas na sala;
+
+Objetivo ADIVINHADORES:
+Todos teram direito de chutar uma letra e logo após chutaram uma palavra
 
 Para o DESAFIADOR:
 Seleção de palvra:
@@ -26,6 +30,9 @@ Caixa de texto de input da palavra;
 Botão de exibição de critérios de pontuação para desafiador;
 Espera:
 Botão de dica;
+
+Objetivo DESAFIADOR:
+Inputar a palavra e dar dicas.
 
 Critérios pontos:
 DESAFIADOR:
