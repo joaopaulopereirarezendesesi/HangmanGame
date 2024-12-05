@@ -13,9 +13,11 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
     $nickname = $_POST['nickname'];
     $photo = $_FILES['photo'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $userPassword = $_POST['password'];
 
-    $uploadDir = 'C:\Users\joaop\Documents\GITHUB\-HangmanGame\Banco_de_dados\photos';
+    $hashedPassword = password_hash($userPassword, PASSWORD_DEFAULT);
+
+    $uploadDir = 'uploads/photos/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
@@ -28,7 +30,7 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
                 VALUES (?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $nickname, $photoPath, $email, $password);
+        $stmt->bind_param("ssss", $nickname, $photoPath, $email, $hashedPassword);
 
         if ($stmt->execute()) {
             echo "Tá cadastrado meu rei";
