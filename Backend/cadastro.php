@@ -9,6 +9,8 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 
+
+
 if (isset($_POST['nickname'], $_POST['email'], $_POST['password'])) {
     $nickname = $_POST['nickname'];
     $email = $_POST['email'];
