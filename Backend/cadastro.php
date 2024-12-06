@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 $password = '';
-$dbname = 'clc dps';
+$dbname = 'hangmangame';
 
 $conn = new mysqli($host, $user, $password, $dbname);
 if ($conn->connect_error) {
