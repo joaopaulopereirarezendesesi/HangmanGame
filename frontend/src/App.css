@@ -45,6 +45,7 @@ main .game .chat {
 
 main .game .players {
   grid-area: players;
+  overflow: auto;
 }
 
 main .game .word {
