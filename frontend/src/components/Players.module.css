@@ -13,11 +13,10 @@
   border-bottom: 2px solid #ddd;
   padding: 10px;
 
-  & span {
-    display: block;
-    width: 80px;
+  & img {
+    width: 40px;
     height: 80px;
-    background-color: blue;
+    object-fit: cover;
     border-radius: 50%;
   }
 
@@ -41,6 +40,34 @@
       font-weight: 300;
       font-size: 15px;
       font-style: italic;
+    }
+  }
+}
+
+@media (max-width: 716px) {
+  .player {
+    min-height: 60px;
+    padding: 5px;
+
+    & img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    & .contentplayer {
+      width: 70%;
+      height: 80px;
+      padding-left: 10px;
+
+      & h1 {
+        font-size: 13px;
+      }
+
+      & p {
+        font-size: 10px;
+      }
     }
   }
 }

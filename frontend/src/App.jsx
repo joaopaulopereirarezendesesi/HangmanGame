@@ -7,7 +7,7 @@ function App() {
     { nome: "Felipe José", pontos: 80 },
     { nome: "Kauan", pontos: 50 },
     { nome: "Matheus", pontos: 30 },
-    { nome: "Thayna", pontos: 30 },
+    { nome: "Thayna", pontos: 0 },
   ];
 
   return (
