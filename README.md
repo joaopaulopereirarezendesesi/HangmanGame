@@ -1,5 +1,18 @@
-Para rodar o front em React, entre na pasta:
+Rodando o Front-End em React!
+Acesse a pasta do projeto front-end: Navegue até a pasta frontend no seu terminal:
 
 ```
-frontend -> execute no terminal o seguinte comando: npm run dev
+cd frontend
+```
+
+Execute o comando abaixo para instalar todas as dependências necessárias para o projeto:
+
+```
+npm install
+```
+
+Após a instalação das dependências, execute o comando abaixo para rodar o front-end localmente:
+
+```
+npm run dev
 ```
