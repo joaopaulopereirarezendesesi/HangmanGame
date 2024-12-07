@@ -1,15 +1,18 @@
 <?php
-class Router {
-    public function run() {
+class Router
+{
+    public function run()
+    {
         $url = isset($_GET['url']) ? explode('/', rtrim($_GET['url'], '/')) : ['user', 'index'];
         $controllerName = ucfirst($url[0]) . 'Controller';
         $action = $url[1] ?? 'index';
         $param = $url[2] ?? null;
 
-        $controllerPath = '../controllers/' . $controllerName . '.php';
+        $controllerPath = realpath(__DIR__ . '/../controllers/' . $controllerName . '.php');
 
-        if (file_exists($controllerPath)) {
+        if ($controllerPath && file_exists($controllerPath)) {
             require_once $controllerPath;
+
             $controller = new $controllerName();
 
             if (method_exists($controller, $action)) {
