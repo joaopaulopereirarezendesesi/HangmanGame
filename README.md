@@ -1,4 +1,4 @@
-Rodando o Front-End em React!
+Rodando o Front-End em React! <br>
 Acesse a pasta do projeto front-end: Navegue até a pasta frontend no seu terminal:
 
 ```
