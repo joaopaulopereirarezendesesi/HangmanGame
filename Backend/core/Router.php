@@ -6,7 +6,7 @@ class Router {
         $action = $url[1] ?? 'index';
         $param = $url[2] ?? null;
 
-        $controllerPath = '../app/controllers/' . $controllerName . '.php';
+        $controllerPath = '../controllers/' . $controllerName . '.php';
 
         if (file_exists($controllerPath)) {
             require_once $controllerPath;

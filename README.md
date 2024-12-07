@@ -16,3 +16,18 @@ Após a instalação das dependências, execute o comando abaixo para rodar o fr
 ```
 npm run dev
 ```
+
+Opa professor! dei uma estudada no MVC e implementeni no projeto, estruturei da seguinte forma para as requisições do front:
+
+/controlador/ação/parametro
+
+Por enquanto tem duas "ações": 
+
+index:
+
+Pega todos os usuarios cadastrados no banco e envia em forma de json;
+
+show:
+
+Pega apenas o úsuario com o id passado como parametro.
+
