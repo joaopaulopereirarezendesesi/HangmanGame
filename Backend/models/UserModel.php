@@ -31,6 +31,7 @@ class UserModel
         $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($existingUser) {
             echo json_encode(['message' => 'Email já cadastrado!']);
+            return;
         }
 
         $stmt = $this->db->prepare("SELECT * FROM users WHERE NICKNAME = :nickname");
@@ -39,6 +40,7 @@ class UserModel
         $existingNickname = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($existingNickname) {
             echo json_encode(['message' => 'Nickname já utilizado!']);
+            return;
         }
 
         try {
