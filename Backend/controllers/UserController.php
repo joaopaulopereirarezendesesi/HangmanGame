@@ -25,18 +25,29 @@ class UserController
     public function create()
     {
         if (!empty($_POST['nickname']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password'])) {
-
-            $nickname = $_POST['nickname'];
-            $email = $_POST['email'];
+            $nickname = trim($_POST['nickname']);
+            $email = strtolower(trim($_POST['email']));
             $password = $_POST['password'];
             $confirmPassword = $_POST['confirm_password'];
 
-            if ($password === $confirmPassword) {
-                $id = $this->userModel->createUser($nickname, $email, $password);
-                echo json_encode(['message' => 'Usuário criado', 'id' => $id]);
-            } else {
-                echo json_encode(['error' => 'As senhas não coincidem']);
+            if (!$this->validateEmail($email)) {
+                echo json_encode(['error' => 'Formato de e-mail inválido']);
+                return;
             }
+
+            $passwordValidation = $this->validatePassword($password);
+            if (!$passwordValidation) {
+                echo json_encode(['error' => 'A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial']);
+                return;
+            }
+
+            if ($password !== $confirmPassword) {
+                echo json_encode(['error' => 'As senhas não coincidem']);
+                return;
+            }
+
+            $id = $this->userModel->createUser($nickname, $email, $password);
+            echo json_encode(['message' => 'Usuário criado', 'id' => $id]);
         } else {
             echo json_encode(['error' => 'Dados inválidos']);
         }
@@ -45,7 +56,7 @@ class UserController
     public function login()
     {
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
-            $email = $_POST['email'];
+            $email = strtolower(trim($_POST['email']));
             $password = $_POST['password'];
 
             $user = $this->userModel->getUserByEmail($email);
@@ -97,9 +108,19 @@ class UserController
             $_SESSION['user_id'] = $_COOKIE['user_id'];
             $_SESSION['nickname'] = $_COOKIE['nickname'];
 
-            return true; 
+            return true;
         }
 
         return false;
+    }
+
+    private function validateEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function validatePassword($password)
+    {
+        return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
     }
 }

@@ -34,6 +34,15 @@ class UserModel
             return 'E-mail já cadastrado';
         }
 
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE NICKNAME = :nickname");
+        $stmt->bindParam(':nickname', $nickname);
+        $stmt->execute();
+        $existingNickname = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingNickname) {
+            return 'Nickname já utilizado';
+        }
+
         try {
             $stmt = $this->db->prepare("INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)");
             $stmt->execute([
