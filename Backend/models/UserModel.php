@@ -39,7 +39,7 @@ class UserModel
             $stmt->execute([
                 ':nickname' => $nickname,
                 ':email' => $email,
-                ':password' => password_hash($password, PASSWORD_BCRYPT)
+                ':password' => password_hash($password, PASSWORD_ARGON2ID)
             ]);
             $id = $this->db->lastInsertId();
             error_log("ID do usuário inserido: " . $id);

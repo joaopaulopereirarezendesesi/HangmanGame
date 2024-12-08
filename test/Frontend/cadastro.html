@@ -43,7 +43,7 @@
         const form = document.getElementById('meuFormulario');
    
         form.addEventListener('submit', function(event) {
-          event.preventDefault();  // Impede o envio padrão do formulário
+          event.preventDefault();  
    
           const formData = new FormData(form);
    
@@ -51,9 +51,9 @@
             method: 'POST',
             body: formData,
           })
-          .then(response => response.text())  // Aqui pegamos o conteúdo retornado pelo servidor
+          .then(response => response.text())  
           .then(data => {
-            console.log('Resposta do servidor:', data);  // Exibe o conteúdo retornado
+            console.log('Resposta do servidor:', data);  
           })
           .catch(error => {
             console.error('Erro na requisição:', error);
