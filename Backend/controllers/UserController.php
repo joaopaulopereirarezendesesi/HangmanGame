@@ -46,8 +46,7 @@ class UserController
                 return;
             }
 
-            $id = $this->userModel->createUser($nickname, $email, $password);
-            echo json_encode(['message' => 'Usuário criado', 'id' => $id]);
+            $this->userModel->createUser($nickname, $email, $password);
         } else {
             echo json_encode(['error' => 'Dados inválidos']);
         }

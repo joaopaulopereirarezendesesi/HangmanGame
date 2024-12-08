@@ -29,18 +29,16 @@ class UserModel
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
-        
         if ($existingUser) {
-            return 'E-mail já cadastrado';
+            echo json_encode(['message' => 'Email já cadastrado!']);
         }
 
         $stmt = $this->db->prepare("SELECT * FROM users WHERE NICKNAME = :nickname");
         $stmt->bindParam(':nickname', $nickname);
         $stmt->execute();
         $existingNickname = $stmt->fetch(PDO::FETCH_ASSOC);
-
         if ($existingNickname) {
-            return 'Nickname já utilizado';
+            echo json_encode(['message' => 'Nickname já utilizado!']);
         }
 
         try {
@@ -51,7 +49,7 @@ class UserModel
                 ':password' => password_hash($password, PASSWORD_ARGON2ID)
             ]);
             $id = $this->db->lastInsertId();
-            error_log("ID do usuário inserido: " . $id);
+            echo json_encode(['message' => '"ID do úsuario incerido"' . $id]);
             return $id; 
         } catch (Exception $e) {
             error_log("Erro ao cadastrar usuário: " . $e->getMessage());
