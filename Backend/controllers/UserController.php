@@ -31,24 +31,24 @@ class UserController
             $confirmPassword = $_POST['confirm_password'];
 
             if (!$this->validateEmail($email)) {
-                echo json_encode(['error' => 'Formato de e-mail inválido']);
+                echo json_encode(['error' => 'Formato de e-mail invalido']);
                 return;
             }
 
             $passwordValidation = $this->validatePassword($password);
             if (!$passwordValidation) {
-                echo json_encode(['error' => 'A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial']);
+                echo json_encode(['error' => 'A senha deve ter pelo menos 8 caracteres, conter uma letra maiuscula, uma minuscula, um numero e um caractere especial']);
                 return;
             }
 
             if ($password !== $confirmPassword) {
-                echo json_encode(['error' => 'As senhas não coincidem']);
+                echo json_encode(['error' => 'As senhas nao coincidem']);
                 return;
             }
 
             $this->userModel->createUser($nickname, $email, $password);
         } else {
-            echo json_encode(['error' => 'Dados inválidos']);
+            echo json_encode(['error' => 'Dados invalidos']);
         }
     }
 
@@ -72,10 +72,10 @@ class UserController
 
                 echo json_encode(['message' => 'Login bem-sucedido', 'user_id' => $user['id']]);
             } else {
-                echo json_encode(['error' => 'Credenciais inválidas']);
+                echo json_encode(['error' => 'Credenciais invalidas']);
             }
         } else {
-            echo json_encode(['error' => 'Email e senha são obrigatórios']);
+            echo json_encode(['error' => 'Email e senha sao obrigatorios']);
         }
     }
 
