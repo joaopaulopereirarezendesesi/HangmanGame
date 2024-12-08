@@ -7,7 +7,7 @@
   </head>
   <body>
     <h2>Cadastro de Usuário</h2>
-    <form id="meuFormulario">
+    <form id="meuFormulario" action="http://localhost:4000/?url=User/create" method="POST">
       <label for="nickname">Nickname:</label>
       <input type="text" id="nickname" name="nickname" required />
 
@@ -38,47 +38,18 @@
     </form>
 
     <script>
-      const form = document.getElementById('meuFormulario');
+      window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const serverResponse = urlParams.get('response');
+        const errorMessage = urlParams.get('error');
 
-      form.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const nickname = document.getElementById('nickname').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm_password').value;
-
-        if (password !== confirmPassword) {
-          alert('As senhas não coincidem!');
-          return;
+        if (serverResponse) {
+          console.log('Resposta do servidor:', serverResponse);
         }
 
-        const data = {
-          nickname: nickname,
-          email: email,
-          password: password,
-          confirm_password: confirmPassword
-        };
-
-        fetch('http://localhost:5000/User/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Erro na resposta do servidor');
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Dados recebidos do servidor:', data);
-          })
-          .catch(error => {
-            console.error('Erro ao enviar os dados:', error);
-          });
+        if (errorMessage) {
+          console.error('Erro do servidor:', errorMessage);
+        }
       });
     </script>
   </body>
