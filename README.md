@@ -31,5 +31,5 @@ show:
 
 Pega apenas o úsuario com o id passado como parametro.
 
-Prof Matheus: Depois preciso saber o que instalar para rodar o back-end em meu computador. :D
+<b>Prof Matheus:</b> Depois preciso saber o que instalar para rodar o back-end em meu computador. :D
 
