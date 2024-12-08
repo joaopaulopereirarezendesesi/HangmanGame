@@ -84,4 +84,22 @@ class UserController
         session_destroy();
         echo json_encode(['message' => 'Logout bem-sucedido']);
     }
+
+    public function isLoggedIn()
+    {
+        session_start();
+
+        if (isset($_SESSION['user_id'])) {
+            return true;
+        }
+
+        if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
+            $_SESSION['user_id'] = $_COOKIE['user_id'];
+            $_SESSION['nickname'] = $_COOKIE['nickname'];
+
+            return true; 
+        }
+
+        return false;
+    }
 }

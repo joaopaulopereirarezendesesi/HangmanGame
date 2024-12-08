@@ -19,7 +19,7 @@ npm run dev
 
 Opa professor! dei uma estudada no MVC e implementeni no projeto, estruturei da seguinte forma para as requisições do front:
 
-/controlador/ação/parametro
+?url=/controlador/ação/parametro
 
 Por enquanto tem duas "ações": 
 
