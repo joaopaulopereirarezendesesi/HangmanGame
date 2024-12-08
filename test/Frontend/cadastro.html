@@ -38,19 +38,28 @@
     </form>
 
     <script>
+      //isso foi feito pelo GPT
       window.addEventListener('load', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const serverResponse = urlParams.get('response');
-        const errorMessage = urlParams.get('error');
-
-        if (serverResponse) {
-          console.log('Resposta do servidor:', serverResponse);
-        }
-
-        if (errorMessage) {
-          console.error('Erro do servidor:', errorMessage);
-        }
+        const form = document.getElementById('meuFormulario');
+   
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();  // Impede o envio padrão do formulário
+   
+          const formData = new FormData(form);
+   
+          fetch('http://localhost:4000/?url=User/create', {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.text())  // Aqui pegamos o conteúdo retornado pelo servidor
+          .then(data => {
+            console.log('Resposta do servidor:', data);  // Exibe o conteúdo retornado
+          })
+          .catch(error => {
+            console.error('Erro na requisição:', error);
+          });
+        });
       });
-    </script>
+   </script>
   </body>
 </html>
