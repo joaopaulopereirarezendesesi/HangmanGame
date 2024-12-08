@@ -1,4 +1,5 @@
 <?php
+
 class UserModel
 {
     private $db;
@@ -24,6 +25,15 @@ class UserModel
 
     public function createUser($nickname, $email, $password)
     {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($existingUser) {
+            return 'E-mail já cadastrado';
+        }
+
         try {
             $stmt = $this->db->prepare("INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)");
             $stmt->execute([
@@ -31,7 +41,9 @@ class UserModel
                 ':email' => $email,
                 ':password' => password_hash($password, PASSWORD_BCRYPT)
             ]);
-            return $this->db->lastInsertId(); 
+            $id = $this->db->lastInsertId();
+            error_log("ID do usuário inserido: " . $id);
+            return $id; 
         } catch (Exception $e) {
             error_log("Erro ao cadastrar usuário: " . $e->getMessage());
             return 'Erro ao cadastrar usuário';

@@ -33,3 +33,31 @@ Pega apenas o úsuario com o id passado como parametro.
 
 <b>Prof Matheus:</b> Depois preciso saber o que instalar para rodar o back-end em meu computador. :D
 
+Tá na mão: 
+
+Para rodar o Bakend:
+
+Baixe XAMPP;
+
+De start no MySQL e no Apache;
+
+Vá no menu Íniciar e pesquise:
+'Editar variáveis de ambiente do sistema' e de enter;
+
+Clique em 'Variáveis de Ambiente...';
+
+No primeira caixa de texto clique em 'Path';
+
+Clique em 'Novo';
+
+E caso tenha instalado o XAMPP na pasta recomendada pro ele cole:
+C:\xampp\php
+
+Caso não tenha vá até a pasta onde você e clique em xampp -> php e copie o indereço e cole lá;
+
+Clone o repositório e vá até onde ovcê clonou;
+
+abra a pasta de Backend e execute o cmd e escrava isso:
+php -S localhost:4000 index.php
+Isso vai ativa um servido imbutido no php para rodar o php!
+

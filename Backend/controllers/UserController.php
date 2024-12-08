@@ -24,13 +24,15 @@ class UserController
 
     public function create()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
+        if (!empty($_POST['nickname']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password'])) {
 
-        if (!empty($data['nickname']) && !empty($data['email']) && !empty($data['password']) && !empty($data['confirm_password'])) {
+            $nickname = $_POST['nickname'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $confirmPassword = $_POST['confirm_password'];
 
-            if ($data['password'] === $data['confirm_password']) {
-
-                $id = $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
+            if ($password === $confirmPassword) {
+                $id = $this->userModel->createUser($nickname, $email, $password);
                 echo json_encode(['message' => 'Usuário criado', 'id' => $id]);
             } else {
                 echo json_encode(['error' => 'As senhas não coincidem']);
@@ -42,18 +44,18 @@ class UserController
 
     public function login()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
+        if (!empty($_POST['email']) && !empty($_POST['password'])) {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-        if (!empty($data['email']) && !empty($data['password'])) {
-            $user = $this->userModel->getUserByEmail($data['email']);
+            $user = $this->userModel->getUserByEmail($email);
 
-            if ($user && password_verify($data['password'], $user['password'])) {
+            if ($user && password_verify($password, $user['password'])) {
                 session_start();
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['nickname'] = $user['nickname'];
 
-                //PROFESSOR caso esteja vendo o backend, adicione uma caixa de relembre-me!
-                if (isset($data['remember']) && $data['remember'] == true) {
+                if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
                     setcookie('user_id', $user['id'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
                     setcookie('nickname', $user['nickname'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
                 }
@@ -70,7 +72,6 @@ class UserController
     public function logout()
     {
         session_start();
-
         session_unset();
 
         if (isset($_COOKIE['user_id'])) {
@@ -81,7 +82,6 @@ class UserController
         }
 
         session_destroy();
-
         echo json_encode(['message' => 'Logout bem-sucedido']);
     }
 }
