@@ -66,11 +66,15 @@ class UserController
                 $_SESSION['nickname'] = $user['NICKNAME'];
 
                 if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, true);
-                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, true);
+                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
+                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
                 }
 
-                echo json_encode(['message' => 'Login bem-sucedido', 'user_id' => $user['ID_U']]);
+                echo json_encode([
+                    'message' => 'Login bem-sucedido',
+                    'user_id' => $user['ID_U'],
+                    'cookies' => $_COOKIE,
+                ]);
             } else {
                 echo json_encode(['error' => 'Credenciais invalidas']);
             }
@@ -98,22 +102,26 @@ class UserController
     }
 
     public function isLoggedIn()
-    {
-        session_start();
+{
+    session_start();
 
-        if (isset($_SESSION['user_id'])) {
-            return true;
-        }
-
-        if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
-            $_SESSION['user_id'] = $_COOKIE['user_id'];
-            $_SESSION['nickname'] = $_COOKIE['nickname'];
-
-            return true;
-        }
-
-        return false;
+    if (isset($_SESSION['user_id'])) {
+        return true;
     }
+
+    if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
+        $user = $this->userModel->getUserById($_COOKIE['user_id']);
+        
+        if ($user && $user['NICKNAME'] === $_COOKIE['nickname']) {
+            $_SESSION['user_id'] = $user['ID_U'];
+            $_SESSION['nickname'] = $user['NICKNAME'];
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
     private function validateEmail($email)
     {
