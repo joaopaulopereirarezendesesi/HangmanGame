@@ -1,63 +1,103 @@
-### Rodando o Front-End em React!
-Acesse a pasta do projeto front-end: Navegue até a pasta frontend no seu terminal:
+### Rodando o Front-End em React
+
+1. **Acesse a pasta do projeto front-end**:
+   - Navegue até a pasta `frontend` no seu terminal:
+     ```bash
+     cd frontend
+     ```
+
+2. **Instale as dependências necessárias**:
+   - Execute o comando abaixo para instalar todas as dependências do projeto:
+     ```bash
+     npm install
+     ```
+
+3. **Rodando o front-end localmente**:
+   - Após a instalação das dependências, execute o comando abaixo para rodar o front-end:
+     ```bash
+     npm run dev
+     ```
+
+---
+
+### Implementação do MVC
+
+Opa, professor! Dei uma estudada no MVC e implementei no projeto, estruturando as requisições do front da seguinte forma:
+
+
+Por enquanto, temos duas **ações**:
+
+- **index**: 
+  - Pega todos os usuários cadastrados no banco e envia em formato JSON.
+
+- **show**: 
+  - Pega um único usuário com o ID passado como parâmetro.
 
 ```
-cd frontend
-```
-
-Execute o comando abaixo para instalar todas as dependências necessárias para o projeto:
-
-```
-npm install
-```
-
-Após a instalação das dependências, execute o comando abaixo para rodar o front-end localmente:
-
-```
-npm run dev
-```
-
-Opa professor! dei uma estudada no MVC e implementeni no projeto, estruturei da seguinte forma para as requisições do front:
-
 ?url=/controlador/ação/parametro
+```
 
-Por enquanto tem duas "ações": 
+---
 
-index:
+### Como Rodar o Back-End
 
-Pega todos os usuarios cadastrados no banco e envia em forma de json;
+Para rodar o Backend:
 
-show:
+1. **Baixe o XAMPP**:
+   - Se você não tiver o XAMPP instalado, baixe e instale o [XAMPP](https://www.apachefriends.org/pt_br/index.html).
 
-Pega apenas o úsuario com o id passado como parametro.
+2. **Inicie o MySQL e o Apache**:
+   - Abra o XAMPP e inicie os serviços do MySQL e do Apache.
 
-<b>Prof Matheus:</b> Depois preciso saber o que instalar para rodar o back-end em meu computador. :D
+3. **Configuração do PHP**:
+   - Vá até o menu **Iniciar** e pesquise por:
+     ```
+     Editar variáveis de ambiente do sistema
+     ```
+   - Clique em **Variáveis de Ambiente**.
 
-Tá na mão: 
+4. **Configuração do PATH**:
+   - Na primeira caixa de texto, clique em **Path** e depois em **Novo**.
+   - Caso tenha instalado o XAMPP na pasta recomendada, cole:
+     ```
+     C:\xampp\php
+     ```
+   - Se não, vá até a pasta onde o XAMPP foi instalado, localize a pasta `php` e copie o caminho até ela.
 
-Para rodar o Bakend:
+5. **Clone o repositório**:
+   - Clone o repositório em sua máquina local e acesse a pasta do Backend.
 
-Baixe XAMPP;
+6. **Rodando o servidor PHP**:
+   - Abra a pasta de Backend no terminal e execute o seguinte comando para rodar o servidor PHP integrado:
+     ```bash
+     php -S localhost:4000 index.php
+     ```
 
-De start no MySQL e no Apache;
+Isso vai ativar um servidor embutido no PHP para rodar o back-end localmente!
 
-Vá no menu Íniciar e pesquise:
-'Editar variáveis de ambiente do sistema' e de enter;
+---
 
-Clique em 'Variáveis de Ambiente...';
+### Desafiador - Regras de Pontuação
 
-No primeira caixa de texto clique em 'Path';
+**150 pontos iniciais:**
 
-Clique em 'Novo';
+- **Palavras com mais de 4 letras repetidas:** -30 pontos
+- **Palavras com quantidade de letras igual ou maior que 4:** -50 pontos
+- **Palavras com quantidade de letras entre 5 a 7:** +10 pontos
+- **Palavras com quantidade de letras entre 8 a 11:** +30 pontos
+- **Palavras com mais de 12 letras:** +50 pontos
+- **Palavras com acentuação:** +20 pontos
+- **Palavras com espaços:** a cada espaço +10 pontos
+- **A cada dica dada:** -10 pontos
+- **A cada minuto que o acerto levar:** -10 pontos
 
-E caso tenha instalado o XAMPP na pasta recomendada pro ele cole:
-C:\xampp\php
+### Adivinhador - Regras de Pontuação
 
-Caso não tenha vá até a pasta onde você e clique em xampp -> php e copie o indereço e cole lá;
+**110 pontos iniciais:**
 
-Clone o repositório e vá até onde ovcê clonou;
+- **A cada acerto de letra:** +10 pontos
+- **A cada acerto de palavra (caso tenha espaços):** +30 pontos
+- **A cada dica dada:** -10 pontos
+- **Acerto sem dica:** +10 pontos
 
-abra a pasta de Backend e execute o cmd e escrava isso:
-php -S localhost:4000 index.php
-Isso vai ativa um servido imbutido no php para rodar o php!
-
+---

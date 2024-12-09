@@ -1,8 +1,10 @@
 <?php
-class Database {
+class Database
+{
     private static $instance = null;
 
-    public static function connect() {
+    public static function connect()
+    {
         if (self::$instance === null) {
             try {
                 self::$instance = new PDO(

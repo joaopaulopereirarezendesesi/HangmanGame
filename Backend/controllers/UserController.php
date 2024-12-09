@@ -59,7 +59,7 @@ class UserController
             $password = $_POST['password'];
 
             $user = $this->userModel->getUserByEmail($email);
-            
+
             if ($user && password_verify($password, $user['PASSWORD'])) {
                 session_start();
                 $_SESSION['user_id'] = $user['ID_U'];
@@ -102,25 +102,25 @@ class UserController
     }
 
     public function isLoggedIn()
-{
-    session_start();
+    {
+        session_start();
 
-    if (isset($_SESSION['user_id'])) {
-        return true;
-    }
-
-    if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
-        $user = $this->userModel->getUserById($_COOKIE['user_id']);
-        
-        if ($user && $user['NICKNAME'] === $_COOKIE['nickname']) {
-            $_SESSION['user_id'] = $user['ID_U'];
-            $_SESSION['nickname'] = $user['NICKNAME'];
+        if (isset($_SESSION['user_id'])) {
             return true;
         }
-    }
 
-    return false;
-}
+        if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
+            $user = $this->userModel->getUserById($_COOKIE['user_id']);
+
+            if ($user && $user['NICKNAME'] === $_COOKIE['nickname']) {
+                $_SESSION['user_id'] = $user['ID_U'];
+                $_SESSION['nickname'] = $user['NICKNAME'];
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     private function validateEmail($email)
