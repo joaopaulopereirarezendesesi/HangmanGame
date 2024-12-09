@@ -59,18 +59,18 @@ class UserController
             $password = $_POST['password'];
 
             $user = $this->userModel->getUserByEmail($email);
-
-            if ($user && password_verify($password, $user['password'])) {
+            
+            if ($user && password_verify($password, $user['PASSWORD'])) {
                 session_start();
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['nickname'] = $user['nickname'];
+                $_SESSION['user_id'] = $user['ID_U'];
+                $_SESSION['nickname'] = $user['NICKNAME'];
 
                 if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                    setcookie('user_id', $user['id'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
-                    setcookie('nickname', $user['nickname'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
+                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, true);
+                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, true);
                 }
 
-                echo json_encode(['message' => 'Login bem-sucedido', 'user_id' => $user['id']]);
+                echo json_encode(['message' => 'Login bem-sucedido', 'user_id' => $user['ID_U']]);
             } else {
                 echo json_encode(['error' => 'Credenciais invalidas']);
             }
@@ -78,6 +78,8 @@ class UserController
             echo json_encode(['error' => 'Email e senha sao obrigatorios']);
         }
     }
+
+
 
     public function logout()
     {

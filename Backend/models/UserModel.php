@@ -51,7 +51,7 @@ class UserModel
                 ':password' => password_hash($password, PASSWORD_ARGON2ID)
             ]);
             $id = $this->db->lastInsertId();
-            echo json_encode(['message' => '"ID do usuario incerido"' . $id]);
+            echo json_encode(['message' => 'ID do usuario incerido' . $id]);
             return $id; 
         } catch (Exception $e) {
             error_log("Erro ao cadastrar usuario: " . $e->getMessage());
@@ -60,11 +60,17 @@ class UserModel
     }
 
     public function getUserByEmail($email)
-    {
-        $query = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+{
+    $query = "SELECT * FROM users WHERE email = :email";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$user) {
+        error_log("Usuário não encontrado para o e-mail: " . $email);
     }
+    return $user;
+}
+
 }
