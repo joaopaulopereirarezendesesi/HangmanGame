@@ -11,65 +11,70 @@ class UserModel
 
     public function getAllUsers()
     {
-        $stmt = $this->db->query("SELECT * FROM users");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->db->query("SELECT * FROM users");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter usuários: " . $e->getMessage());
+        }
     }
 
     public function getUserById($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE ID_U = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT * FROM users WHERE ID_U = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter usuário: " . $e->getMessage());
+        }
     }
 
     public function createUser($nickname, $email, $password)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($existingUser) {
-            echo json_encode(['message' => 'Email ja cadastrado!']);
-            return;
-        }
-
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE NICKNAME = :nickname");
-        $stmt->bindParam(':nickname', $nickname);
-        $stmt->execute();
-        $existingNickname = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($existingNickname) {
-            echo json_encode(['message' => 'Nickname ja utilizado!']);
-            return;
-        }
-
         try {
-            $stmt = $this->db->prepare("INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)");
+            $query = "SELECT * FROM users WHERE email = :email OR NICKNAME = :nickname";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([':email' => $email, ':nickname' => $nickname]);
+            $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingUser) {
+                if ($existingUser['email'] === $email) {
+                    throw new Exception('Email já cadastrado!');
+                }
+                if ($existingUser['NICKNAME'] === $nickname) {
+                    throw new Exception('Nickname já utilizado!');
+                }
+            }
+
+            $query = "INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)";
+            $stmt = $this->db->prepare($query);
             $stmt->execute([
                 ':nickname' => $nickname,
                 ':email' => $email,
-                ':password' => password_hash($password, PASSWORD_ARGON2ID)
+                ':password' => password_hash($password, PASSWORD_ARGON2ID),
             ]);
-            $id = $this->db->lastInsertId();
-            echo json_encode(['message' => 'ID do usuario incerido' . $id]);
-            return $id;
-        } catch (Exception $e) {
-            error_log("Erro ao cadastrar usuario: " . $e->getMessage());
-            return 'Erro ao cadastrar usuario';
+
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao criar usuário: " . $e->getMessage());
         }
     }
 
     public function getUserByEmail($email)
     {
-        $query = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
+        try {
+            $query = "SELECT * FROM users WHERE email = :email";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$user) {
-            error_log("Usuário não encontrado para o e-mail: " . $email);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter usuário por email: " . $e->getMessage());
         }
-        return $user;
     }
 }

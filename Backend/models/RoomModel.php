@@ -11,73 +11,72 @@ class RoomModel
 
     public function getCurrentRoomTime()
     {
-        $dateTime = new DateTime();
-        $dateTime->setTimezone(new DateTimeZone('UTC'));
-        $formattedDate = $dateTime->format('Y-m-d H:i:s.') . sprintf("%03d", $dateTime->format('v'));
-
-        return $formattedDate;
+        $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+        return $dateTime->format('Y-m-d H:i:s.u');
     }
 
     public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit)
     {
-        $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT) 
-                  VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit)";
+        try {
+            $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT) 
+                      VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit)";
 
-        $stmt = $this->db->prepare($query);
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ':id_o' => $id_o,
+                ':room_name' => $room_name,
+                ':private' => $private,
+                ':password' => password_hash($password, PASSWORD_ARGON2ID),
+                ':player_capacity' => $player_capacity,
+                ':time_limit' => $time_limit
+            ]);
 
-        $stmt->bindValue(':id_o', $id_o, PDO::PARAM_INT);
-        $stmt->bindValue(':room_name', $room_name, PDO::PARAM_STR);
-        $stmt->bindValue(':private', $private, PDO::PARAM_BOOL);
-        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
-        $stmt->bindValue(':player_capacity', $player_capacity, PDO::PARAM_INT);
-        $stmt->bindValue(':time_limit', $time_limit, PDO::PARAM_INT);
-
-        if ($stmt->execute()) {
-            return [
-                'success' => 'Sala criada com sucesso',
-                'id_r' => $this->getIdroomByName($room_name),
-                'room_name' => $room_name,
-                'id_o' => $id_o,
-                'private' => $private,
-                'password' => $password,
-                'player_capacity' => $player_capacity,
-                'time_limit' => $time_limit
-            ];
-        } else {
-            return ['error' => 'Falha ao criar a sala'];
+            return $this->getIdroomByName($room_name);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao criar sala: " . $e->getMessage());
         }
     }
 
     public function getRoomById($roomId)
     {
-        $query = "SELECT * FROM rooms WHERE ID_R = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(1, $roomId, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT * FROM rooms WHERE ID_R = :roomId";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
+            $stmt->execute();
 
-        return $result;
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter sala: " . $e->getMessage());
+        }
     }
 
     public function doesRoomNameExist($roomName)
     {
-        $query = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(1, $roomName, PDO::PARAM_STR);
-        $stmt->execute();
-        $count = $stmt->fetchColumn();
+        try {
+            $query = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = :roomName";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
+            $stmt->execute();
 
-        return $count > 0;
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao verificar nome da sala: " . $e->getMessage());
+        }
     }
 
     public function getIdroomByName($roomName)
     {
-        $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(1, $roomName, PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
+            $stmt->execute();
 
-        return $result['ID_R'] ?? null;
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['ID_R'] ?? null;
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter ID da sala: " . $e->getMessage());
+        }
     }
 }

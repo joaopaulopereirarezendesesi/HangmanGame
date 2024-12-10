@@ -11,29 +11,38 @@ class PlayedModel
 
     public function getPlayersCountInRoom($roomId)
     {
-        $query = "SELECT COUNT(*) AS player_count FROM played WHERE ID_R = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $roomId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+        try {
+            $query = "SELECT COUNT(*) AS player_count FROM played WHERE ID_R = :roomId";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $row['player_count'];
+            return $row['player_count'] ?? 0;
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao contar jogadores na sala: " . $e->getMessage());
+        }
     }
 
     public function joinRoom($userId, $roomId)
     {
-        $query = "INSERT INTO played (ID_U, ID_R, SCORE, IS_THE_CHALLENGER) VALUES (?, ?, 0, 0)";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ii', $userId, $roomId);
-        $stmt->execute();
+        try {
+            $query = "INSERT INTO played (ID_U, ID_R, SCORE, IS_THE_CHALLENGER) VALUES (:userId, :roomId, 0, 0)";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([':userId' => $userId, ':roomId' => $roomId]);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao entrar na sala: " . $e->getMessage());
+        }
     }
 
     public function leaveRoom($userId, $roomId)
     {
-        $query = "DELETE FROM played WHERE ID_U = ? AND ID_R = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ii', $userId, $roomId);
-        $stmt->execute();
+        try {
+            $query = "DELETE FROM played WHERE ID_U = :userId AND ID_R = :roomId";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([':userId' => $userId, ':roomId' => $roomId]);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao sair da sala: " . $e->getMessage());
+        }
     }
 }
