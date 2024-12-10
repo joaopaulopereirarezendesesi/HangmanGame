@@ -28,12 +28,16 @@ class RoomController
 
             $private = isset($_POST['private']) ? (bool)$_POST['private'] : false;
 
-            if ($private && empty($_POST['password'])) {
-                echo json_encode(['error' => 'Senha obrigatória para salas privadas']);
-                return; 
+            if ($private) {
+                $password = $_POST['password'];
+                if (empty($password)) {
+                    echo json_encode(['error' => 'Senha obrigatória para salas privadas']);
+                    return;
+                }
+            } else {
+                $password = null;
             }
 
-            $password = $private ? $_POST['password'] : null;
             $player_capacity = isset($_POST['player_capacity']) ? (int)$_POST['player_capacity'] : 10;
             $time_limit = isset($_POST['time_limit']) ? (int)$_POST['time_limit'] : 5;
 
@@ -64,7 +68,7 @@ class RoomController
             return;
         }
 
-        if ($room['PRIVATE'] && (empty($password) || $password !== $room['PASSWORD'])) {
+        if ($room['PRIVATE'] && (empty($password) || !password_verify($password, $room['PASSWORD']))) {
             echo json_encode(['error' => 'Senha inválida']);
             return;
         }
