@@ -83,8 +83,6 @@ class UserController
         }
     }
 
-
-
     public function logout()
     {
         session_start();

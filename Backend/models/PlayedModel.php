@@ -28,4 +28,12 @@ class PlayedModel
         $stmt->bind_param('ii', $userId, $roomId);
         $stmt->execute();
     }
+
+    public function leaveRoom($userId, $roomId)
+    {
+        $query = "DELETE FROM played WHERE ID_U = ? AND ID_R = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ii', $userId, $roomId);
+        $stmt->execute();
+    }
 }

@@ -80,4 +80,17 @@ class RoomController
 
         echo json_encode(['message' => 'Entrou na sala com sucesso']);
     }
+
+    public function removePlayerFromRoom($roomId, $userId)
+    {
+        $room = $this->roomModel->getRoomById($roomId);
+        if (!$room) {
+            echo json_encode(['error' => 'Sala não encontrada']);
+            return;
+        }
+
+        $this->playedModel->leaveRoom($userId, $roomId);
+
+        echo json_encode(['message' => 'Jogador removido com sucesso']);
+    }
 }
