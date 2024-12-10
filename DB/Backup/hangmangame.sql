@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 05/12/2024 às 22:59
+-- Tempo de geração: 10/12/2024 às 01:11
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -47,6 +47,24 @@ CREATE TABLE `played` (
   `SCORE` int(11) DEFAULT 0,
   `IS_THE_CHALLENGER` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Acionadores `played`
+--
+DELIMITER $$
+CREATE TRIGGER `EmptyRoomTrigger` AFTER DELETE ON `played` FOR EACH ROW BEGIN
+    DECLARE player_count INT;
+
+    SELECT COUNT(*) INTO player_count
+    FROM played
+    WHERE ID_R = OLD.ID_R;
+
+    IF player_count = 0 THEN
+        DELETE FROM rooms WHERE ID_R = OLD.ID_R;
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -102,10 +120,6 @@ CREATE TABLE `users` (
   `EMAIL` varchar(100) DEFAULT NULL,
   `PASSWORD` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Índices para tabelas despejadas
---
 
 --
 -- Índices de tabela `attempts`
@@ -182,7 +196,7 @@ ALTER TABLE `rounds`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID_U` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_U` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restrições para tabelas despejadas
