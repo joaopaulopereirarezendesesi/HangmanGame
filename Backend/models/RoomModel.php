@@ -31,9 +31,23 @@ class RoomModel
                 ':time_limit' => $time_limit
             ]);
 
-            return $this->getIdroomByName($room_name);
+            return json_encode(['nameroom' => $room_name, 'idroom' => $this->getRoomNameId($room_name)]);
         } catch (PDOException $e) {
             throw new Exception("Erro ao criar sala: " . $e->getMessage());
+        }
+    }
+
+    public function getRoomNameId($roomName)
+    {
+        try {
+            $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':roomId', $roomName, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao obter o ID da sala: " . $e->getMessage());
         }
     }
 

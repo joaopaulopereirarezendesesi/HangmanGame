@@ -47,6 +47,11 @@ class RoomController
             }
 
             $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit);
+
+            $roomname = $result['idroom'];
+
+            $this->joinRoom($roomname, $id_o, $password);
+
             echo json_encode($result);
         } else {
             echo json_encode(['error' => 'ID do organizador não informado']);
@@ -62,7 +67,7 @@ class RoomController
     public function joinRoom($roomId, $userId, $password)
     {
         $room = $this->roomModel->getRoomById($roomId);
-
+        
         if (!$room) {
             echo json_encode(['error' => 'Sala não encontrada']);
             return;
