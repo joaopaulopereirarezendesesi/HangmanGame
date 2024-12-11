@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
-import Players from "../../components/players";
+import Players from "../../components/Players/Players";
+import AppContext from "../../context/AppContext";
 import "./Game.css";
+import Darkmode from "../../components/DarkMode/Darkmode";
 
 function Game() {
   const [userId, setUserId] = useState(null);
   const [nickname, setNickname] = useState("");
+  const { darkMode } = useContext(AppContext);
 
   useEffect(() => {
-    // Obtém os cookies e define os estados
     setUserId(Cookies.get("user_id"));
     setNickname(Cookies.get("nickname"));
+    console.log(darkMode);
   }, []);
 
   const jogadores = [
@@ -22,15 +25,14 @@ function Game() {
   ];
 
   return (
-    <main>
-      <p>{nickname}</p>
+    <main className={darkMode ? "dark" : ""}>
+      <Darkmode />
       <section className="game">
         <div className="players">
           {jogadores.map((jogador, index) => (
             <Players key={index} nome={jogador.nome} pontos={jogador.pontos} />
           ))}
         </div>
-
         <div className="word"></div>
         <div className="chat"></div>
       </section>

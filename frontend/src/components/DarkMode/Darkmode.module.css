@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transition: all 0.5s ease;
+}
+
+.toggle {
+  display: none;
+}
+
+.display {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  z-index: 5;
+}
+
+.display label {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  border-radius: 1000px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display .circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 99px;
+  background-color: #2f2f2f;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5),
+    -10px -10px 30px rgba(0, 0, 0, 0.5) inset;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display .circle svg {
+  font-size: 30px;
+  position: absolute;
+}
+
+.display .circle .sun {
+  color: #ffff00;
+  margin-top: 0%;
+}
+
+.display .circle .moon {
+  color: #ffffff;
+  display: none;
+}
+
+input[type="checkbox"]:checked + .display label .circle {
+  background-color: #2f2f2f;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5),
+    -10px -10px 30px rgba(0, 0, 0, 0.5) inset;
+}
+
+input[type="checkbox"]:checked + .display label .circle .moon {
+  display: block;
+}
+
+input[type="checkbox"]:checked + .display label .circle .sun {
+  display: none;
+}
