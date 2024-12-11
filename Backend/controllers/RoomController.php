@@ -18,6 +18,7 @@ class RoomController
     {
         if (!empty($_POST['id'])) {
             $id_o = $_POST['id'];
+            $points = $_POST['points'] ?? 2000;
 
             $room_name = $_POST['room_name'] ?? $this->generateRoomName();
 
@@ -46,7 +47,7 @@ class RoomController
                 return;
             }
 
-            $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit);
+            $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
 
             $roomname = $result['idroom'];
 
@@ -58,7 +59,8 @@ class RoomController
                 'nomesala' => $room_name,
                 'privacao' => $private,
                 'capacidade' => $player_capacity,
-                'tampodasala' => $time_limit
+                'tampodasala' => $time_limit,
+                'pointos' => $points
             ]);            
         } else {
             echo json_encode(['error' => 'ID do organizador não informado']);

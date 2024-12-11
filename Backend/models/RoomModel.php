@@ -15,11 +15,11 @@ class RoomModel
         return $dateTime->format('Y-m-d H:i:s.u');
     }
 
-    public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit)
+    public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
     {
         try {
             $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT) 
-                      VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit)";
+                      VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
             $stmt = $this->db->prepare($query);
             $stmt->execute([
@@ -28,7 +28,8 @@ class RoomModel
                 ':private' => $private,
                 ':password' => password_hash($password, PASSWORD_ARGON2ID),
                 ':player_capacity' => $player_capacity,
-                ':time_limit' => $time_limit
+                ':time_limit' => $time_limit,
+                ':points' => $points
             ]);
 
             return json_encode(['idroom' => $this->getRoomNameId($room_name)]);

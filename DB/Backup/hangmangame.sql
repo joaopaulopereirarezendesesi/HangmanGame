@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 10/12/2024 às 01:11
+-- Tempo de geração: 11/12/2024 às 17:30
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -93,7 +93,8 @@ CREATE TABLE `rooms` (
   `PRIVATE` tinyint(1) DEFAULT 0,
   `PASSWORD` varchar(50) DEFAULT NULL,
   `PLAYER_CAPACITY` int(11) DEFAULT 10,
-  `TIME_LIMIT` int(11) DEFAULT 5
+  `TIME_LIMIT` int(11) DEFAULT 5,
+  `POINTS` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -120,6 +121,10 @@ CREATE TABLE `users` (
   `EMAIL` varchar(100) DEFAULT NULL,
   `PASSWORD` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Índices para tabelas despejadas
+--
 
 --
 -- Índices de tabela `attempts`
