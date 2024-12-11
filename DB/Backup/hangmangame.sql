@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 11/12/2024 às 17:30
+-- Tempo de geração: 11/12/2024 às 19:27
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.0.30
 
@@ -32,6 +32,17 @@ CREATE TABLE `attempts` (
   `ID_ROUND` bigint(20) UNSIGNED NOT NULL,
   `GUESS` varchar(255) NOT NULL,
   `IS_CORRECT` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `friends`
+--
+
+CREATE TABLE `friends` (
+  `ID_U` int(11) DEFAULT NULL,
+  `ID_A` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

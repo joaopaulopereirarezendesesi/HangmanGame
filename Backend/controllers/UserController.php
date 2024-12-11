@@ -120,6 +120,16 @@ class UserController
         return false;
     }
 
+    public function msgFriends() 
+    {
+        $id_p = $_POST['id'];
+        $id_f = $_POST['id_f'];
+    }
+
+    public function addFriends() 
+    {
+    }
+
 
     private function validateEmail($email)
     {
