@@ -31,7 +31,7 @@ class RoomModel
                 ':time_limit' => $time_limit
             ]);
 
-            return json_encode(['nameroom' => $room_name, 'idroom' => $this->getRoomNameId($room_name)]);
+            return json_encode(['idroom' => $this->getRoomNameId($room_name)]);
         } catch (PDOException $e) {
             throw new Exception("Erro ao criar sala: " . $e->getMessage());
         }

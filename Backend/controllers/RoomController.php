@@ -52,7 +52,13 @@ class RoomController
 
             $this->joinRoom($roomname, $id_o, $password);
 
-            echo json_encode($result);
+            echo json_encode([
+                'idsala' => $result,
+                'nomesala' => $room_name,
+                'privacao' => $private,
+                'capacidade' => $player_capacity,
+                'tampodasala' => $time_limit
+            ]);            
         } else {
             echo json_encode(['error' => 'ID do organizador não informado']);
         }
