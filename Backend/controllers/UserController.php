@@ -60,17 +60,21 @@ class UserController
 
             $user = $this->userModel->getUserByEmail($email);
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user && password_verify($password, $user['PASSWORD'])) {
                 session_start();
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['nickname'] = $user['nickname'];
+                $_SESSION['user_id'] = $user['ID_U'];
+                $_SESSION['nickname'] = $user['NICKNAME'];
 
                 if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                    setcookie('user_id', $user['id'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
-                    setcookie('nickname', $user['nickname'], time() + (86400 * 30), '/', '', true, true, ['samesite' => 'Strict']);
+                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
+                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
                 }
 
-                echo json_encode(['message' => 'Login bem-sucedido', 'user_id' => $user['id']]);
+                echo json_encode([
+                    'message' => 'Login bem-sucedido',
+                    'user_id' => $user['ID_U'],
+                    'cookies' => $_COOKIE,
+                ]);
             } else {
                 echo json_encode(['error' => 'Credenciais invalidas']);
             }
@@ -104,14 +108,18 @@ class UserController
         }
 
         if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
-            $_SESSION['user_id'] = $_COOKIE['user_id'];
-            $_SESSION['nickname'] = $_COOKIE['nickname'];
+            $user = $this->userModel->getUserById($_COOKIE['user_id']);
 
-            return true;
+            if ($user && $user['NICKNAME'] === $_COOKIE['nickname']) {
+                $_SESSION['user_id'] = $user['ID_U'];
+                $_SESSION['nickname'] = $user['NICKNAME'];
+                return true;
+            }
         }
 
         return false;
     }
+
 
     private function validateEmail($email)
     {
