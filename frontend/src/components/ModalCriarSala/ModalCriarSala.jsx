@@ -5,20 +5,29 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2>Editar Administrador</h2>
+        <h2>Cria sala</h2>
         <label>
-          Username:
-          {/* <input type="text" value={username} required /> */}
+          Nome:
+          <input type="text" required />
         </label>
         <label>
-          Email:
-          {/* <input type="email" value={email} required /> */}
+          Senha:
+          <input type="password" name="" id="" />
         </label>
         <label>
-          Role:
-          {/* <select value={role} required></select> */}
+          Capacidade:
+          <input type="number" name="capacity" id="capacity" min="1" max="20" />
         </label>
-
+        <label>
+          Tempo:
+          <select name="points" id="points">
+            <option value="1000">1000ms</option>
+            <option value="1500">1500ms</option>
+            <option value="2000">2000ms</option>
+            <option value="2500">2500ms</option>
+          </select>
+        </label>
+        <button>Salvar</button>
         <button onClick={() => setIsModalOpen(false)}>Close</button>
       </div>
     </div>

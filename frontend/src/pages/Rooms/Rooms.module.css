@@ -7,20 +7,6 @@
 body {
   width: 100vw;
   height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: linear-gradient(
-    120deg,
-    rgba(255, 0, 0, 1) 0%,
-    rgba(255, 0, 0, 1) 19%,
-    rgba(255, 0, 0, 1) 38%,
-    rgba(68, 1, 1, 1) 63%,
-    rgba(34, 43, 49, 1) 86%,
-    rgb(0, 0, 0) 100%
-  );
 }
 
 .rooms {
@@ -111,7 +97,6 @@ body {
   background-color: transparent;
   overflow: auto;
   border-radius: 20px;
-  padding: 30px;
   scrollbar-width: none;
 
   display: flex;
