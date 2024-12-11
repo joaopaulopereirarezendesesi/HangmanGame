@@ -54,6 +54,7 @@ class RoomController
 
             echo json_encode([
                 'idsala' => $result,
+                'id_o' => $id_o,
                 'nomesala' => $room_name,
                 'privacao' => $private,
                 'capacidade' => $player_capacity,
