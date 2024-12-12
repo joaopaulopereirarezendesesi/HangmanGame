@@ -26,6 +26,7 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const remember = event.target.remember.checked;
+
     try {
       const response = await axios.post(
         "http://localhost:4000/?url=User/login",
@@ -41,8 +42,6 @@ function Login() {
           withCredentials: true,
         }
       );
-
-      console.log(response.data.cookies);
 
       if (response.data.message === "Login bem-sucedido") {
         const userId = Cookies.get("user_id");
@@ -69,11 +68,16 @@ function Login() {
           <form action="#">
             <h1>Create Account</h1>
             <input type="text" name="name" id="name" placeholder="Nome" />
-            <input type="email" name="email" id="email" placeholder="Email" />
+            <input
+              type="email"
+              name="email"
+              id="emailPassword"
+              placeholder="Email"
+            />
             <input
               type="password"
               name="password"
-              id="password"
+              id="passwordRegister"
               placeholder="Password"
             />
             <button className={styles.btn}>Sign Up</button>

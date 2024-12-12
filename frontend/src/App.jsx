@@ -7,6 +7,7 @@ import Game from "./pages/Game/Game";
 import Provider from "./context/Provider";
 import Darkmode from "./components/DarkMode/Darkmode";
 import Rooms from "./pages/Rooms/Rooms";
+import RoomStatus from "./components/RoomStatus/RoomStatus";
 
 function App() {
   return (
@@ -23,11 +24,21 @@ function App() {
               </PrivateRoute>
             }
           />
+
           <Route
             path="/rooms"
             element={
               <PrivateRoute>
                 <Rooms />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/roomstatus"
+            element={
+              <PrivateRoute>
+                <RoomStatus />
               </PrivateRoute>
             }
           />

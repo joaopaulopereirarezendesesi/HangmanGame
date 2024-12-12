@@ -54,6 +54,7 @@ class UserController
 
     public function login()
     {
+
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
             $email = strtolower(trim($_POST['email']));
             $password = $_POST['password'];

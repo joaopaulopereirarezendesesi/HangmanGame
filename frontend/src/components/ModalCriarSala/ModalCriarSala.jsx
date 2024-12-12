@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ModalCriarSala.module.css";
+import RoomStatus from "../RoomStatus/RoomStatus";
 
 const ModalCriarSala = ({ setIsModalOpen }) => {
+  const [privateRoom, setPrivateRoom] = useState(false);
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -11,9 +13,20 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
           <input type="text" required />
         </label>
         <label>
-          Senha:
-          <input type="password" name="" id="" />
+          Status:
+          <RoomStatus
+            setPrivateRoom={setPrivateRoom}
+            privateRoom={privateRoom}
+          />
         </label>
+
+        {privateRoom && (
+          <label>
+            Senha:
+            <input type="password" name="" id="" />
+          </label>
+        )}
+
         <label>
           Capacidade:
           <input type="number" name="capacity" id="capacity" min="1" max="20" />
