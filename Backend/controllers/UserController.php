@@ -82,45 +82,6 @@ class UserController
         }
     }
 
-
-    // public function login()
-    // {
-
-    //     if (!empty($_POST['email']) && !empty($_POST['password'])) {
-    //         $email = strtolower(trim($_POST['email']));
-    //         $password = $_POST['password'];
-    //         $hashedPassword = password_verify($password, $user['PASSWORD']);
-
-    //         $user = $this->userModel->getUserByEmail($email);
-    //         error_log("PasswordBanco: " . $user['PASSWORD']);
-    //         error_log("Email: " . $_POST['email']);
-    //         error_log("Password: " . $_POST['password']);
-    //         error_log("hashedPassword: " . $hashedPassword);
-            
-    //         if ($user && password_verify($password, $user['PASSWORD'])) {
-    //             session_start();
-                
-    //             $_SESSION['user_id'] = $user['ID_U'];
-    //             $_SESSION['nickname'] = $user['NICKNAME'];
-
-    //             if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-    //                 setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
-    //                 setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
-    //             }
-
-    //             echo json_encode([
-    //                 'message' => 'Login bem-sucedido',
-    //                 'user_id' => $user['ID_U'],
-    //                 'cookies' => $_COOKIE,
-    //             ]);
-    //         } else {
-    //             echo json_encode(['error' => 'Credenciais invalidas']);
-    //         }
-    //     } else {
-    //         echo json_encode(['error' => 'Email e senha sao obrigatorios']);
-    //     }
-    // }
-
     public function login()
     {
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -133,11 +94,11 @@ class UserController
             error_log("Password: " . $_POST['password']);
 
             if ($user) {
-                $hashedPassword = password_verify($password, $user['PASSWORD']);
-                error_log("PasswordBanco: " . $user['PASSWORD']);
-                error_log("hashedPassword: " . ($hashedPassword ? 'true' : 'false'));
                 error_log("Senha fornecida: " . $password);
-                error_log("Hash armazenado: " . $user['PASSWORD']);
+                error_log("PasswordBanco: " . $user['PASSWORD']);
+                $hashedPassword = password_verify($password, $user['PASSWORD']);
+                error_log("hashedPassword: " . ($hashedPassword ? 'true' : 'false'));
+                
 
                 if ($hashedPassword) {
                     session_start();
