@@ -7,17 +7,29 @@ import styles from "./Login.module.css";
 
 function Login() {
   const [isActive, setIsActive] = useState(false);
+  const [error, setError] = useState([]);
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (token) {
       navigate("/rooms");
     }
-  }, []);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (error) {
+      const timeout = setTimeout(() => {
+        setError("");
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [error]);
 
   const toggleActiveClass = () => {
     setIsActive((prevState) => !prevState);
@@ -31,14 +43,12 @@ function Login() {
       const response = await axios.post(
         "http://localhost:4000/?url=User/login",
         new URLSearchParams({
-          email: email,
-          password: password,
+          email,
+          password,
           remember: remember ? "true" : "false",
         }),
         {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
         }
       );
@@ -50,11 +60,73 @@ function Login() {
         console.log("Nickname do cookie:", nickname);
 
         localStorage.setItem("token", userId);
-
         navigate("/game");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
+    }
+  };
+
+  const handleRegister = async (event) => {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/?url=User/create",
+        new URLSearchParams({
+          email,
+          nickname,
+          password,
+        }),
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(response.data);
+
+      if (response.data.success) {
+        alert("Usuário cadastrado com sucesso!");
+
+        console.log(email, password);
+        // Realizando o login após o cadastro
+        const loginResponse = await axios.post(
+          "http://localhost:4000/?url=User/login",
+          new URLSearchParams({
+            email,
+            password,
+            remember: "true",
+          }),
+          {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            withCredentials: true,
+          }
+        );
+
+        console.log(loginResponse);
+
+        if (loginResponse.data.message === "Login bem-sucedido") {
+          const userId = Cookies.get("user_id");
+          const nickname = Cookies.get("nickname");
+          console.log("User ID do cookie:", userId);
+          console.log("Nickname do cookie:", nickname);
+
+          localStorage.setItem("token", userId); // Armazenando token no localStorage
+          navigate("/game"); // Redireciona após login
+        }
+      } else if (response.data.errors || response.data.error) {
+        console.log(response.data.errors);
+        setError(response.data.errors || response.data.error);
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      setError("Ocorreu um erro ao cadastrar. Tente novamente.");
     }
   };
 
@@ -65,21 +137,51 @@ function Login() {
         id="container"
       >
         <div className={`${styles.form_container} ${styles.sign_up}`}>
-          <form action="#">
+          <form onSubmit={handleRegister}>
             <h1>Create Account</h1>
-            <input type="text" name="name" id="name" placeholder="Nome" />
+            <input
+              type="text"
+              name="nickname"
+              placeholder="Nome"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
+            />
             <input
               type="email"
               name="email"
-              id="emailPassword"
               placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <input
               type="password"
               name="password"
-              id="passwordRegister"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            {error && (
+              <div className={styles.error}>
+                {Array.isArray(error) ? (
+                  Object.entries(error).map(([key, message]) => (
+                    <p key={key}>{message}</p>
+                  ))
+                ) : (
+                  <p>{error}</p>
+                )}
+              </div>
+            )}
             <button className={styles.btn}>Sign Up</button>
           </form>
         </div>

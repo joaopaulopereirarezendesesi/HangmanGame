@@ -265,6 +265,12 @@ input[type="checkbox"]:checked + .checkmark {
   border-color: #888;
 }
 
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
 @media (max-width: 710px) {
   body {
     background-color: pink;

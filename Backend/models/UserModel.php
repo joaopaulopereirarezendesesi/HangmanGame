@@ -77,4 +77,21 @@ class UserModel
             throw new Exception("Erro ao obter usuário por email: " . $e->getMessage());
         }
     }
+
+    public function emailExists($email)
+    {
+        try {
+            $query = "SELECT COUNT(*) FROM users WHERE email = :email";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+
+            // Verifica se o e-mail já está registrado
+            $count = $stmt->fetchColumn();
+            return $count > 0;  // Retorna true se o e-mail já existe
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao verificar e-mail: " . $e->getMessage());
+        }
+}
+
 }
