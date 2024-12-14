@@ -1,8 +1,8 @@
-.statusroom input[type="checkbox"] {
+.statusroom .statusroom_toggle {
   display: none;
 }
 
-.statusroom label {
+.statusroom .statusroom_label {
   width: 25%;
   height: 31px;
   position: relative;
@@ -16,7 +16,7 @@
   margin-bottom: 20px;
 }
 
-.statusroom label::after {
+.statusroom .statusroom_label::after {
   content: "";
   width: 23px;
   height: 80%;
@@ -29,21 +29,21 @@
   transition: all 0.5s ease;
 }
 
-input:checked + label {
+.statusroom_toggle:checked + .statusroom_label {
   background-color: #9d0000;
 }
 
-input:checked + label:after {
+.statusroom_toggle:checked + .statusroom_label:after {
   left: 85px;
   transform: translateX(-100%);
   background: linear-gradient(180deg, #c00000, #3a3a3a);
 }
 
-label:active::after {
+.statusroom_label:active::after {
   width: 50px;
 }
 
-label svg {
+.statusroom_label svg {
   position: absolute;
   top: 7px;
   z-index: 100;
@@ -51,16 +51,16 @@ label svg {
   color: #000;
 }
 
-input:checked + label svg {
+.statusroom_toggle:checked + .statusroom_label svg {
   color: #fff;
 }
 
-label .iconPublicRoom {
+.statusroom_label .iconPublicRoom {
   left: 12px;
   transition: 0.3s;
 }
 
-label .iconPrivateRoom {
+.statusroom_label .iconPrivateRoom {
   left: 64px;
   transition: 0.3s;
 }
