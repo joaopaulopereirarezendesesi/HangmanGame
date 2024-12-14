@@ -54,11 +54,10 @@ class UserController
 
     public function login()
     {
-
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
             $email = strtolower(trim($_POST['email']));
             $password = $_POST['password'];
-
+            print_r('aoba');
             $user = $this->userModel->getUserByEmail($email);
 
             if ($user && password_verify($password, $user['PASSWORD'])) {

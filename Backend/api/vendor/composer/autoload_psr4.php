@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'api\\Websocket\\' => array($baseDir . '/../controllers'),
+    'api\\Websocket\\' => array($baseDir . '/websocket'),
     'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Routing\\' => array($vendorDir . '/symfony/routing'),
