@@ -7,11 +7,13 @@ class RoomController
 {
     private $roomModel;
     private $playedModel;
+    private $wsHandler;
 
     public function __construct()
     {
         $this->roomModel = new RoomModel();
         $this->playedModel = new PlayedModel();
+        $this->wsHandler = new \api\Websocket\WShandler(); 
     }
 
     public function createRoom()
@@ -61,7 +63,7 @@ class RoomController
                 'capacidade' => $player_capacity,
                 'tampodasala' => $time_limit,
                 'pointos' => $points
-            ]);            
+            ]);
         } else {
             echo json_encode(['error' => 'ID do organizador não informado']);
         }
@@ -95,6 +97,8 @@ class RoomController
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
+        
+        $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'joined');
 
         echo json_encode(['message' => 'Entrou na sala com sucesso']);
     }
@@ -108,6 +112,8 @@ class RoomController
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
+
+        $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'left');
 
         echo json_encode(['message' => 'Jogador removido com sucesso']);
     }

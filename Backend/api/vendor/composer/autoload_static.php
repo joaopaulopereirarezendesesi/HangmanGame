@@ -15,6 +15,10 @@ class ComposerStaticInitce559b9fbd0e097bccee77e6c3cc8be1
     );
 
     public static $prefixLengthsPsr4 = array (
+        'm' => 
+        array (
+            'models\\' => 7,
+        ),
         'a' => 
         array (
             'api\\Websocket\\' => 14,
@@ -52,6 +56,10 @@ class ComposerStaticInitce559b9fbd0e097bccee77e6c3cc8be1
     );
 
     public static $prefixDirsPsr4 = array (
+        'models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/models',
+        ),
         'api\\Websocket\\' => 
         array (
             0 => __DIR__ . '/../..' . '/websocket',

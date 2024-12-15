@@ -5,12 +5,12 @@ require 'vendor/autoload.php';
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
-use api\Websocket\ChatHandler; 
+use api\Websocket\WShandler;  
 
 $server = new IoServer(
     new HttpServer(
         new WsServer(
-            new ChatHandler()
+            new WShandler()  
         )
     ),
     8080
