@@ -24,64 +24,34 @@ class UserController
 
     public function create()
     {
-        // Verificar se os dados estão completos
-        if (empty($_POST['nickname']) || empty($_POST['email']) || empty($_POST['password'])) {
-            echo json_encode(['error' => 'Todos os campos são obrigatórios']);
-            return;
-        }
+        if (!empty($_POST['nickname']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password'])) {
+            $nickname = trim($_POST['nickname']);
+            $email = strtolower(trim($_POST['email']));
+            $password = $_POST['password'];
+            $confirmPassword = $_POST['confirm_password'];
 
-        $nickname = trim($_POST['nickname']);
-        $email = strtolower(trim($_POST['email']));
-        $password = $_POST['password'];
+            if (!$this->validateEmail($email)) {
+                echo json_encode(['error' => 'Formato de e-mail invalido']);
+                return;
+            }
 
-        // Validar o formato do e-mail
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(['error' => 'Formato de e-mail inválido']);
-            return;
-        }
+            $passwordValidation = $this->validatePassword($password);
+            if (!$passwordValidation) {
+                echo json_encode(['error' => 'A senha deve ter pelo menos 8 caracteres, conter uma letra maiuscula, uma minuscula, um numero e um caractere especial']);
+                return;
+            }
 
-        // Inicializar o array de erros
-        $errors = [];
+            if ($password !== $confirmPassword) {
+                echo json_encode(['error' => 'As senhas nao coincidem']);
+                return;
+            }
 
-        // Verificar se a senha atende aos critérios
-        if (strlen($password) < 8) {
-            $errors['errorQuantidade'] = 'A senha deve ter pelo menos 8 caracteres.';
-        }
-        if (!preg_match('/[A-Z]/', $password)) {
-            $errors['errorLetraMaiuscula'] = 'A senha deve conter uma letra maiúscula.';
-        }
-        if (!preg_match('/[a-z]/', $password)) {
-            $errors['errorLetraMinuscula'] = 'A senha deve conter uma letra minúscula.';
-        }
-        if (!preg_match('/[0-9]/', $password)) {
-            $errors['errorNumero'] = 'A senha deve conter um número.';
-        }
-        if (!preg_match('/[\W_]/', $password)) {
-            $errors['errorCaracter'] = 'A senha deve conter um caracter especial.';
-        }
-
-        // Se houver erros de validação de senha, retornar os erros
-        if (!empty($errors)) {
-            echo json_encode(['errors' => $errors]);
-            return;
-        }
-
-        // Verificar se o e-mail já está cadastrado
-        if ($this->userModel->emailExists($email)) {
-            echo json_encode(['error' => 'E-mail já cadastrado']);
-            return;
-        }
-
-        // Criar o usuário
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        if ($this->userModel->createUser($nickname, $email, $hashedPassword)) {
-            echo json_encode(['success' => 'Usuário criado com sucesso']);
+            $this->userModel->createUser($nickname, $email, $password);
         } else {
-            echo json_encode(['error' => 'Erro ao criar usuário']);
+            echo json_encode(['error' => 'Dados invalidos']);
         }
     }
-
+    
     public function login()
     {
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -98,7 +68,7 @@ class UserController
                 error_log("PasswordBanco: " . $user['PASSWORD']);
                 $hashedPassword = password_verify($password, $user['PASSWORD']);
                 error_log("hashedPassword: " . ($hashedPassword ? 'true' : 'false'));
-                
+
 
                 if ($hashedPassword) {
                     session_start();
@@ -164,15 +134,13 @@ class UserController
         return false;
     }
 
-    public function msgFriends() 
+    public function msgFriends()
     {
         $id_p = $_POST['id'];
         $id_f = $_POST['id_f'];
     }
 
-    public function addFriends() 
-    {
-    }
+    public function addFriends() {}
 
 
     private function validateEmail($email)
