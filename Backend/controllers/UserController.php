@@ -51,43 +51,30 @@ class UserController
             echo json_encode(['error' => 'Dados invalidos']);
         }
     }
-    
+
     public function login()
     {
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
             $email = strtolower(trim($_POST['email']));
             $password = $_POST['password'];
-            print_r('aoba');
+
             $user = $this->userModel->getUserByEmail($email);
 
-            error_log("Email: " . $_POST['email']);
-            error_log("Password: " . $_POST['password']);
+            if ($user && password_verify($password, $user['PASSWORD'])) {
+                session_start();
+                $_SESSION['user_id'] = $user['ID_U'];
+                $_SESSION['nickname'] = $user['NICKNAME'];
 
-            if ($user) {
-                error_log("Senha fornecida: " . $password);
-                error_log("PasswordBanco: " . $user['PASSWORD']);
-                $hashedPassword = password_verify($password, $user['PASSWORD']);
-                error_log("hashedPassword: " . ($hashedPassword ? 'true' : 'false'));
-
-
-                if ($hashedPassword) {
-                    session_start();
-                    $_SESSION['user_id'] = $user['ID_U'];
-                    $_SESSION['nickname'] = $user['NICKNAME'];
-
-                    if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                        setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
-                        setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
-                    }
-
-                    echo json_encode([
-                        'message' => 'Login bem-sucedido',
-                        'user_id' => $user['ID_U'],
-                        'cookies' => $_COOKIE,
-                    ]);
-                } else {
-                    echo json_encode(['error' => 'Credenciais invalidas']);
+                if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
+                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
+                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
                 }
+
+                echo json_encode([
+                    'message' => 'Login bem-sucedido',
+                    'user_id' => $user['ID_U'],
+                    'cookies' => $_COOKIE,
+                ]);
             } else {
                 echo json_encode(['error' => 'Credenciais invalidas']);
             }
@@ -95,7 +82,6 @@ class UserController
             echo json_encode(['error' => 'Email e senha sao obrigatorios']);
         }
     }
-
 
     public function logout()
     {
@@ -133,14 +119,6 @@ class UserController
 
         return false;
     }
-
-    public function msgFriends()
-    {
-        $id_p = $_POST['id'];
-        $id_f = $_POST['id_f'];
-    }
-
-    public function addFriends() {}
 
 
     private function validateEmail($email)
