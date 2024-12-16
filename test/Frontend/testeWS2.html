@@ -3,70 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Test</title>
+    <title>WebSocket Test - User 2</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #messages {
-            border: 1px solid #ccc;
-            padding: 10px;
-            height: 200px;
-            overflow-y: scroll;
-            margin-bottom: 10px;
-        }
-        input, button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px 0;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #messages { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; margin-bottom: 10px; }
+        input, button { padding: 10px; font-size: 16px; margin: 5px 0; }
     </style>
 </head>
 <body>
-    <h1>WebSocket Test</h1>
+    <h1>WebSocket Test - User 2</h1>
     <div id="messages"></div>
     <input type="text" id="messageInput" placeholder="Type your message here">
     <button id="sendButton">Send</button>
 
     <script>
-        // Connect to the WebSocket server
-        const ws = new WebSocket('ws://localhost:8000');
+        const ws = new WebSocket('ws://localhost:8000'); // WebSocket server URL
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
 
-        // Handle connection open
         ws.onopen = () => {
             appendMessage("Connected to WebSocket server.");
+            
+            // Send a message when the connection is established
+            const message = {
+                type: 'joinRoom',
+                room: 1
+            };
+            ws.send(JSON.stringify(message)); // Join room 1 as User 2
         };
 
-        // Handle incoming messages
         ws.onmessage = (event) => {
             appendMessage("Received: " + event.data);
         };
 
-        // Handle connection errors
-        ws.onerror = (error) => {
-            appendMessage("WebSocket error: " + error);
-        };
-
-        // Handle connection close
-        ws.onclose = () => {
-            appendMessage("WebSocket connection closed.");
-        };
-
-        // Send message on button click
         sendButton.addEventListener('click', () => {
             const message = messageInput.value;
             if (message) {
-                ws.send(message);
+                const chatMessage = {
+                    type: 'chat',
+                    room: 1,
+                    user: 'user2',
+                    message: message
+                };
+                ws.send(JSON.stringify(chatMessage)); // Send message to room 1 as user2
                 appendMessage("Sent: " + message);
                 messageInput.value = '';
             }
         });
 
-        // Append messages to the messagesDiv
         function appendMessage(message) {
             const p = document.createElement('p');
             p.textContent = message;
