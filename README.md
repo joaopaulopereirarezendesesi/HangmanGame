@@ -86,6 +86,7 @@ Para rodar o Backend:
    - As mensagens não chegam na outro sala
    - ... Teste oque quiser!
 
+---
 
 ### Desafiador - Regras de Pontuação
 
