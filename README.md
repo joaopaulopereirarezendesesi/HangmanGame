@@ -112,3 +112,13 @@ Para rodar o Backend:
 - **Acerto sem dica:** +10 pontos
 
 ---
+
+
+
+
+
+
+<br>
+<br>
+
+Matheus: Porque tem 2 composer dentro de vendor?!
