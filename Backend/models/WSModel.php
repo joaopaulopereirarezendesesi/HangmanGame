@@ -4,7 +4,7 @@ namespace models;
 
 use PDO;
 use PDOException;
-use Database;
+use core\Database;
 
 class WSModel
 {
