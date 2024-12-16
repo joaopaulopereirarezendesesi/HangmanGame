@@ -1,5 +1,14 @@
 <?php
 
+namespace models;
+
+use core\Database;
+use PDO;
+use PDOException;
+use Exception;
+use DateTime;
+use DateTimeZone;
+
 class RoomModel
 {
     private $db;
@@ -18,7 +27,7 @@ class RoomModel
     public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
     {
         try {
-            $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT) 
+            $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
                       VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
             $stmt = $this->db->prepare($query);
@@ -43,7 +52,7 @@ class RoomModel
         try {
             $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
             $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomId', $roomName, PDO::PARAM_INT);
+            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);

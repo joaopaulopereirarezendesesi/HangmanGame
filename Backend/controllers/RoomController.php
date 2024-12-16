@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/RoomModel.php';
-require_once __DIR__ . '/../models/PlayedModel.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class RoomController
 {
@@ -11,9 +10,10 @@ class RoomController
 
     public function __construct()
     {
-        $this->roomModel = new RoomModel();
-        $this->playedModel = new PlayedModel();
+        $this->roomModel = new \models\RoomModel();
+        $this->playedModel = new \models\PlayedModel();
         $this->wsHandler = new \api\Websocket\WShandler(); 
+        print_r('classes carregadas com sucesso!');
     }
 
     public function createRoom()

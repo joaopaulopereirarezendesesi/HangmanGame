@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../models/UserModel.php';
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class UserController
 {
@@ -7,7 +8,7 @@ class UserController
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        $this->userModel = new \models\UserModel();
     }
 
     public function index()

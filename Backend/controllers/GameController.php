@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/GameModel.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class GameController
 {
@@ -9,7 +9,7 @@ class GameController
 
     public function __construct()
     {
-        $this->gameModel = new GameModel();  
+        $this->gameModel = new models\GameModel();  
         $this->wsHandler = new \api\Websocket\WShandler();
     }
 }

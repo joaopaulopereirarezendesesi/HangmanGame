@@ -10,8 +10,6 @@ use api\Websocket\WShandler;
 use React\Socket\Server as ReactServer;
 use React\EventLoop\Factory as EventLoopFactory;
 
-print_r("Tudo funcionando!");
-
 $loop = EventLoopFactory::create();
 
 $socket = new ReactServer('0.0.0.0:8000', $loop);
@@ -25,5 +23,7 @@ $server = new IoServer(
     $socket,  
     $loop    
 );
+
+print_r("Tudo certo, servidor iniciado!\n\n");
 
 $server->run();
