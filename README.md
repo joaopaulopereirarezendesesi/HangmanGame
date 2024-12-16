@@ -20,18 +20,9 @@
 
 ---
 
-### Implementação do MVC
+### Forma da requisição:
 
-Opa, professor! Dei uma estudada no MVC e implementei no projeto, estruturando as requisições do front da seguinte forma:
-
-
-Por enquanto, temos duas **ações**:
-
-- **index**: 
-  - Pega todos os usuários cadastrados no banco e envia em formato JSON.
-
-- **show**: 
-  - Pega um único usuário com o ID passado como parâmetro.
+Como fazer a requisição:
 
 ```
 ?url=/controlador/ação/parametro
@@ -72,10 +63,29 @@ Para rodar o Backend:
      ```bash
      php -S localhost:4000 index.php
      ```
+     Isso vai ativar um servidor embutido no PHP para rodar o back-end localmente!
 
-Isso vai ativar um servidor embutido no PHP para rodar o back-end localmente!
+7. **Baxando dependencias**:
+   - Vá até o site do Composer;
+   - Download;
+   - Baixe o executavel e o execute;
+   - Não se preucupe com o resto! as depencias já estão baixadas no projeto.
 
 ---
+
+### Quer testar o WebSocket?
+
+1. **Abra o terminal no diretório da pasta /Backend**
+   - Execute o comando "php WSserver";
+
+2. **Vá até /test e abra os 4 arquivos de "testeWS"**
+   - 2 abriram na sala 1 e 2 na sala 2
+
+3. **Teste, manade mensagem e veja se:**
+   - As mensagens chegam até o outro cara da mesma sala 
+   - As mensagens não chegam na outro sala
+   - ... Teste oque quiser!
+
 
 ### Desafiador - Regras de Pontuação
 
