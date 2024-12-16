@@ -24,6 +24,6 @@ $server = new IoServer(
     $loop    
 );
 
-print_r("Tudo certo, servidor iniciado!\n\n");
+echo "Tudo certo, servidor iniciado!\n\n";
 
 $server->run();
