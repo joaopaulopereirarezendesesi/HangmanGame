@@ -76,7 +76,7 @@ Para rodar o Backend:
 ### Quer testar o WebSocket?
 
 1. **Abra o terminal no diretório da pasta /Backend**
-   - Execute o comando "php WSserver";
+   - Execute o comando "php WSserver.php";
 
 2. **Vá até /test e abra os 4 arquivos de "testeWS"**
    - 2 abriram na sala 1 e 2 na sala 2
