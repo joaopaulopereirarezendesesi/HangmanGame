@@ -19,6 +19,10 @@ class ComposerStaticInitce559b9fbd0e097bccee77e6c3cc8be1
         array (
             'models\\' => 7,
         ),
+        'c' => 
+        array (
+            'core\\' => 5,
+        ),
         'a' => 
         array (
             'api\\Websocket\\' => 14,
@@ -59,6 +63,10 @@ class ComposerStaticInitce559b9fbd0e097bccee77e6c3cc8be1
         'models\\' => 
         array (
             0 => __DIR__ . '/../..' . '/models',
+        ),
+        'core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/core',
         ),
         'api\\Websocket\\' => 
         array (

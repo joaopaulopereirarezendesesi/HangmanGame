@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require __DIR__ . '/api/vendor/autoload.php';
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
@@ -13,7 +13,7 @@ $server = new IoServer(
             new WShandler()  
         )
     ),
-    8080
+    8000
 );
 
 $server->run();

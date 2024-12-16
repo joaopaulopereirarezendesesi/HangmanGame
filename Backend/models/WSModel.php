@@ -2,9 +2,9 @@
 
 namespace models;
 
-use Database;
 use PDO;
 use PDOException;
+use Database;
 
 class WSModel
 {
@@ -22,6 +22,7 @@ class WSModel
                       FROM users u
                       JOIN played p ON u.ID_U = p.ID_U
                       WHERE p.ID_R = :roomId";
+
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
             $stmt->execute();
@@ -37,10 +38,12 @@ class WSModel
     {
         try {
             $query = "INSERT INTO friends (from_user, to_user, status) VALUES (:fromUser, :toUser, 'pending')";
+
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':fromUser', $fromUser, PDO::PARAM_INT);
             $stmt->bindParam(':toUser', $toUser, PDO::PARAM_INT);
             $stmt->execute();
+
             return true;
         } catch (PDOException $e) {
             return false;

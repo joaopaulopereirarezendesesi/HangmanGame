@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 200px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type your message here">
+    <button id="sendButton">Send</button>
+
+    <script>
+        // Connect to the WebSocket server
+        const ws = new WebSocket('ws://localhost:8000');
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Handle connection open
+        ws.onopen = () => {
+            appendMessage("Connected to WebSocket server.");
+        };
+
+        // Handle incoming messages
+        ws.onmessage = (event) => {
+            appendMessage("Received: " + event.data);
+        };
+
+        // Handle connection errors
+        ws.onerror = (error) => {
+            appendMessage("WebSocket error: " + error);
+        };
+
+        // Handle connection close
+        ws.onclose = () => {
+            appendMessage("WebSocket connection closed.");
+        };
+
+        // Send message on button click
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                ws.send(message);
+                appendMessage("Sent: " + message);
+                messageInput.value = '';
+            }
+        });
+
+        // Append messages to the messagesDiv
+        function appendMessage(message) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            messagesDiv.appendChild(p);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+        }
+    </script>
+</body>
+</html>

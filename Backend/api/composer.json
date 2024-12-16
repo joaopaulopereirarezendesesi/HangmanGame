@@ -1,8 +1,9 @@
 {
   "autoload": {
     "psr-4": {
+      "models\\": "models/",
       "api\\Websocket\\": "websocket/",
-      "models\\": "models/" 
+      "core\\": "core/"
     }
   },
   "require": {
