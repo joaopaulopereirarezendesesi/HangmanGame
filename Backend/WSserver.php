@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';  
+require_once __DIR__ . '/tools/helpers.php';
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
@@ -24,6 +25,6 @@ $server = new IoServer(
     $loop    
 );
 
-echo "Tudo certo, servidor iniciado!\n\n";
+displayMessage("Arquivos startados, servidor WebSocket iniciado!\n\n", 'success');
 
 $server->run();

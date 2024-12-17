@@ -23,7 +23,6 @@ final class Database
                     DB_PASS,
                     self::getDefaultOptions($options)
                 );
-                displayMessage("Conexão com o banco de dados bem-sucedida!", 'success');
             } catch (PDOException $e) {
                 displayMessage("Erro na conexão: " . $e->getMessage(), 'error');
                 throw new PDOException("Erro ao conectar ao banco de dados.");

@@ -64,7 +64,6 @@ class App
     {
         try {
             \core\Database::connect();
-            displayMessage("Conexão com o banco de dados estabelecida com sucesso!", 'success');
 
             $router = new core\Router();
             $router->run();
@@ -81,11 +80,15 @@ class App
 }
 
 try {
-    $controlScript = __DIR__ . '/tools/WSserverControl.php';
-    $command = "start php \"$controlScript\"";
-    pclose(popen($command, "r"));
+    $statusWS = isPortInUse(8000);
+
+    if (!$statusWS) {
+        $controlScript = __DIR__ . '/tools/WSserverControl.php';
+        $command = "start php \"$controlScript\"";
+        pclose(popen($command, "r"));
+    }
+
     new App();
-    
 } catch (\Exception $e) {
     error_log("Erro ao inicializar a aplicação: " . $e->getMessage());
     errorResponse("Erro crítico ao iniciar a aplicação.", 500);

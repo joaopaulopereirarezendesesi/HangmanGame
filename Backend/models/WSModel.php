@@ -34,6 +34,20 @@ class WSModel
         }
     }
 
+    public function getAllRoomsAndUsers()
+    {
+        try {
+            $query = "SELECT ID_U, ID_R FROM played";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new \Exception("Erro ao restaurar usuários e salas: " . $e->getMessage());
+        }
+    }
+
+
     public function sendFriendRequest($fromUser, $toUser)
     {
         try {
