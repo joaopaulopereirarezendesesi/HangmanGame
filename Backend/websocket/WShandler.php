@@ -66,10 +66,6 @@ class WShandler implements MessageComponentInterface
     
         $reconnectMessage = json_encode([
             'type' => 'reconnect',
-            'data' => [
-                'userId' => $userId,
-                'message' => "Sua conexão foi perdida. Por favor, reconecte-se."
-            ]
         ]);
     
         displayMessage("Mensagem de reconexão enviada para o usuário {$userId}: {$reconnectMessage}", 'error');
