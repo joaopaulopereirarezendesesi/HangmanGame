@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../tools/helpers.php';
 
 class RoomController
 {
@@ -12,61 +13,47 @@ class RoomController
     {
         $this->roomModel = new \models\RoomModel();
         $this->playedModel = new \models\PlayedModel();
-        $this->wsHandler = new \api\Websocket\WShandler(); 
-        print_r('classes carregadas com sucesso!');
+        $this->wsHandler = new \api\Websocket\WShandler();
     }
 
     public function createRoom()
     {
-        if (!empty($_POST['id'])) {
-            $id_o = $_POST['id'];
-            $points = $_POST['points'] ?? 2000;
+        $data = validateParams($_POST, ['id']); 
 
-            $room_name = $_POST['room_name'] ?? $this->generateRoomName();
+        $id_o = $data['id'];
+        $points = $_POST['points'] ?? 2000;
+        $room_name = $_POST['room_name'] ?? $this->generateRoomName();
+        $private = isset($_POST['private']) ? (bool)$_POST['private'] : false;
 
-            if ($this->roomModel->doesRoomNameExist($room_name)) {
-                echo json_encode(['error' => 'Nome de sala já em uso. Escolha outro.']);
-                return;
-            }
-
-            $private = isset($_POST['private']) ? (bool)$_POST['private'] : false;
-
-            if ($private) {
-                $password = $_POST['password'];
-                if (empty($password)) {
-                    echo json_encode(['error' => 'Senha obrigatória para salas privadas']);
-                    return;
-                }
-            } else {
-                $password = null;
-            }
-
-            $player_capacity = isset($_POST['player_capacity']) ? (int)$_POST['player_capacity'] : 10;
-            $time_limit = isset($_POST['time_limit']) ? (int)$_POST['time_limit'] : 5;
-
-            if ($player_capacity < 1 || $time_limit < 1) {
-                echo json_encode(['error' => 'Capacidade de jogadores ou tempo limite inválidos']);
-                return;
-            }
-
-            $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
-
-            $roomname = $result['idroom'];
-
-            $this->joinRoom($roomname, $id_o, $password);
-
-            echo json_encode([
-                'idsala' => $result,
-                'id_o' => $id_o,
-                'nomesala' => $room_name,
-                'privacao' => $private,
-                'capacidade' => $player_capacity,
-                'tampodasala' => $time_limit,
-                'pointos' => $points
-            ]);
-        } else {
-            echo json_encode(['error' => 'ID do organizador não informado']);
+        if ($this->roomModel->doesRoomNameExist($room_name)) {
+            errorResponse('Nome de sala já em uso. Escolha outro.');
         }
+
+        $password = $private ? $_POST['password'] ?? null : null;
+        if ($private && empty($password)) {
+            errorResponse('Senha obrigatória para salas privadas.');
+        }
+
+        $player_capacity = (int)($_POST['player_capacity'] ?? 10);
+        $time_limit = (int)($_POST['time_limit'] ?? 5);
+        if ($player_capacity < 1 || $time_limit < 1) {
+            errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
+        }
+
+        $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
+        $roomId = $result['idroom'];
+
+        $this->joinRoom($roomId, $id_o, $password);
+
+        jsonResponse([
+            'idsala' => $roomId,
+            'id_o' => $id_o,
+            'nomesala' => $room_name,
+            'privacao' => $private,
+            'capacidade' => $player_capacity,
+            'tampodasala' => $time_limit,
+            'pontos' => $points
+        ]);
     }
 
     private function generateRoomName()
@@ -75,46 +62,39 @@ class RoomController
         return 'room_' . $time_day;
     }
 
-    public function joinRoom($roomId, $userId, $password)
+    public function joinRoom($roomId, $userId, $password = null)
     {
         $room = $this->roomModel->getRoomById($roomId);
-        
+
         if (!$room) {
-            echo json_encode(['error' => 'Sala não encontrada']);
-            return;
+            errorResponse('Sala não encontrada.');
         }
 
-        if ($room['PRIVATE'] && (empty($password) || !password_verify($password, $room['PASSWORD']))) {
-            echo json_encode(['error' => 'Senha inválida']);
-            return;
+        if ($room['PRIVATE'] && validateRoomPassword($room['PASSWORD'], $password)) {
+            errorResponse('Senha inválida.');
         }
 
-        $currentPlayers = $this->playedModel->getPlayersCountInRoom($roomId);
-
-        if ($currentPlayers >= $room['PLAYER_CAPACITY']) {
-            echo json_encode(['error' => 'Sala cheia']);
-            return;
+        if ($this->playedModel->getPlayersCountInRoom($roomId) >= $room['PLAYER_CAPACITY']) {
+            errorResponse('Sala cheia.');
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
-        
         $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'joined');
 
-        echo json_encode(['message' => 'Entrou na sala com sucesso']);
+        jsonResponse(['message' => 'Entrou na sala com sucesso.']);
     }
 
     public function removePlayerFromRoom($roomId, $userId)
     {
         $room = $this->roomModel->getRoomById($roomId);
+
         if (!$room) {
-            echo json_encode(['error' => 'Sala não encontrada']);
-            return;
+            errorResponse('Sala não encontrada.');
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
-
         $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'left');
 
-        echo json_encode(['message' => 'Jogador removido com sucesso']);
+        jsonResponse(['message' => 'Jogador removido com sucesso.']);
     }
 }

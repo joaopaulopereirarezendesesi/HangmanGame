@@ -93,12 +93,10 @@ class UserModel
             $stmt->bindParam(':email', $email);
             $stmt->execute();
 
-            // Verifica se o e-mail já está registrado
             $count = $stmt->fetchColumn();
-            return $count > 0;  // Retorna true se o e-mail já existe
+            return $count > 0;
         } catch (PDOException $e) {
             throw new Exception("Erro ao verificar e-mail: " . $e->getMessage());
         }
-}
-
+    }
 }

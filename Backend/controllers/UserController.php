@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../tools/helpers.php';
 
 class UserController
 {
@@ -14,73 +15,66 @@ class UserController
     public function index()
     {
         $users = $this->userModel->getAllUsers();
-        echo json_encode($users);
+        jsonResponse($users, 200);
     }
 
     public function show($id)
     {
         $user = $this->userModel->getUserById($id);
-        echo json_encode($user);
+        if ($user) {
+            jsonResponse($user, 200);
+        } else {
+            errorResponse("Usuário não encontrado", 404);
+        }
     }
 
     public function create()
     {
-        if (!empty($_POST['nickname']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password'])) {
-            $nickname = trim($_POST['nickname']);
-            $email = strtolower(trim($_POST['email']));
-            $password = $_POST['password'];
-            $confirmPassword = $_POST['confirm_password'];
+        $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
+        $data = validateParams($_POST, $requiredParams);
 
-            if (!$this->validateEmail($email)) {
-                echo json_encode(['error' => 'Formato de e-mail invalido']);
-                return;
-            }
-
-            $passwordValidation = $this->validatePassword($password);
-            if (!$passwordValidation) {
-                echo json_encode(['error' => 'A senha deve ter pelo menos 8 caracteres, conter uma letra maiuscula, uma minuscula, um numero e um caractere especial']);
-                return;
-            }
-
-            if ($password !== $confirmPassword) {
-                echo json_encode(['error' => 'As senhas nao coincidem']);
-                return;
-            }
-
-            $this->userModel->createUser($nickname, $email, $password);
-        } else {
-            echo json_encode(['error' => 'Dados invalidos']);
+        if (!validateEmail($data['email'])) {
+            errorResponse("Formato de e-mail inválido", 400);
         }
+
+        if (!validatePassword($data['password'])) {
+            errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
+        }
+
+        if ($data['password'] !== $data['confirm_password']) {
+            errorResponse("As senhas não coincidem", 400);
+        }
+
+        $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
+        jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
     }
 
     public function login()
     {
-        if (!empty($_POST['email']) && !empty($_POST['password'])) {
-            $email = strtolower(trim($_POST['email']));
-            $password = $_POST['password'];
+        $requiredParams = ['email', 'password'];
+        $data = validateParams($_POST, $requiredParams);
 
-            $user = $this->userModel->getUserByEmail($email);
+        $email = strtolower(trim($data['email']));
+        $password = $data['password'];
 
-            if ($user && password_verify($password, $user['PASSWORD'])) {
-                session_start();
-                $_SESSION['user_id'] = $user['ID_U'];
-                $_SESSION['nickname'] = $user['NICKNAME'];
+        $user = $this->userModel->getUserByEmail($email);
 
-                if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                    setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
-                    setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
-                }
+        if ($user && password_verify($password, $user['PASSWORD'])) {
+            session_start();
+            $_SESSION['user_id'] = $user['ID_U'];
+            $_SESSION['nickname'] = $user['NICKNAME'];
 
-                echo json_encode([
-                    'message' => 'Login bem-sucedido',
-                    'user_id' => $user['ID_U'],
-                    'cookies' => $_COOKIE,
-                ]);
-            } else {
-                echo json_encode(['error' => 'Credenciais invalidas']);
+            if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
+                setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
+                setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
             }
+
+            jsonResponse([
+                'message' => 'Login bem-sucedido',
+                'user_id' => $user['ID_U']
+            ], 200);
         } else {
-            echo json_encode(['error' => 'Email e senha sao obrigatorios']);
+            errorResponse("Credenciais inválidas", 401);
         }
     }
 
@@ -88,16 +82,12 @@ class UserController
     {
         session_start();
         session_unset();
-
-        if (isset($_COOKIE['user_id'])) {
-            setcookie('user_id', '', time() - 3600, '/');
-        }
-        if (isset($_COOKIE['nickname'])) {
-            setcookie('nickname', '', time() - 3600, '/');
-        }
-
         session_destroy();
-        echo json_encode(['message' => 'Logout bem-sucedido']);
+
+        setcookie('user_id', '', time() - 3600, '/');
+        setcookie('nickname', '', time() - 3600, '/');
+
+        jsonResponse(['message' => 'Logout bem-sucedido'], 200);
     }
 
     public function isLoggedIn()
@@ -119,16 +109,5 @@ class UserController
         }
 
         return false;
-    }
-
-
-    private function validateEmail($email)
-    {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    private function validatePassword($password)
-    {
-        return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
     }
 }
