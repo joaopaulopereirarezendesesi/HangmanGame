@@ -1,8 +1,19 @@
 <?php
 
-function isServerRunning($port) {
-    $output = shell_exec("netstat -an | grep $port");
-    return !empty($output);
+function isPortInUse($port) {
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        $output = shell_exec("netstat -aon | findstr :{$port}");
+        if ($output) {
+            return true; 
+        }
+    } else {
+        $output = shell_exec("lsof -ti :{$port}");
+        if (!empty($output)) {
+            return true; 
+        }
+    }
+
+    return false; 
 }
 
 //Vi isso no stack overflow e achei mto foda

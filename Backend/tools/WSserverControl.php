@@ -2,11 +2,13 @@
 
 require_once __DIR__ . '/helpers.php';
 
-$serverScript = __DIR__ . '/../WSserver.php'; 
+$serverScript = __DIR__ . '/../WSserver.php';
 $serverPort = 8000;
 
-if (isServerRunning($serverPort)) {
-    displayMessage("O servidor já está rodando na porta {$serverPort}!", 'info');
+$status = isPortInUse($serverPort);
+
+if ($status) {
+    exit(0);
 } else {
     displayMessage("Servidor está parado. Iniciando...", 'info');
     startWebSocketServer($serverScript);

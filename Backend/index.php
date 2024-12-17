@@ -78,7 +78,6 @@ class App
         error_log("Erro fatal: " . $e->getMessage());
         errorResponse("Ocorreu um erro interno no servidor. Tente novamente mais tarde.", 500);
     }
-
 }
 
 try {
