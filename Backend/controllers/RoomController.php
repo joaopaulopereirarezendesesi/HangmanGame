@@ -13,7 +13,7 @@ class RoomController
     {
         $this->roomModel = new \models\RoomModel();
         $this->playedModel = new \models\PlayedModel();
-        $this->wsHandler = new \api\Websocket\WShandler();
+        $this->wsHandler = new \Websocket\WShandler();
     }
 
     public function createRoom()

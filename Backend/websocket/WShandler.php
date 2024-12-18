@@ -1,6 +1,6 @@
 <?php
 
-namespace api\Websocket;
+namespace Websocket;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;

@@ -23,9 +23,9 @@ class ComposerStaticInit8a4664d620a802d681cd05de60eecf06
         array (
             'core\\' => 5,
         ),
-        'a' => 
+        'W' => 
         array (
-            'api\\Websocket\\' => 14,
+            'Websocket\\' => 10,
         ),
         'S' => 
         array (
@@ -68,7 +68,7 @@ class ComposerStaticInit8a4664d620a802d681cd05de60eecf06
         array (
             0 => __DIR__ . '/../..' . '/core',
         ),
-        'api\\Websocket\\' => 
+        'Websocket\\' => 
         array (
             0 => __DIR__ . '/../..' . '/websocket',
         ),
@@ -122,8 +122,8 @@ class ComposerStaticInit8a4664d620a802d681cd05de60eecf06
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (

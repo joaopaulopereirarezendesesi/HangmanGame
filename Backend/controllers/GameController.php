@@ -9,7 +9,7 @@ class GameController
 
     public function __construct()
     {
-        $this->gameModel = new models\GameModel();  
-        $this->wsHandler = new \api\Websocket\WShandler();
+        $this->gameModel = new \models\GameModel();  
+        $this->wsHandler = new \Websocket\WShandler();
     }
 }
