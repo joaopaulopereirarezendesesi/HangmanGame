@@ -18,7 +18,7 @@ class RoomController
 
     public function createRoom()
     {
-        $data = validateParams($_POST, ['id']); 
+        $data = validateParams($_POST, ['id']);
 
         $id_o = $data['id'];
         $points = $_POST['points'] ?? 2000;
@@ -70,7 +70,7 @@ class RoomController
             errorResponse('Sala não encontrada.');
         }
 
-        if ($room['PRIVATE'] && validateRoomPassword($room['PASSWORD'], $password)) {
+        if ($room['PRIVATE'] && $this->validateRoomPassword($room['PASSWORD'], $password)) {
             errorResponse('Senha inválida.');
         }
 
@@ -96,5 +96,10 @@ class RoomController
         $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'left');
 
         jsonResponse(['message' => 'Jogador removido com sucesso.']);
+    }
+
+    function validateRoomPassword($hashedPassword, $password)
+    {
+        return !empty($password) && password_verify($password, $hashedPassword);
     }
 }

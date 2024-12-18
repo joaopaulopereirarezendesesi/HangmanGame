@@ -33,7 +33,7 @@ class UserController
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
         $data = validateParams($_POST, $requiredParams);
 
-        if (!validateEmail($data['email'])) {
+        if (!$this->validateEmail($data['email'])) {
             errorResponse("Formato de e-mail inválido", 400);
         }
 
@@ -109,5 +109,10 @@ class UserController
         }
 
         return false;
+    }
+
+    function validateEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }

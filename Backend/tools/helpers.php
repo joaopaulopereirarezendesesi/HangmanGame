@@ -16,8 +16,6 @@ function isPortInUse($port) {
     return false; 
 }
 
-//Vi isso no stack overflow e achei mto foda
-
 function displayMessage($message, $type = 'info') {
     $colors = [
         'info' => "\033[34m",    // Azul
@@ -55,17 +53,7 @@ function validateParams($request, $requiredParams) {
     return array_intersect_key($request, array_flip($requiredParams));
 }
 
-function validateEmail($email)
-{
-    return filter_var($email, FILTER_VALIDATE_EMAIL);
-}
-
 function validatePassword($password)
 {
     return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
-}
-
-function validateRoomPassword($hashedPassword, $password)
-{
-    return !empty($password) && password_verify($password, $hashedPassword);
 }
