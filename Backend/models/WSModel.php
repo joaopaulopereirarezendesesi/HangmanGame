@@ -2,17 +2,16 @@
 
 namespace models;
 
-use PDO;
-use PDOException;
-use core\Database;
+use tools\Utils;
+use Exception;
 
 class WSModel
 {
-    private $db;
+    private $utils;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->utils = new Utils(); 
     }
 
     public function getUsersInRoom($roomId)
@@ -22,15 +21,12 @@ class WSModel
                       FROM users u
                       JOIN played p ON u.ID_U = p.ID_U
                       WHERE p.ID_R = :roomId";
-
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
-            $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $params = [':roomId' => $roomId];
+            $users = $this->utils->executeQuery($query, $params, true);
 
             return $users;
-        } catch (PDOException $e) {
-            throw new \Exception("Erro ao obter usuários na sala: " . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception("Erro ao obter usuários na sala: " . $e->getMessage());
         }
     }
 
@@ -38,28 +34,27 @@ class WSModel
     {
         try {
             $query = "SELECT ID_U, ID_R FROM played";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute();
+            $roomsAndUsers = $this->utils->executeQuery($query, [], true);
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new \Exception("Erro ao restaurar usuários e salas: " . $e->getMessage());
+            return $roomsAndUsers;
+        } catch (Exception $e) {
+            throw new Exception("Erro ao restaurar usuários e salas: " . $e->getMessage());
         }
     }
-
 
     public function sendFriendRequest($fromUser, $toUser)
     {
         try {
             $query = "INSERT INTO friends (from_user, to_user, status) VALUES (:fromUser, :toUser, 'pending')";
+            $params = [
+                ':fromUser' => $fromUser,
+                ':toUser' => $toUser
+            ];
 
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':fromUser', $fromUser, PDO::PARAM_INT);
-            $stmt->bindParam(':toUser', $toUser, PDO::PARAM_INT);
-            $stmt->execute();
+            $this->utils->executeQuery($query, $params); 
 
             return true;
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

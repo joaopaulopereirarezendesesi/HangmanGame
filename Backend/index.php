@@ -3,6 +3,7 @@
 require_once 'config/config.php';
 require_once 'core/Database.php';
 require_once 'core/Router.php';
+require_once 'tools/helpers.php';
 
 class App
 {
@@ -41,14 +42,13 @@ class App
         }
     }
 
-
     private function validateConfig(): void
     {
         $requiredConfigs = ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME'];
         foreach ($requiredConfigs as $config) {
             if (!defined($config)) {
-                error_log("Configuração faltando: {$config}");
-                errorResponse("Configuração faltando no servidor: {$config}", 500);
+                tools\Utils::displayMessage("Configuração faltando: {$config}", 'error');
+                tools\Utils::errorResponse("Configuração faltando no servidor: {$config}", 500);
             }
         }
     }
@@ -56,7 +56,7 @@ class App
     private function handleOptionsRequest(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            jsonResponse(['status' => 'OK'], 200);
+            tools\Utils::jsonResponse(['status' => 'OK'], 200);
         }
     }
 
@@ -74,13 +74,13 @@ class App
 
     private function handleException(\Exception $e): void
     {
-        error_log("Erro fatal: " . $e->getMessage());
-        errorResponse("Ocorreu um erro interno no servidor. Tente novamente mais tarde.", 500);
+        tools\Utils::displayMessage("Erro fatal: " . $e->getMessage(), 'error');
+        tools\Utils::errorResponse("Ocorreu um erro interno no servidor. Tente novamente mais tarde.", 500);
     }
 }
 
 try {
-    $statusWS = isPortInUse(8000);
+    $statusWS = tools\Utils::isPortInUse(8000);
 
     if (!$statusWS) {
         $controlScript = __DIR__ . '/tools/WSserverControl.php';
@@ -90,6 +90,6 @@ try {
 
     new App();
 } catch (\Exception $e) {
-    error_log("Erro ao inicializar a aplicação: " . $e->getMessage());
-    errorResponse("Erro crítico ao iniciar a aplicação.", 500);
+    tools\Utils::displayMessage("Erro ao inicializar a aplicação: " . $e->getMessage(), 'error');
+    tools\Utils::errorResponse("Erro crítico ao iniciar a aplicação.", 500);
 }

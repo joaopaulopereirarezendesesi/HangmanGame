@@ -15,44 +15,44 @@ class UserController
     public function index()
     {
         $users = $this->userModel->getAllUsers();
-        jsonResponse($users, 200);
+        \tools\Utils::jsonResponse($users, 200);
     }
 
     public function show($id)
     {
         $user = $this->userModel->getUserById($id);
         if ($user) {
-            jsonResponse($user, 200);
+            \tools\Utils::jsonResponse($user, 200);
         } else {
-            errorResponse("Usuário não encontrado", 404);
+            \tools\Utils::errorResponse("Usuário não encontrado", 404);
         }
     }
 
     public function create()
     {
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
-        $data = validateParams($_POST, $requiredParams);
+        $data = \tools\Utils::validateParams($_POST, $requiredParams);
 
         if (!$this->validateEmail($data['email'])) {
-            errorResponse("Formato de e-mail inválido", 400);
+            \tools\Utils::errorResponse("Formato de e-mail inválido", 400);
         }
 
-        if (!validatePassword($data['password'])) {
-            errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
+        if (!\tools\Utils::validatePassword($data['password'])) {
+            \tools\Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
         }
 
         if ($data['password'] !== $data['confirm_password']) {
-            errorResponse("As senhas não coincidem", 400);
+            \tools\Utils::errorResponse("As senhas não coincidem", 400);
         }
 
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
-        jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
+        \tools\Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
     }
 
     public function login()
     {
         $requiredParams = ['email', 'password'];
-        $data = validateParams($_POST, $requiredParams);
+        $data = \tools\Utils::validateParams($_POST, $requiredParams);
 
         $email = strtolower(trim($data['email']));
         $password = $data['password'];
@@ -69,12 +69,12 @@ class UserController
                 setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
             }
 
-            jsonResponse([
+            \tools\Utils::jsonResponse([
                 'message' => 'Login bem-sucedido',
                 'user_id' => $user['ID_U']
             ], 200);
         } else {
-            errorResponse("Credenciais inválidas", 401);
+            \tools\Utils::errorResponse("Credenciais inválidas", 401);
         }
     }
 
@@ -87,7 +87,7 @@ class UserController
         setcookie('user_id', '', time() - 3600, '/');
         setcookie('nickname', '', time() - 3600, '/');
 
-        jsonResponse(['message' => 'Logout bem-sucedido'], 200);
+        \tools\Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
     }
 
     public function isLoggedIn()

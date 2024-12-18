@@ -18,7 +18,7 @@ class RoomController
 
     public function createRoom()
     {
-        $data = validateParams($_POST, ['id']);
+        $data = \tools\Utils::validateParams($_POST, ['id']);
 
         $id_o = $data['id'];
         $points = $_POST['points'] ?? 2000;
@@ -26,18 +26,18 @@ class RoomController
         $private = isset($_POST['private']) ? (bool)$_POST['private'] : false;
 
         if ($this->roomModel->doesRoomNameExist($room_name)) {
-            errorResponse('Nome de sala já em uso. Escolha outro.');
+            \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
         }
 
         $password = $private ? $_POST['password'] ?? null : null;
         if ($private && empty($password)) {
-            errorResponse('Senha obrigatória para salas privadas.');
+            \tools\Utils::errorResponse('Senha obrigatória para salas privadas.');
         }
 
         $player_capacity = (int)($_POST['player_capacity'] ?? 10);
         $time_limit = (int)($_POST['time_limit'] ?? 5);
         if ($player_capacity < 1 || $time_limit < 1) {
-            errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
+            \tools\Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
         }
 
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
@@ -45,7 +45,7 @@ class RoomController
 
         $this->joinRoom($roomId, $id_o, $password);
 
-        jsonResponse([
+        \tools\Utils::jsonResponse([
             'idsala' => $roomId,
             'id_o' => $id_o,
             'nomesala' => $room_name,
@@ -67,21 +67,21 @@ class RoomController
         $room = $this->roomModel->getRoomById($roomId);
 
         if (!$room) {
-            errorResponse('Sala não encontrada.');
+            \tools\Utils::errorResponse('Sala não encontrada.');
         }
 
         if ($room['PRIVATE'] && $this->validateRoomPassword($room['PASSWORD'], $password)) {
-            errorResponse('Senha inválida.');
+            \tools\Utils::errorResponse('Senha inválida.');
         }
 
         if ($this->playedModel->getPlayersCountInRoom($roomId) >= $room['PLAYER_CAPACITY']) {
-            errorResponse('Sala cheia.');
+            \tools\Utils::errorResponse('Sala cheia.');
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
         $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'joined');
 
-        jsonResponse(['message' => 'Entrou na sala com sucesso.']);
+        \tools\Utils::jsonResponse(['message' => 'Entrou na sala com sucesso.']);
     }
 
     public function removePlayerFromRoom($roomId, $userId)
@@ -89,13 +89,13 @@ class RoomController
         $room = $this->roomModel->getRoomById($roomId);
 
         if (!$room) {
-            errorResponse('Sala não encontrada.');
+            \tools\Utils::errorResponse('Sala não encontrada.');
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
         $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'left');
 
-        jsonResponse(['message' => 'Jogador removido com sucesso.']);
+        \tools\Utils::jsonResponse(['message' => 'Jogador removido com sucesso.']);
     }
 
     function validateRoomPassword($hashedPassword, $password)

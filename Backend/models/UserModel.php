@@ -2,26 +2,25 @@
 
 namespace models;
 
-use core\Database;
-use PDO;
-use PDOException;
+use tools\Utils;
 use Exception;
 
 class UserModel
 {
-    private $db;
+    private $utils;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->utils = new Utils();
     }
 
     public function getAllUsers()
     {
         try {
-            $stmt = $this->db->query("SELECT * FROM users");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $query = "SELECT * FROM users";
+            $result = $this->utils->executeQuery($query, [], true); 
+            return $result;
+        } catch (Exception $e) {
             throw new Exception("Erro ao obter usuários: " . $e->getMessage());
         }
     }
@@ -30,12 +29,10 @@ class UserModel
     {
         try {
             $query = "SELECT * FROM users WHERE ID_U = :id";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $params = [':id' => $id];
+            $result = $this->utils->executeQuery($query, $params, true); 
+            return $result[0] ?? null;
+        } catch (Exception $e) {
             throw new Exception("Erro ao obter usuário: " . $e->getMessage());
         }
     }
@@ -44,29 +41,29 @@ class UserModel
     {
         try {
             $query = "SELECT * FROM users WHERE email = :email OR NICKNAME = :nickname";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([':email' => $email, ':nickname' => $nickname]);
-            $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
+            $params = [':email' => $email, ':nickname' => $nickname];
+            $existingUser = $this->utils->executeQuery($query, $params, true); 
 
             if ($existingUser) {
-                if ($existingUser['email'] === $email) {
+                if ($existingUser[0]['email'] === $email) {
                     throw new Exception('Email já cadastrado!');
                 }
-                if ($existingUser['NICKNAME'] === $nickname) {
+                if ($existingUser[0]['NICKNAME'] === $nickname) {
                     throw new Exception('Nickname já utilizado!');
                 }
             }
 
             $query = "INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([
+            $params = [
                 ':nickname' => $nickname,
                 ':email' => $email,
                 ':password' => password_hash($password, PASSWORD_ARGON2ID),
-            ]);
+            ];
 
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
+            $this->utils->executeQuery($query, $params); 
+
+            return $this->utils->executeQuery("SELECT LAST_INSERT_ID()", [], true)[0]['LAST_INSERT_ID()'];
+        } catch (Exception $e) {
             throw new Exception("Erro ao criar usuário: " . $e->getMessage());
         }
     }
@@ -75,12 +72,10 @@ class UserModel
     {
         try {
             $query = "SELECT * FROM users WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $params = [':email' => $email];
+            $result = $this->utils->executeQuery($query, $params, true); 
+            return $result[0] ?? null;
+        } catch (Exception $e) {
             throw new Exception("Erro ao obter usuário por email: " . $e->getMessage());
         }
     }
@@ -89,13 +84,10 @@ class UserModel
     {
         try {
             $query = "SELECT COUNT(*) FROM users WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-
-            $count = $stmt->fetchColumn();
-            return $count > 0;
-        } catch (PDOException $e) {
+            $params = [':email' => $email];
+            $result = $this->utils->executeQuery($query, $params, true); 
+            return $result[0]['COUNT(*)'] > 0;
+        } catch (Exception $e) {
             throw new Exception("Erro ao verificar e-mail: " . $e->getMessage());
         }
     }

@@ -25,6 +25,6 @@ $server = new IoServer(
     $loop    
 );
 
-displayMessage("Arquivos startados, servidor WebSocket iniciado!\n\n", 'success');
+tools\Utils::displayMessage("Arquivos startados, servidor WebSocket iniciado!\n\n", 'success');
 
 $server->run();

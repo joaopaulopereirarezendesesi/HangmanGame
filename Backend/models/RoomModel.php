@@ -2,20 +2,18 @@
 
 namespace models;
 
-use core\Database;
-use PDO;
-use PDOException;
+use tools\Utils;
 use Exception;
 use DateTime;
 use DateTimeZone;
 
 class RoomModel
 {
-    private $db;
+    private $utils;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->utils = new Utils(); 
     }
 
     public function getCurrentRoomTime()
@@ -30,8 +28,7 @@ class RoomModel
             $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
                       VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([
+            $params = [
                 ':id_o' => $id_o,
                 ':room_name' => $room_name,
                 ':private' => $private,
@@ -39,10 +36,12 @@ class RoomModel
                 ':player_capacity' => $player_capacity,
                 ':time_limit' => $time_limit,
                 ':points' => $points
-            ]);
+            ];
+
+            $this->utils->executeQuery($query, $params); 
 
             return json_encode(['idroom' => $this->getRoomNameId($room_name)]);
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new Exception("Erro ao criar sala: " . $e->getMessage());
         }
     }
@@ -51,12 +50,12 @@ class RoomModel
     {
         try {
             $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
-            $stmt->execute();
+            $params = [':roomName' => $roomName];
 
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $result = $this->utils->executeQuery($query, $params, true); 
+
+            return $result[0]['ID_R'] ?? null;
+        } catch (Exception $e) {
             throw new Exception("Erro ao obter o ID da sala: " . $e->getMessage());
         }
     }
@@ -65,12 +64,12 @@ class RoomModel
     {
         try {
             $query = "SELECT * FROM rooms WHERE ID_R = :roomId";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
-            $stmt->execute();
+            $params = [':roomId' => $roomId];
 
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $result = $this->utils->executeQuery($query, $params, true); 
+
+            return $result[0] ?? null;
+        } catch (Exception $e) {
             throw new Exception("Erro ao obter sala: " . $e->getMessage());
         }
     }
@@ -79,28 +78,13 @@ class RoomModel
     {
         try {
             $query = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = :roomName";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
-            $stmt->execute();
+            $params = [':roomName' => $roomName];
 
-            return $stmt->fetchColumn() > 0;
-        } catch (PDOException $e) {
+            $result = $this->utils->executeQuery($query, $params, true); 
+
+            return $result[0]['COUNT(*)'] > 0;
+        } catch (Exception $e) {
             throw new Exception("Erro ao verificar nome da sala: " . $e->getMessage());
-        }
-    }
-
-    public function getIdroomByName($roomName)
-    {
-        try {
-            $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':roomName', $roomName, PDO::PARAM_STR);
-            $stmt->execute();
-
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['ID_R'] ?? null;
-        } catch (PDOException $e) {
-            throw new Exception("Erro ao obter ID da sala: " . $e->getMessage());
         }
     }
 }

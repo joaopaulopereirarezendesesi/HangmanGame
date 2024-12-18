@@ -5,8 +5,7 @@ namespace Websocket;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use models\WSModel;
-
-require_once __DIR__ . '/../tools/helpers.php';
+use tools\Utils;
 
 class WShandler implements MessageComponentInterface
 {
@@ -21,7 +20,7 @@ class WShandler implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
-        displayMessage("Novo cliente conectado: {$conn->resourceId}", 'success');
+        Utils::displayMessage("Novo cliente conectado: {$conn->resourceId}", 'success');
         $this->clients[$conn->resourceId] = $conn;
     }
 
@@ -30,7 +29,7 @@ class WShandler implements MessageComponentInterface
         $data = json_decode($msg);
 
         if (!$data) {
-            displayMessage("Dados inválidos recebidos: {$msg}", 'error');
+            Utils::displayMessage("Dados inválidos recebidos: {$msg}", 'error');
             $from->send(json_encode(['error' => 'Dados inválidos']));
             return;
         }
@@ -38,41 +37,39 @@ class WShandler implements MessageComponentInterface
         if (isset($data->type)) {
             switch ($data->type) {
                 case 'chat':
-                    displayMessage("Enviando mensagem para a sala {$data->room}", 'info');
+                    Utils::displayMessage("Enviando mensagem para a sala {$data->room}", 'info');
                     $this->sendToRoom($data->room, $data->message, $data->user, $from);
                     break;
 
                 case 'joinRoom':
-                    displayMessage("Cliente {$from->resourceId} entrando na sala {$data->room}", 'info');
+                    Utils::displayMessage("Cliente {$from->resourceId} entrando na sala {$data->room}", 'info');
                     $this->joinRoom($from, $data->room);
                     break;
 
                 case 'friendRequest':
-                    displayMessage("Solicitação de amizade de {$data->fromUser} para {$data->toUser}", 'info');
+                    Utils::displayMessage("Solicitação de amizade de {$data->fromUser} para {$data->toUser}", 'info');
                     $this->handleFriendRequest($data->fromUser, $data->toUser);
                     break;
 
                 default:
-                    displayMessage("Tipo de mensagem inválido: {$data->type}", 'error');
+                    Utils::displayMessage("Tipo de mensagem inválido: {$data->type}", 'error');
                     $from->send(json_encode(['error' => 'Tipo de mensagem inválido']));
             }
         } else {
-            errorResponse("Dados incompletos recebidos", 400);
+            Utils::errorResponse("Dados incompletos recebidos", 400);
         }
     }
 
     public function onClose(ConnectionInterface $conn)
     {
-        displayMessage("Cliente desconectado: {$conn->resourceId}", 'info');
-
+        Utils::displayMessage("Cliente desconectado: {$conn->resourceId}", 'info');
         unset($this->clients[$conn->resourceId]);
         unset($this->rooms[$conn->resourceId]);
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        displayMessage("Erro com o cliente {$conn->resourceId}: " . $e->getMessage(), 'error');
-
+        Utils::displayMessage("Erro com o cliente {$conn->resourceId}: " . $e->getMessage(), 'error');
         $conn->send(json_encode(['error' => $e->getMessage()]));
         $conn->close();
     }
@@ -80,20 +77,19 @@ class WShandler implements MessageComponentInterface
     private function joinRoom(ConnectionInterface $conn, $room)
     {
         $this->rooms[$conn->resourceId] = $room;
-
-        displayMessage("Cliente {$conn->resourceId} entrou na sala {$room}", 'success');
+        Utils::displayMessage("Cliente {$conn->resourceId} entrou na sala {$room}", 'success');
         $conn->send(json_encode(['success' => "Entrou na sala {$room}"]));
-        displayMessage("array rooms: " . print_r($this->rooms, true), 'success');
+        Utils::displayMessage("array rooms: " . print_r($this->rooms, true), 'success');
     }
 
     private function sendToRoom($roomId, $message, $user, ConnectionInterface $from)
     {
-        displayMessage("Enviando mensagem para a sala {$roomId}: {$message}", 'info');
+        Utils::displayMessage("Enviando mensagem para a sala {$roomId}: {$message}", 'info');
 
         $players = $this->WSModel->getUsersInRoom($roomId);
 
         if (!$players) {
-            displayMessage("Nenhum usuário na sala {$roomId}", 'error');
+            Utils::displayMessage("Nenhum usuário na sala {$roomId}", 'error');
             $from->send(json_encode(['error' => "Nenhum usuário na sala {$roomId}"]));
             return;
         }
@@ -112,7 +108,7 @@ class WShandler implements MessageComponentInterface
 
     private function handleFriendRequest($fromUser, $toUser)
     {
-        displayMessage("Processando a solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+        Utils::displayMessage("Processando a solicitação de amizade de {$fromUser} para {$toUser}", 'info');
 
         $result = $this->WSModel->sendFriendRequest($fromUser, $toUser);
 
@@ -128,12 +124,12 @@ class WShandler implements MessageComponentInterface
         }
 
         $message = $result ? "Solicitação enviada com sucesso" : "Solicitação já existe";
-        displayMessage($message, $result ? 'success' : 'error');
+        Utils::displayMessage($message, $result ? 'success' : 'error');
     }
 
     public function broadcastRoomUpdate($roomId, $userId, $action)
     {
-        displayMessage("Atualização na sala {$roomId}: {$action} por {$userId}", 'info');
+        Utils::displayMessage("Atualização na sala {$roomId}: {$action} por {$userId}", 'info');
 
         foreach ($this->clients as $client) {
             if (isset($this->rooms[$client->resourceId]) && $this->rooms[$client->resourceId] === $roomId) {
