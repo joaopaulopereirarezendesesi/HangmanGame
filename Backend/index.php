@@ -84,7 +84,7 @@ try {
 
     if (!$statusWS) {
         $controlScript = __DIR__ . '/tools/WSserverControl.php';
-        $command = "start php \"$controlScript\"";
+        $command = "php \"$controlScript\"";
         pclose(popen($command, "r"));
     }
 

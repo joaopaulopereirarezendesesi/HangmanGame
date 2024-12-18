@@ -17,60 +17,7 @@ class WShandler implements MessageComponentInterface
     public function __construct()
     {
         $this->WSModel = new WSModel();
-        $this->restoreRoomsFromDatabase();
     }
-
-    private function restoreRoomsFromDatabase()
-    {
-        displayMessage("\nIniciando restauração do estado das salas...", 'info');
-    
-        $roomsData = $this->WSModel->getAllRoomsAndUsers();
-    
-        if (empty($roomsData)) {
-            displayMessage("Nenhum dado encontrado na tabela 'played'. Nenhuma restauração necessária.", 'info');
-            return;
-        }
-    
-        foreach ($roomsData as $data) {
-            $roomId = $data['ID_R'];
-            $userId = $data['ID_U'];
-    
-            $this->rooms[$userId] = $roomId;
-    
-            displayMessage("Usuário {$userId} restaurado para a sala {$roomId}", 'success');
-    
-            if (isset($this->clients[$userId])) {
-                $this->clients[$userId]->send(json_encode([
-                    'type' => 'restore',
-                    'data' => [
-                        'room' => $roomId,
-                        'message' => "Seu estado foi restaurado para a sala {$roomId}."
-                    ]
-                ]));
-            } else {
-                $this->sendReconnectTrigger($userId);
-            }
-    
-            displayMessage("\n\nEstado atual de rooms:", 'info');
-            displayMessage(print_r($this->rooms, true), 'info');
-            displayMessage("\n\nEstado atual de clients:", 'info');
-            displayMessage(print_r($this->clients, true), 'info');
-        }
-    
-        displayMessage("Restauração concluída. Salas e usuários carregados com sucesso.\n", 'info');
-    }
-    
-    private function sendReconnectTrigger($userId)
-    {
-        displayMessage("Enviando gatilho de reconexão para o usuário {$userId}...", 'info');
-    
-        $reconnectMessage = json_encode([
-            'type' => 'reconnect',
-        ]);
-    
-        displayMessage("Mensagem de reconexão enviada para o usuário {$userId}: {$reconnectMessage}", 'error');
-    }
-    
 
     public function onOpen(ConnectionInterface $conn)
     {
