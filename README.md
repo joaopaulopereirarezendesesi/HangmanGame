@@ -106,3 +106,4 @@
 > Eu quero abstrair o WebSocket para o front-end. Já comecei a fazer isso iniciando o servidor WebSocket quando a primeira requisição for feita e depois ele vai verificar se a porta 8000 (a porta do WebSocket) está em uso. Se estiver, ele não tentará iniciar mais. A ideia é que quem vai tratar do servidor WebSocket será o back-end, então o front-end só vai precisar requisitar o servidor, e o resto o back-end cuida.
 >
 > Matheus: Não era exatamente isto, porém se já esta funcionando sem problemas. Quais são minhas tarefas agora?!
+> Só termine de implementar e estilizar as telas de jogo e de profile... e as faça interagir com o back

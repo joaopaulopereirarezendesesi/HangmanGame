@@ -50,7 +50,7 @@ class Utils
 
     public static function displayMessage($message, $type = 'info') {
         $colors = [
-            'info' => "\033[34m",    // Azul
+            'info' => "\033[34m",    // A
             'success' => "\033[32m", // Verde
             'error' => "\033[31m",   // Vermelho
             'reset' => "\033[0m"     // Reset
