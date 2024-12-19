@@ -104,3 +104,5 @@
 > Opa, professor, não sei se é isso, mas se for o que estou pensando, os dois Composer são coisas diferentes: o composer.json e o composer.lock. O composer.json contém as    dependências e as configurações do projeto, enquanto o composer.lock garante que as versões exatas das dependências sejam instaladas em diferentes máquinas. Quando você executa o comando composer install, o Composer usa o composer.lock para garantir que as versões das dependências sejam consistentes. Qual quer problema siga os passos que coloquei em "**Testando o WebSocket**"
 >
 > Eu quero abstrair o WebSocket para o front-end. Já comecei a fazer isso iniciando o servidor WebSocket quando a primeira requisição for feita e depois ele vai verificar se a porta 8000 (a porta do WebSocket) está em uso. Se estiver, ele não tentará iniciar mais. A ideia é que quem vai tratar do servidor WebSocket será o back-end, então o front-end só vai precisar requisitar o servidor, e o resto o back-end cuida.
+>
+> Matheus: Não era exatamente isto, porém se já esta funcionando sem problemas. Quais são minhas tarefas agora?!
