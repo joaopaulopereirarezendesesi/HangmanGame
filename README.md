@@ -106,4 +106,11 @@
 > Eu quero abstrair o WebSocket para o front-end. Já comecei a fazer isso iniciando o servidor WebSocket quando a primeira requisição for feita e depois ele vai verificar se a porta 8000 (a porta do WebSocket) está em uso. Se estiver, ele não tentará iniciar mais. A ideia é que quem vai tratar do servidor WebSocket será o back-end, então o front-end só vai precisar requisitar o servidor, e o resto o back-end cuida.
 >
 > Matheus: Não era exatamente isto, porém se já esta funcionando sem problemas. Quais são minhas tarefas agora?!
+
 > Só termine de implementar e estilizar as telas de jogo e de profile... e as faça interagir com o back
+
+> Há professor! Vou implementar im lógica de reload de estado para o WebSocket, isso vai ficionar da seguinte forma:
+
+> 1. **Servidor caindo**
+      > - Toda vez que o servidor reiniciar, iniciar, ou até mesmo cair, ele vai executar um método para verificar a tabela "played" do banco. Caso houver algum registro lá, ele vai começar a restaurar dados. O WebSocket precisa que o cliente se conecte por si só, ou seja, eu não posso simplesmente associar um ID ao array $clients porque ele não vai ser válido para o WebSocket. Isso acontece porque o WebSocket precisa de uma solicitação HTTP para poder fazer isso. Então o que eu pensei: ao perceber que o servidor caiu, verificando a tabela, ele envia um gatilho para o front do tipo {type: reconnect} e o front envia a requisição, não atrapalhando o usuário.
+
