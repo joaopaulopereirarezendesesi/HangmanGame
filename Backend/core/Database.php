@@ -3,8 +3,8 @@
 namespace core;
 
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../tools/helpers.php';
 
+use tools\Utils;
 use PDO;
 use PDOException;
 
@@ -24,7 +24,7 @@ final class Database
                     self::getDefaultOptions($options)
                 );
             } catch (PDOException $e) {
-                displayMessage("Erro na conexão: " . $e->getMessage(), 'error');
+                Utils::displayMessage("Erro na conexão: " . $e->getMessage(), 'error');
                 throw new PDOException("Erro ao conectar ao banco de dados.");
             }
         }
