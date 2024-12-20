@@ -21,26 +21,24 @@ class App
         array $allowedHeaders = ['Content-Type', 'Authorization']
     ): void {
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-
-        if ($origin === '' && $_SERVER['SERVER_NAME'] === 'localhost') {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Credentials: true");
-        } elseif (in_array($origin, $allowedOrigins)) {
+    
+        if (in_array($origin, $allowedOrigins)) {
             header("Access-Control-Allow-Origin: $origin");
             header("Access-Control-Allow-Credentials: true");
         } else {
             header("HTTP/1.1 403 Forbidden");
-            exit(json_encode(['error' => 'Origem não permitida.']));
+            exit('Origem não permitida.');
         }
-
+    
         header("Access-Control-Allow-Methods: " . implode(', ', $allowedMethods));
         header("Access-Control-Allow-Headers: " . implode(', ', $allowedHeaders));
-
+    
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header("HTTP/1.1 204 No Content");
             exit();
         }
     }
+    
 
     private function validateConfig(): void
     {
