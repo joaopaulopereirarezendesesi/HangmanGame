@@ -14,22 +14,6 @@ class WSModel
         $this->utils = new Utils(); 
     }
 
-    public function getUsersInRoom($roomId)
-    {
-        try {
-            $query = "SELECT u.ID_U, u.NICKNAME
-                      FROM users u
-                      JOIN played p ON u.ID_U = p.ID_U
-                      WHERE p.ID_R = :roomId";
-            $params = [':roomId' => $roomId];
-            $users = $this->utils->executeQuery($query, $params, true);
-
-            return $users;
-        } catch (Exception $e) {
-            throw new Exception("Erro ao obter usuários na sala: " . $e->getMessage());
-        }
-    }
-
     public function getAllRoomsAndUsers()
     {
         try {

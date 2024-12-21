@@ -18,7 +18,7 @@ class UserModel
     {
         try {
             $query = "SELECT * FROM users";
-            $result = $this->utils->executeQuery($query, [], true); 
+            $result = $this->utils->executeQuery($query, [], true);
             return $result;
         } catch (Exception $e) {
             throw new Exception("Erro ao obter usuários: " . $e->getMessage());
@@ -30,7 +30,7 @@ class UserModel
         try {
             $query = "SELECT * FROM users WHERE ID_U = :id";
             $params = [':id' => $id];
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
             return $result[0] ?? null;
         } catch (Exception $e) {
             throw new Exception("Erro ao obter usuário: " . $e->getMessage());
@@ -42,7 +42,7 @@ class UserModel
         try {
             $query = "SELECT * FROM users WHERE email = :email OR NICKNAME = :nickname";
             $params = [':email' => $email, ':nickname' => $nickname];
-            $existingUser = $this->utils->executeQuery($query, $params, true); 
+            $existingUser = $this->utils->executeQuery($query, $params, true);
 
             if ($existingUser) {
                 if ($existingUser[0]['email'] === $email) {
@@ -60,7 +60,7 @@ class UserModel
                 ':password' => password_hash($password, PASSWORD_ARGON2ID),
             ];
 
-            $this->utils->executeQuery($query, $params); 
+            $this->utils->executeQuery($query, $params);
 
             return $this->utils->executeQuery("SELECT LAST_INSERT_ID()", [], true)[0]['LAST_INSERT_ID()'];
         } catch (Exception $e) {
@@ -73,7 +73,7 @@ class UserModel
         try {
             $query = "SELECT * FROM users WHERE email = :email";
             $params = [':email' => $email];
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
             return $result[0] ?? null;
         } catch (Exception $e) {
             throw new Exception("Erro ao obter usuário por email: " . $e->getMessage());
@@ -85,10 +85,22 @@ class UserModel
         try {
             $query = "SELECT COUNT(*) FROM users WHERE email = :email";
             $params = [':email' => $email];
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
             return $result[0]['COUNT(*)'] > 0;
         } catch (Exception $e) {
             throw new Exception("Erro ao verificar e-mail: " . $e->getMessage());
+        }
+    }
+
+    public function getPasswordbyId($id)
+    {
+        try {
+            $query = "SELECT `PASSWORD` FROM `users` WHERE `ID_U` = :id;";
+            $params = [':id' => $id];
+            $result = $this->utils->executeQuery($query, $params, true);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Erro ao obter a senha: " . $e->getMessage());
         }
     }
 }

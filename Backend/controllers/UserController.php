@@ -35,18 +35,37 @@ class UserController
 
         if (!$this->validateEmail($data['email'])) {
             \tools\Utils::errorResponse("Formato de e-mail inválido", 400);
+            return;
         }
 
         if (!\tools\Utils::validatePassword($data['password'])) {
             \tools\Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
+            return;
         }
 
         if ($data['password'] !== $data['confirm_password']) {
             \tools\Utils::errorResponse("As senhas não coincidem", 400);
+            return;
         }
 
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
         \tools\Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
+    }
+
+    
+    public function recoverPassword()
+    {
+        $requiredParams = ['id' ,'oldPassword', 'newPassword', 'c_newPassword'];
+        $data = \tools\Utils::validateParams($_POST, $requiredParams);
+
+        $password = $this->userModel->getPasswordbyId($data['id']);
+
+        if($password !== $data['oldPassword']) {
+            \tools\Utils::errorResponse("Sua senha antiga não corresponde a senha inputada", 400);
+            return;
+        }
+
+
     }
 
     public function login()

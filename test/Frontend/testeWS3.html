@@ -30,7 +30,7 @@
             // Send a message when the connection is established
             const message = {
                 type: 'joinRoom',
-                room: 2
+                room: 1
             };
             ws.send(JSON.stringify(message)); // Join room 1 as User 1
         };
@@ -44,7 +44,7 @@
             if (message) {
                 const chatMessage = {
                     type: 'chat',
-                    room: 2,
+                    room: 1,
                     user: 'User3',
                     message: message
                 };

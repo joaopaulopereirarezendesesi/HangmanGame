@@ -6,6 +6,7 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use models\WSModel;
 use tools\Utils;
+use models\UserModel;
 
 class WShandler implements MessageComponentInterface
 {

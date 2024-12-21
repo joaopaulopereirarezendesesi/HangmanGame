@@ -32,6 +32,37 @@ class Utils
         }
     }
 
+    public function sendEmailWithInlineImage($to, $subject, $body, $imagePath, $from = 'colocar email depois', $fromName = 'Seu Nome') {
+        $boundary = md5(uniqid(time()));
+
+        $headers = "From: $fromName <$from>\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: multipart/related; boundary=\"$boundary\"\r\n";
+
+        $message = "--$boundary\r\n";
+        $message .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $message .= "Content-Transfer-Encoding: 7bit\r\n";
+        $message .= "$body\r\n";  
+
+        $fileContent = chunk_split(base64_encode(file_get_contents($imagePath)));
+        $fileName = basename($imagePath);
+
+        $message .= "--$boundary\r\n";
+        $message .= "Content-Type: image/jpeg; name=\"$fileName\"\r\n"; 
+        $message .= "Content-Disposition: inline; filename=\"$fileName\"\r\n";
+        $message .= "Content-ID: <image1>\r\n";  
+        $message .= "Content-Transfer-Encoding: base64\r\n";
+        $message .= "$fileContent\r\n";
+
+        $message .= "--$boundary--";
+
+        if (mail($to, $subject, $message, $headers)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function isPortInUse($port) {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $output = shell_exec("netstat -aon | findstr :{$port}");
@@ -50,10 +81,10 @@ class Utils
 
     public static function displayMessage($message, $type = 'info') {
         $colors = [
-            'info' => "\033[34m",    // A
-            'success' => "\033[32m", // Verde
-            'error' => "\033[31m",   // Vermelho
-            'reset' => "\033[0m"     // Reset
+            'info' => "\033[34m",   
+            'success' => "\033[32m",
+            'error' => "\033[31m",   
+            'reset' => "\033[0m"   
         ];
 
         echo $colors[$type] . $message . $colors['reset'] . "\n";

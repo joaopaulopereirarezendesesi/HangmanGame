@@ -27,17 +27,20 @@ class RoomController
 
         if ($this->roomModel->doesRoomNameExist($room_name)) {
             \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
+            return;
         }
 
         $password = $private ? $_POST['password'] ?? null : null;
         if ($private && empty($password)) {
             \tools\Utils::errorResponse('Senha obrigatória para salas privadas.');
+            return;
         }
 
         $player_capacity = (int)($_POST['player_capacity'] ?? 10);
         $time_limit = (int)($_POST['time_limit'] ?? 5);
         if ($player_capacity < 1 || $time_limit < 1) {
             \tools\Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
+            return;
         }
 
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
@@ -68,14 +71,17 @@ class RoomController
 
         if (!$room) {
             \tools\Utils::errorResponse('Sala não encontrada.');
+            return;
         }
 
         if ($room['PRIVATE'] && $this->validateRoomPassword($room['PASSWORD'], $password)) {
             \tools\Utils::errorResponse('Senha inválida.');
+            return;
         }
 
         if ($this->playedModel->getPlayersCountInRoom($roomId) >= $room['PLAYER_CAPACITY']) {
             \tools\Utils::errorResponse('Sala cheia.');
+            return;
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
@@ -90,6 +96,7 @@ class RoomController
 
         if (!$room) {
             \tools\Utils::errorResponse('Sala não encontrada.');
+            return;
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
