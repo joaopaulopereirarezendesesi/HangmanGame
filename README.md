@@ -164,5 +164,5 @@ Se deseja contribuir, siga os passos abaixo:
 
 ## Licença
 
-Este projeto está licenciado sob a **MIT License**.
+Este projeto está licenciado sob a **GNU License**.
 
