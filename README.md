@@ -2,40 +2,29 @@
 
 ## Visão Geral
 
-Este projeto é um site de jogo da forca desenvolvido em PHP. Ele foi projetado para ser executado no Windows, mas também pode rodar em distribuições Linux. O sistema utiliza WebSockets para interação em tempo real, aproveitando as bibliotecas fornecidas pelo Composer.
-
-O jogo da forca permite que os jogadores se conectem em tempo real para tentar adivinhar palavras. Ele possui um sistema de pontuação, histórico de partidas e suporte a múltiplos jogadores em uma mesma sessão.
+Este projeto é um site de jogo da forca desenvolvido em PHP, utilizando WebSockets para permitir a interação em tempo real entre múltiplos jogadores. Ele foi projetado para ser compatível tanto com Windows quanto com distribuições Linux. O jogo conta com um sistema de pontuação, histórico de partidas e suporte a múltiplos jogadores simultaneamente.
 
 ## Requisitos do Sistema
 
-- **Servidor Web**: Apache ou Nginx
-- **PHP**: Versão 7.4 ou superior
-- **Composer**: Para gerenciamento de dependências
-- **Banco de Dados**: MySQL ou SQLite (configurável via `.env`)
-- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)
+- **Servidor Web**: Apache ou Nginx  
+- **PHP**: Versão 7.4 ou superior  
+- **Composer**: Para gerenciamento de dependências  
+- **Banco de Dados**: MySQL ou SQLite  
+- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)  
 
 ## Instalação
 
 1. Clone o repositório do projeto:
-
    ```sh
    git clone https://github.com/seu-repositorio/jogo-da-forca.git
    cd jogo-da-forca
    ```
-
 2. Instale as dependências utilizando o Composer:
-
    ```sh
    composer install
    ```
-
-3. Configure o ambiente:
-
-   - Renomeie o arquivo `.env.example` para `.env`
-   - Edite o `.env` e configure os parâmetros necessários, incluindo conexão com o banco de dados e porta do servidor WebSocket.
-
+3. Configure o ambiente no arquivo de configuração PHP.
 4. Execute as migrações do banco de dados:
-
    ```sh
    php core/migrate.php
    ```
@@ -57,17 +46,17 @@ O projeto segue um padrão de namespaces para organização do código:
 }
 ```
 
-As principais pastas do projeto são:
+### Principais Diretórios:
 
-- `models/` - Contém as classes do modelo de dados, como jogadores, partidas e palavras
-- `websocket/` - Implementação dos WebSockets, incluindo gerenciadores de conexão
-- `core/` - Componentes essenciais do sistema, como configuração e gerenciamento de banco de dados
-- `tools/` - Utilitários e funções auxiliares, como logs e validações
-- `public/` - Arquivos acessíveis via web, como HTML, CSS e JS
+- **models/** – Classes do modelo de dados (jogadores, partidas e palavras)
+- **websocket/** – Implementação dos WebSockets e gerenciamento de conexões
+- **core/** – Componentes essenciais, como configuração e banco de dados
+- **tools/** – Funções auxiliares, como logs e validações
+- **public/** – Arquivos acessíveis via web (HTML, CSS e JS)
 
 ## Dependências
 
-O projeto usa as seguintes bibliotecas:
+O projeto utiliza as seguintes bibliotecas:
 
 ```json
 "require": {
@@ -77,15 +66,13 @@ O projeto usa as seguintes bibliotecas:
 }
 ```
 
-## Rodando o Front-End
+## Executando o Front-End
 
-### Passos para rodar o Front-End:
-
-1. Acesse a pasta do projeto front-end:
+1. Acesse a pasta do front-end:
    ```sh
    cd frontend
    ```
-2. Instale as dependências necessárias:
+2. Instale as dependências:
    ```sh
    npm install
    ```
@@ -94,79 +81,88 @@ O projeto usa as seguintes bibliotecas:
    npm run dev
    ```
 
-## Rodando o Back-End
+## Executando o Back-End
 
-### Passos para rodar o Back-End:
-
-1. Instalar o XAMPP (caso não tenha):
-   - Baixe e instale o XAMPP.
-2. Iniciar o MySQL e Apache:
-   - Abra o XAMPP e inicie os serviços do MySQL e Apache.
-3. Configurar o PHP no sistema:
-   - Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.
-4. Clonar o repositório:
+1. Instale o XAMPP (caso necessário).
+2. Inicie os serviços do MySQL e Apache no XAMPP.
+3. Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.
+4. Clone o repositório:
    ```sh
    git clone https://github.com/seu-repositorio/jogo-da-forca.git
    ```
-5. Rodar o servidor PHP:
+5. Inicie o servidor PHP:
    ```sh
    php -S localhost:4000 index.php
    ```
 
 ## Testando o WebSocket
 
-### Passos para testar o WebSocket:
-
-1. Baixe e instale o Composer.
-2. Navegue até a pasta onde o arquivo `WSserver.php` está localizado.
-3. Execute o seguinte comando para iniciar o servidor WebSocket:
+1. Navegue até a pasta onde o arquivo `WSserver.php` está localizado.
+2. Execute o seguinte comando para iniciar o servidor WebSocket:
    ```sh
    php WSserver.php
    ```
-4. Acesse o diretório `/test` e abra os arquivos de teste.
-5. Teste a troca de mensagens entre participantes e a comunicação entre salas.
-
-Se houver erros de dependências, execute:
-
-```sh
-rm -rf vendor composer.lock
-composer install
-```
+3. Acesse o diretório `/test` e abra os arquivos de teste.
+4. Teste a troca de mensagens entre participantes e a comunicação entre salas.
+5. Se houver erros de dependências, execute:
+   ```sh
+   rm -rf vendor composer.lock
+   composer install
+   ```
 
 ## Regras de Pontuação
 
-### Desafiador
+### **Desafiador**
 
-- **150 pontos iniciais**
-- Palavras com mais de 4 letras repetidas: **-30 pontos**
-- Palavras com 4 ou mais letras: **-50 pontos**
-- Palavras entre 5 a 7 letras: **+10 pontos**
-- Palavras entre 8 a 11 letras: **+30 pontos**
-- Palavras com mais de 12 letras: **+50 pontos**
-- Palavras com acentuação: **+20 pontos**
-- Palavras com espaços: **+10 pontos por espaço**
-- A cada dica dada: **-10 pontos**
-- A cada minuto de atraso: **-10 pontos**
+- 150 pontos iniciais  
+- Palavras com mais de 4 letras repetidas: **-30 pontos**  
+- Palavras com 4 ou mais letras: **-50 pontos**  
+- Palavras entre 5 a 7 letras: **+10 pontos**  
+- Palavras entre 8 a 11 letras: **+30 pontos**  
+- Palavras com mais de 12 letras: **+50 pontos**  
+- Palavras com acentuação: **+20 pontos**  
+- Palavras com espaços: **+10 pontos por espaço**  
+- A cada dica dada: **-10 pontos**  
+- A cada minuto de atraso: **-10 pontos**  
 
-### Adivinhador
+### **Adivinhador**
 
-- **110 pontos iniciais**
-- Acerto de letra: **+10 pontos**
-- Acerto de palavra (com espaços): **+30 pontos**
-- Dica dada: **-10 pontos**
-- Acerto sem dica: **+10 pontos**
+- 110 pontos iniciais  
+- Acerto de letra: **+10 pontos**  
+- Acerto de palavra (com espaços): **+30 pontos**  
+- Dica dada: **-10 pontos**  
+- Acerto sem dica: **+10 pontos**  
 
 ## Abstração do WebSocket para o Front-End
 
 O WebSocket será iniciado pelo back-end ao receber a primeira requisição e verificará se a porta 8000 já está em uso antes de tentar iniciar novamente. O objetivo é que o back-end gerencie todo o servidor WebSocket, enquanto o front-end apenas faz as requisições necessárias.
 
-Além disso, será implementada uma lógica de **recarga de estado** para quando o servidor WebSocket cair. O sistema verificará a tabela `played` no banco de dados e, caso haja registros, iniciará a restauração dos dados. O WebSocket enviará um gatilho `{type: reconnect}` para que o front-end envie uma nova requisição automaticamente, sem interromper a experiência do usuário.
+Além disso, será implementada uma lógica de recarga de estado para quando o servidor WebSocket cair. O sistema verificará a tabela `played` no banco de dados e, caso haja registros, iniciará a restauração dos dados. O WebSocket enviará um gatilho `{type: reconnect}` para que o front-end envie uma nova requisição automaticamente, sem interromper a experiência do usuário.
 
 ## Contribuição
 
-Se deseja contribuir, faça um fork do repositório, crie uma nova branch e envie um pull request com suas melhorias.
+Se deseja contribuir, siga os passos abaixo:
+
+1. Faça um **fork** do repositório.
+2. Crie uma **nova branch** com um nome descritivo:
+   ```sh
+   git checkout -b feature-nova-funcionalidade
+   ```
+3. Faça suas alterações e adicione os arquivos modificados:
+   ```sh
+   git add .
+   ```
+4. Realize um commit seguindo um padrão de mensagens claras:
+   ```sh
+   git commit -m "feat: Adicionada nova funcionalidade X"
+   ```
+5. Envie suas alterações para o seu repositório forkado:
+   ```sh
+   git push origin feature-nova-funcionalidade
+   ```
+6. Abra um **Pull Request** no repositório original e aguarde a revisão.
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a **MIT License**.
 
