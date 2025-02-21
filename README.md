@@ -1,116 +1,172 @@
+# Documentação do Projeto - Jogo da Forca
+
+## Visão Geral
+
+Este projeto é um site de jogo da forca desenvolvido em PHP. Ele foi projetado para ser executado no Windows, mas também pode rodar em distribuições Linux. O sistema utiliza WebSockets para interação em tempo real, aproveitando as bibliotecas fornecidas pelo Composer.
+
+O jogo da forca permite que os jogadores se conectem em tempo real para tentar adivinhar palavras. Ele possui um sistema de pontuação, histórico de partidas e suporte a múltiplos jogadores em uma mesma sessão.
+
+## Requisitos do Sistema
+
+- **Servidor Web**: Apache ou Nginx
+- **PHP**: Versão 7.4 ou superior
+- **Composer**: Para gerenciamento de dependências
+- **Banco de Dados**: MySQL ou SQLite (configurável via `.env`)
+- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)
+
+## Instalação
+
+1. Clone o repositório do projeto:
+
+   ```sh
+   git clone https://github.com/seu-repositorio/jogo-da-forca.git
+   cd jogo-da-forca
+   ```
+
+2. Instale as dependências utilizando o Composer:
+
+   ```sh
+   composer install
+   ```
+
+3. Configure o ambiente:
+
+   - Renomeie o arquivo `.env.example` para `.env`
+   - Edite o `.env` e configure os parâmetros necessários, incluindo conexão com o banco de dados e porta do servidor WebSocket.
+
+4. Execute as migrações do banco de dados:
+
+   ```sh
+   php core/migrate.php
+   ```
+
+## Estrutura do Projeto
+
+O projeto segue um padrão de namespaces para organização do código:
+
+```json
+{
+  "autoload": {
+    "psr-4": {
+      "models\\": "models/",
+      "Websocket\\": "websocket/",
+      "core\\": "core/",
+      "tools\\": "tools/"
+    }
+  }
+}
+```
+
+As principais pastas do projeto são:
+
+- `models/` - Contém as classes do modelo de dados, como jogadores, partidas e palavras
+- `websocket/` - Implementação dos WebSockets, incluindo gerenciadores de conexão
+- `core/` - Componentes essenciais do sistema, como configuração e gerenciamento de banco de dados
+- `tools/` - Utilitários e funções auxiliares, como logs e validações
+- `public/` - Arquivos acessíveis via web, como HTML, CSS e JS
+
+## Dependências
+
+O projeto usa as seguintes bibliotecas:
+
+```json
+"require": {
+  "cboden/ratchet": "^0.4.4",
+  "react/socket": "^1.16",
+  "react/event-loop": "^1.5"
+}
+```
+
 ## Rodando o Front-End
 
 ### Passos para rodar o Front-End:
 
-1. **Acesse a pasta do projeto front-end**:
-   - Navegue até a pasta `frontend` no seu terminal:
-     ```bash
-     cd frontend
-     ```
-
-2. **Instale as dependências necessárias**:
-   - Execute o comando abaixo para instalar todas as dependências do projeto:
-     ```bash
-     npm install
-     ```
-
-3. **Execute o front-end localmente**:
-   - Após a instalação das dependências, execute o comando abaixo para rodar o front-end:
-     ```bash
-     npm run dev
-     ```
+1. Acesse a pasta do projeto front-end:
+   ```sh
+   cd frontend
+   ```
+2. Instale as dependências necessárias:
+   ```sh
+   npm install
+   ```
+3. Execute o front-end localmente:
+   ```sh
+   npm run dev
+   ```
 
 ## Rodando o Back-End
 
 ### Passos para rodar o Back-End:
 
-1. **Instalar o XAMPP**:
-   - Se não tiver o XAMPP, baixe e instale [XAMPP](https://www.apachefriends.org/pt_br/index.html).
-
-2. **Iniciar o MySQL e Apache**:
+1. Instalar o XAMPP (caso não tenha):
+   - Baixe e instale o XAMPP.
+2. Iniciar o MySQL e Apache:
    - Abra o XAMPP e inicie os serviços do MySQL e Apache.
-
-3. **Configurar o PHP**:
-   - Vá para "Editar variáveis de ambiente do sistema" e adicione o caminho do PHP ao PATH. Se o XAMPP foi instalado na pasta padrão, adicione:
-     ```plaintext
-     C:\xampp\php
-     ```
-
-4. **Clonar o repositório**:
-   - Clone o repositório e acesse a pasta do back-end.
-
-5. **Rodar o servidor PHP**:
-   - Execute o seguinte comando na pasta do back-end:
-     ```bash
-     php -S localhost:4000 index.php
-     ```
+3. Configurar o PHP no sistema:
+   - Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.
+4. Clonar o repositório:
+   ```sh
+   git clone https://github.com/seu-repositorio/jogo-da-forca.git
+   ```
+5. Rodar o servidor PHP:
+   ```sh
+   php -S localhost:4000 index.php
+   ```
 
 ## Testando o WebSocket
 
 ### Passos para testar o WebSocket:
 
-1. **Baixe o Composer**:
-   - Acesse o site oficial do [Composer](https://getcomposer.org/) e baixe o instalador para o seu sistema operacional.
-   - Após o download, siga as instruções de instalação para garantir que o Composer esteja corretamente configurado no seu ambiente.
-
-2. **Abrir o terminal no diretório `/Backend`**:
-   - Navegue até a pasta onde o arquivo `WSserver.php` está localizado.
-   - Execute o seguinte comando para iniciar o servidor WebSocket:
-     ```bash
-     php WSserver.php
-     ```
-
-3. **Acessar o diretório `/test`**:
-   - Vá até a pasta `/test` dentro do seu projeto.
-   - Abra os arquivos de teste, por exemplo, `testeWS1.html`, `testeWS2.html`, etc.
-
-4. **Testando as mensagens entre diferentes salas**:
-   - Ao abrir dois ou mais arquivos de teste em diferentes abas do navegador, simule a interação entre diferentes salas.
-   - Teste se as mensagens enviadas em uma sala chegam corretamente apenas aos participantes daquela sala e se não há vazamento de mensagens entre salas.
-
-5. **Verificação**:
-   - Envie uma mensagem em uma das salas e observe se a outra sala não recebe a mensagem.
-   - Teste a troca de mensagens entre participantes da mesma sala e se a funcionalidade de comunicação entre os usuários está funcionando como esperado.
-
-> **Observação**: Caso não funcione e comece a dar muitos erros, pode ser porque as dependências não estão devidamente instaladas no seu PC. Nesse caso, apague as pastas `/vendor` e o arquivo `/composer.lock`, deixando apenas o `composer.json`. Em seguida, abra o terminal na pasta do back-end e execute o seguinte comando para reinstalar as dependências:
-   ```bash
-   composer install
+1. Baixe e instale o Composer.
+2. Navegue até a pasta onde o arquivo `WSserver.php` está localizado.
+3. Execute o seguinte comando para iniciar o servidor WebSocket:
+   ```sh
+   php WSserver.php
    ```
----
+4. Acesse o diretório `/test` e abra os arquivos de teste.
+5. Teste a troca de mensagens entre participantes e a comunicação entre salas.
+
+Se houver erros de dependências, execute:
+
+```sh
+rm -rf vendor composer.lock
+composer install
+```
 
 ## Regras de Pontuação
 
-### Desafiador - Regras de Pontuação
+### Desafiador
 
-- **150 pontos iniciais**:
-  - **Palavras com mais de 4 letras repetidas**: -30 pontos
-  - **Palavras com 4 ou mais letras**: -50 pontos
-  - **Palavras entre 5 a 7 letras**: +10 pontos
-  - **Palavras entre 8 a 11 letras**: +30 pontos
-  - **Palavras com mais de 12 letras**: +50 pontos
-  - **Palavras com acentuação**: +20 pontos
-  - **Palavras com espaços**: +10 pontos por espaço
-  - **A cada dica dada**: -10 pontos
-  - **A cada minuto de atraso para o acerto**: -10 pontos
+- **150 pontos iniciais**
+- Palavras com mais de 4 letras repetidas: **-30 pontos**
+- Palavras com 4 ou mais letras: **-50 pontos**
+- Palavras entre 5 a 7 letras: **+10 pontos**
+- Palavras entre 8 a 11 letras: **+30 pontos**
+- Palavras com mais de 12 letras: **+50 pontos**
+- Palavras com acentuação: **+20 pontos**
+- Palavras com espaços: **+10 pontos por espaço**
+- A cada dica dada: **-10 pontos**
+- A cada minuto de atraso: **-10 pontos**
 
-### Adivinhador - Regras de Pontuação
+### Adivinhador
 
-- **110 pontos iniciais**:
-  - **Acerto de letra**: +10 pontos
-  - **Acerto de palavra (com espaços)**: +30 pontos
-  - **Dica dada**: -10 pontos
-  - **Acerto sem dica**: +10 pontos
+- **110 pontos iniciais**
+- Acerto de letra: **+10 pontos**
+- Acerto de palavra (com espaços): **+30 pontos**
+- Dica dada: **-10 pontos**
+- Acerto sem dica: **+10 pontos**
 
-> Opa, professor, não sei se é isso, mas se for o que estou pensando, os dois Composer são coisas diferentes: o composer.json e o composer.lock. O composer.json contém as    dependências e as configurações do projeto, enquanto o composer.lock garante que as versões exatas das dependências sejam instaladas em diferentes máquinas. Quando você executa o comando composer install, o Composer usa o composer.lock para garantir que as versões das dependências sejam consistentes. Qual quer problema siga os passos que coloquei em "**Testando o WebSocket**"
->
-> Eu quero abstrair o WebSocket para o front-end. Já comecei a fazer isso iniciando o servidor WebSocket quando a primeira requisição for feita e depois ele vai verificar se a porta 8000 (a porta do WebSocket) está em uso. Se estiver, ele não tentará iniciar mais. A ideia é que quem vai tratar do servidor WebSocket será o back-end, então o front-end só vai precisar requisitar o servidor, e o resto o back-end cuida.
->
-> Matheus: Não era exatamente isto, porém se já esta funcionando sem problemas. Quais são minhas tarefas agora?!
+## Abstração do WebSocket para o Front-End
 
-> Só termine de implementar e estilizar as telas de jogo e de profile... e as faça interagir com o back
+O WebSocket será iniciado pelo back-end ao receber a primeira requisição e verificará se a porta 8000 já está em uso antes de tentar iniciar novamente. O objetivo é que o back-end gerencie todo o servidor WebSocket, enquanto o front-end apenas faz as requisições necessárias.
 
-> Há professor! Vou implementar im lógica de reload de estado para o WebSocket, isso vai ficionar da seguinte forma:
+Além disso, será implementada uma lógica de **recarga de estado** para quando o servidor WebSocket cair. O sistema verificará a tabela `played` no banco de dados e, caso haja registros, iniciará a restauração dos dados. O WebSocket enviará um gatilho `{type: reconnect}` para que o front-end envie uma nova requisição automaticamente, sem interromper a experiência do usuário.
 
-> 1. **Servidor caindo**
-      > - Toda vez que o servidor reiniciar, iniciar, ou até mesmo cair, ele vai executar um método para verificar a tabela "played" do banco. Caso houver algum registro lá, ele vai começar a restaurar dados. O WebSocket precisa que o cliente se conecte por si só, ou seja, eu não posso simplesmente associar um ID ao array $clients porque ele não vai ser válido para o WebSocket. Isso acontece porque o WebSocket precisa de uma solicitação HTTP para poder fazer isso. Então o que eu pensei: ao perceber que o servidor caiu, verificando a tabela, ele envia um gatilho para o front do tipo {type: reconnect} e o front envia a requisição, não atrapalhando o usuário.
+## Contribuição
+
+Se deseja contribuir, faça um fork do repositório, crie uma nova branch e envie um pull request com suas melhorias.
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
 
