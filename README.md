@@ -6,11 +6,11 @@ Este projeto é um site de jogo da forca desenvolvido em PHP, utilizando WebSock
 
 ## Requisitos do Sistema
 
-- **Servidor Web**: Apache ou Nginx  
-- **PHP**: Versão 7.4 ou superior  
-- **Composer**: Para gerenciamento de dependências  
-- **Banco de Dados**: MySQL ou SQLite  
-- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)  
+- **Servidor Web**: Apache ou Nginx
+- **PHP**: Versão 7.4 ou superior
+- **Composer**: Para gerenciamento de dependências
+- **Banco de Dados**: MySQL ou SQLite
+- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)
 
 ## Instalação
 
@@ -19,14 +19,13 @@ Este projeto é um site de jogo da forca desenvolvido em PHP, utilizando WebSock
    git clone https://github.com/seu-repositorio/jogo-da-forca.git
    cd jogo-da-forca
    ```
-2. Instale as dependências utilizando o Composer:
+2. Instale Composer no seguinte site:
+   ```sh
+   https://getcomposer.org/
+   ```
+3. Vá à pasta do Backend e instale as dependências utilizando o Composer:
    ```sh
    composer install
-   ```
-3. Configure o ambiente no arquivo de configuração PHP.
-4. Execute as migrações do banco de dados:
-   ```sh
-   php core/migrate.php
    ```
 
 ## Estrutura do Projeto
@@ -114,24 +113,24 @@ O projeto utiliza as seguintes bibliotecas:
 
 ### **Desafiador**
 
-- 150 pontos iniciais  
-- Palavras com mais de 4 letras repetidas: **-30 pontos**  
-- Palavras com 4 ou mais letras: **-50 pontos**  
-- Palavras entre 5 a 7 letras: **+10 pontos**  
-- Palavras entre 8 a 11 letras: **+30 pontos**  
-- Palavras com mais de 12 letras: **+50 pontos**  
-- Palavras com acentuação: **+20 pontos**  
-- Palavras com espaços: **+10 pontos por espaço**  
-- A cada dica dada: **-10 pontos**  
-- A cada minuto de atraso: **-10 pontos**  
+- 150 pontos iniciais
+- Palavras com mais de 4 letras repetidas: **-30 pontos**
+- Palavras com 4 ou mais letras: **-50 pontos**
+- Palavras entre 5 a 7 letras: **+10 pontos**
+- Palavras entre 8 a 11 letras: **+30 pontos**
+- Palavras com mais de 12 letras: **+50 pontos**
+- Palavras com acentuação: **+20 pontos**
+- Palavras com espaços: **+10 pontos por espaço**
+- A cada dica dada: **-10 pontos**
+- A cada minuto de atraso: **-10 pontos**
 
 ### **Adivinhador**
 
-- 110 pontos iniciais  
-- Acerto de letra: **+10 pontos**  
-- Acerto de palavra (com espaços): **+30 pontos**  
-- Dica dada: **-10 pontos**  
-- Acerto sem dica: **+10 pontos**  
+- 110 pontos iniciais
+- Acerto de letra: **+10 pontos**
+- Acerto de palavra (com espaços): **+30 pontos**
+- Dica dada: **-10 pontos**
+- Acerto sem dica: **+10 pontos**
 
 ## Abstração do WebSocket para o Front-End
 
@@ -165,4 +164,3 @@ Se deseja contribuir, siga os passos abaixo:
 ## Licença
 
 Este projeto está licenciado sob a **GNU License**.
-
