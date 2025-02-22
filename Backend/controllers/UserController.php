@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../tools/helpers.php';
+require_once __DIR__ . '/../core/JwtHandler.php';
 
 class UserController
 {
@@ -52,20 +53,18 @@ class UserController
         \tools\Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
     }
 
-    
+
     public function recoverPassword()
     {
-        $requiredParams = ['id' ,'oldPassword', 'newPassword', 'c_newPassword'];
+        $requiredParams = ['id', 'oldPassword', 'newPassword', 'c_newPassword'];
         $data = \tools\Utils::validateParams($_POST, $requiredParams);
 
         $password = $this->userModel->getPasswordbyId($data['id']);
 
-        if($password !== $data['oldPassword']) {
+        if ($password !== $data['oldPassword']) {
             \tools\Utils::errorResponse("Sua senha antiga não corresponde a senha inputada", 400);
             return;
         }
-
-
     }
 
     public function login()
@@ -79,9 +78,17 @@ class UserController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['PASSWORD'])) {
+
+            $token = \core\JwtHandler::generateToken([
+                'user_id' => $user['ID_U'],
+                'email' => $user['EMAIL'],
+                'nickname' => $user['NICKNAME'],
+            ]);
+
             session_start();
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
+            setcookie('token', $token, time() + 3600, '/', '', true, true);
 
             if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
                 setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
@@ -105,6 +112,7 @@ class UserController
 
         setcookie('user_id', '', time() - 3600, '/');
         setcookie('nickname', '', time() - 3600, '/');
+        setcookie('token', '', time() - 3600, '/');
 
         \tools\Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
     }

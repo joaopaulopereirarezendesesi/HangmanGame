@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../tools/helpers.php';
+require_once __DIR__ . '/../core/JwtHandler.php';
 
 class RoomController
 {
@@ -16,10 +17,26 @@ class RoomController
         $this->wsHandler = new \Websocket\WShandler();
     }
 
+    private function getUserIdFromToken()
+    {
+        $token = \tools\Utils::getToken();
+        if (!$token) {
+            \tools\Utils::errorResponse('Token não encontrado.', 401);
+            return null;
+        }
+
+        $decoded = \core\JwtHandler::validateToken($token);
+        if (!$decoded) return null;
+
+        return $decoded['user_id'];
+    }
+
     public function createRoom()
     {
-        $data = \tools\Utils::validateParams($_POST, ['id']);
+        $id_o = $this->getUserIdFromToken();
+        if (!$id_o) return;
 
+        $data = \tools\Utils::validateParams($_POST, ['id']);
         $id_o = $data['id'];
         $points = $_POST['points'] ?? 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
@@ -67,6 +84,9 @@ class RoomController
 
     public function joinRoom($roomId, $userId, $password = null)
     {
+        $JWT = $this->getUserIdFromToken();
+        if (!$JWT) return;
+
         $room = $this->roomModel->getRoomById($roomId);
 
         if (!$room) {
@@ -74,7 +94,7 @@ class RoomController
             return;
         }
 
-        if ($room['PRIVATE'] && $this->validateRoomPassword($room['PASSWORD'], $password)) {
+        if ($room['PRIVATE'] && !$this->validateRoomPassword($room['PASSWORD'], $password)) {
             \tools\Utils::errorResponse('Senha inválida.');
             return;
         }

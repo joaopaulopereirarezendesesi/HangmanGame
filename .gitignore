@@ -1,3 +1,4 @@
 Backend/vendor
 Backend/composer.lock
+Backend/.env
 LICENSE
