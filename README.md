@@ -13,7 +13,6 @@ Compatível com **Windows** e distribuições **Linux**.
 ✅ **Servidor Web**: Apache  
 ✅ **PHP**: Versão 7.4 ou superior  
 ✅ **React.js**
-
 ✅ **[Composer](https://getcomposer.org/)**: Gerenciador de dependências PHP  
 ✅ **Banco de Dados**: MySQL  
 ✅ **Extensões PHP Necessárias**: `sockets`, `mbstring`, `pdo`, `pdo_mysql`  
