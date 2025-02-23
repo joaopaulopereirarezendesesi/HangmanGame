@@ -13,6 +13,7 @@ Compatível com **Windows** e distribuições **Linux**.
 ✅ **Servidor Web**: Apache  
 ✅ **PHP**: Versão 7.4 ou superior  
 ✅ **React.js**
+
 ✅ **[Composer](https://getcomposer.org/)**: Gerenciador de dependências PHP  
 ✅ **Banco de Dados**: MySQL  
 ✅ **Extensões PHP Necessárias**: `sockets`, `mbstring`, `pdo`, `pdo_mysql`  
@@ -87,6 +88,7 @@ O projeto utiliza as seguintes bibliotecas:
    ```
 2️⃣ **Instale o [XAMPP](https://www.apachefriends.org/pt_br/index.html).**
 3️⃣ **Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.**
+
 4️⃣ **Configure o Apache (HTTP/HTTPS) no Windows:**
 
    ### 🔹 4.1 Habilitando OpenSSL:
