@@ -33,25 +33,28 @@ class UserController
     {
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
         $data = \tools\Utils::validateParams($_POST, $requiredParams);
-
+    
         if (!$this->validateEmail($data['email'])) {
             \tools\Utils::errorResponse("Formato de e-mail inválido", 400);
             return;
         }
-
+    
         if (!\tools\Utils::validatePassword($data['password'])) {
             \tools\Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
             return;
         }
-
+    
         if ($data['password'] !== $data['confirm_password']) {
             \tools\Utils::errorResponse("As senhas não coincidem", 400);
             return;
         }
-
+    
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
         \tools\Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
+    
+        $this->login($data['email'], $data['password']);
     }
+    
 
 
     public function recoverPassword()
@@ -67,34 +70,38 @@ class UserController
         }
     }
 
-    public function login()
+    public function login($email = null, $password = null)
     {
-        $requiredParams = ['email', 'password'];
-        $data = \tools\Utils::validateParams($_POST, $requiredParams);
-
-        $email = strtolower(trim($data['email']));
-        $password = $data['password'];
-
+        if ($email === null || $password === null) {
+            $requiredParams = ['email', 'password'];
+            $data = \tools\Utils::validateParams($_POST, $requiredParams);
+            $email = strtolower(trim($data['email']));
+            $password = $data['password'];
+        } else {
+            $email = strtolower(trim($email));
+        }
+    
         $user = $this->userModel->getUserByEmail($email);
-
+    
         if ($user && password_verify($password, $user['PASSWORD'])) {
-
+    
             $token = \core\JwtHandler::generateToken([
                 'user_id' => $user['ID_U'],
                 'email' => $user['EMAIL'],
                 'nickname' => $user['NICKNAME'],
+                'password' => $user['PASSWORD'],
             ]);
-
+    
             session_start();
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
             setcookie('token', $token, time() + 3600, '/', '', true, true);
-
+    
             if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
                 setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
                 setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
             }
-
+    
             \tools\Utils::jsonResponse([
                 'message' => 'Login bem-sucedido',
                 'user_id' => $user['ID_U']

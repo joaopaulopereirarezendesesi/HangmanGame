@@ -1,166 +1,251 @@
-# Documentação do Projeto - Jogo da Forca
+# 📜 Documentação do Projeto - Jogo da Forca
 
-## Visão Geral
+## 🎯 Visão Geral
 
-Este projeto é um site de jogo da forca desenvolvido em PHP, utilizando WebSockets para permitir a interação em tempo real entre múltiplos jogadores. Ele foi projetado para ser compatível tanto com Windows quanto com distribuições Linux. O jogo conta com um sistema de pontuação, histórico de partidas e suporte a múltiplos jogadores simultaneamente.
+Este projeto é um jogo da forca online, desenvolvido em **PHP**, utilizando **WebSockets** para possibilitar interatividade em tempo real entre múltiplos jogadores. O jogo conta com um **sistema de pontuação**, **histórico de partidas** e **suporte para vários jogadores simultaneamente**. 
 
-## Requisitos do Sistema
+Compatível com **Windows** e distribuições **Linux**.
 
-- **Servidor Web**: Apache ou Nginx
-- **PHP**: Versão 7.4 ou superior
-- **Composer**: Para gerenciamento de dependências
-- **Banco de Dados**: MySQL ou SQLite
-- **Extensões PHP**: `sockets`, `mbstring`, `pdo`, `pdo_mysql` (caso use MySQL)
+---
 
-## Instalação
+## 🖥️ Requisitos do Sistema
 
-1. Clone o repositório do projeto:
+✅ **Servidor Web**: Apache  
+✅ **PHP**: Versão 7.4 ou superior  
+✅ **React.js**
+✅ **[Composer](https://getcomposer.org/)**: Gerenciador de dependências PHP  
+✅ **Banco de Dados**: MySQL  
+✅ **Extensões PHP Necessárias**: `sockets`, `mbstring`, `pdo`, `pdo_mysql`  
+
+---
+
+## ⚙️ Instalação
+
+1️⃣ **Clone o repositório do projeto:**
    ```sh
-   git clone https://github.com/seu-repositorio/jogo-da-forca.git
+   git clone https://github.com/joaopaulopereirarezendesesi/HangmanGame
    cd jogo-da-forca
    ```
-2. Instale Composer no seguinte site:
-   ```sh
-   https://getcomposer.org/
-   ```
-3. Vá à pasta do Backend e instale as dependências utilizando o Composer:
+2️⃣ **Instale o Composer pelo site oficial:**  
+   🔗 [Baixar Composer](https://getcomposer.org/)
+
+3️⃣ **Acesse a pasta do backend e instale as dependências:**
    ```sh
    composer install
    ```
 
-## Estrutura do Projeto
+---
 
-O projeto segue um padrão de namespaces para organização do código:
+## 📂 Estrutura do Projeto
 
-```json
-{
-  "autoload": {
-    "psr-4": {
-      "models\\": "models/",
-      "Websocket\\": "websocket/",
-      "core\\": "core/",
-      "tools\\": "tools/"
-    }
-  }
-}
-```
+📁 **models/** – Classes do modelo de dados (jogadores, partidas e palavras)  
+📁 **websocket/** – Implementação dos WebSockets e gerenciamento de conexões  
+📁 **core/** – Componentes essenciais, como configuração e banco de dados  
+📁 **tools/** – Funções auxiliares, como logs e validações  
 
-### Principais Diretórios:
+---
 
-- **models/** – Classes do modelo de dados (jogadores, partidas e palavras)
-- **websocket/** – Implementação dos WebSockets e gerenciamento de conexões
-- **core/** – Componentes essenciais, como configuração e banco de dados
-- **tools/** – Funções auxiliares, como logs e validações
-- **public/** – Arquivos acessíveis via web (HTML, CSS e JS)
-
-## Dependências
+## 📦 Dependências
 
 O projeto utiliza as seguintes bibliotecas:
 
 ```json
 "require": {
-  "cboden/ratchet": "^0.4.4",
-  "react/socket": "^1.16",
-  "react/event-loop": "^1.5"
+   "cboden/ratchet": "v0.4.4",
+   "react/socket": "v1.16.0",
+   "react/event-loop": "v1.5.0",
+   "vlucas/phpdotenv": "v5.6.1",
+   "firebase/php-jwt": "v6.11.0",
+   "phpmailer/phpmailer": "v6.9.3"
 }
 ```
 
-## Executando o Front-End
+---
 
-1. Acesse a pasta do front-end:
+## 🚀 Executando o Frontend
+
+1️⃣ **Acesse a pasta do frontend:**
    ```sh
    cd frontend
    ```
-2. Instale as dependências:
+2️⃣ **Instale as dependências:**
    ```sh
    npm install
    ```
-3. Execute o front-end localmente:
+3️⃣ **Execute o frontend localmente:**
    ```sh
    npm run dev
    ```
 
-## Executando o Back-End
+---
 
-1. Instale o XAMPP (caso necessário).
-2. Inicie os serviços do MySQL e Apache no XAMPP.
-3. Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.
-4. Clone o repositório:
+## 🔧 Executando o Backend
+
+1️⃣ **Clone o repositório:**
    ```sh
-   git clone https://github.com/seu-repositorio/jogo-da-forca.git
+   git clone https://github.com/joaopaulopereirarezendesesi/HangmanGame
    ```
-5. Inicie o servidor PHP:
+2️⃣ **Instale o [XAMPP](https://www.apachefriends.org/pt_br/index.html).**
+3️⃣ **Adicione o caminho `C:\xampp\php` às variáveis de ambiente do sistema.**
+4️⃣ **Configure o Apache (HTTP/HTTPS) no Windows:**
+
+   ### 🔹 4.1 Habilitando OpenSSL:
+
+   1️⃣ **No XAMPP, clique no **config** do Apache e logo após clique em php.ini.**
+
+   2️⃣ **APERTE CTRL+F e digite "opemssl"**
+
+   3️⃣ **Descomente ";extension=openssl" Retirando o ; da frente**
+
+   4️⃣ **Caso o extension=php_openssl.dll esteja comentado, descomenti também**
+   
+   ### 🔹 4.2 Gerando certificado SSL:
+   
+   📂 **Vá até a pasta do XAMPP:**
    ```sh
-   php -S localhost:4000 index.php
+   C:\xampp
+   ```
+   📂 **Acesse a pasta `/apache`** e crie um arquivo **`v3.ext`** e garanta que não tenha `.txt` no final da seguinte forma:
+
+   1. No Gerenciador de Arquivos, vá até a barra superior e clique em Exibir.
+   2. No menu Exibir, marque a caixa de seleção Extensões de nomes de arquivo.
+
+   Isso permitirá que você veja e edite a extensão completa do arquivo, garantindo que ele seja **`salvo corretamente como`** **`v3.ext`** e **`não como`** **`v3.ext.txt`**.
+   
+   ✏️ **Adicione o seguinte conteúdo ao arquivo:**
+   ```ext
+   authorityKeyIdentifier=keyid,issuer
+   basicConstraints=CA:FALSE
+   keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+   subjectAltName = @alt_names
+   [alt_names]
+   DNS.1 = localhost
    ```
 
-## Testando o WebSocket
-
-1. Navegue até a pasta onde o arquivo `WSserver.php` está localizado.
-2. Execute o seguinte comando para iniciar o servidor WebSocket:
+   📝 **Edite o arquivo `makecert.bat` e adicione ao final da linha: `bin\openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 365`**
    ```sh
-   php WSserver.php
+   -sha256 -extfile v3.ext
    ```
-3. Acesse o diretório `/test` e abra os arquivos de teste.
-4. Teste a troca de mensagens entre participantes e a comunicação entre salas.
-5. Se houver erros de dependências, execute:
+
+   🖥️ **Gere o certificado executando:**
    ```sh
-   rm -rf vendor composer.lock
-   composer install
+   cd \xampp\apache
+   makecert
    ```
 
-## Regras de Pontuação
+   🔑 **Durante a configuração, insira:**
+   - **Senha:** Exemplo `123456`  
+   - **Country Name:** `BR`  
+   - **Organization Name:** Nome da sua empresa  
+   - **Common Name:** `localhost`  
 
-### **Desafiador**
+   ✅ **Pronto! Seu certificado foi gerado.**
 
-- 150 pontos iniciais
+   ### 🔹 4.3 Instalando o certificado:
+   
+   📂 **Acesse:**
+   ```sh
+   C:\xampp\apache\conf\ssl.crt
+   ```
+   🛠️ **Importe o certificado, vá em "Procurar" e marque "Autoridade de Certificação Raiz Confiável".**
+   🔒 **Confirme a instalação.**
+
+   ### 🔹 4.4 Mudando a pasta root do Apache:
+   
+   Para alterar a pasta root (diretório padrão dos arquivos servidos pelo Apache), siga os passos abaixo:
+   
+   1️⃣ **Abra o arquivo de configuração do Apache**:
+   ```sh
+   C:\xampp\apache\conf\httpd.conf
+   ```
+   
+   2️⃣ **Localize a linha:**
+   ```apache
+   DocumentRoot "C:/xampp/htdocs"
+   <Directory "C:/xampp/htdocs">
+   ```
+   
+   3️⃣ **Altere o caminho para a pasta de backend do projeto `Hangmangame`**, por exemplo:
+   ```apache
+   DocumentRoot "C:/Users/user/Documents/HangmanGame/Backend"
+   <Directory "C:/Users/user/Documents/HangmanGame/Backend">
+   ```
+
+   4️⃣ **Abra o arquivo de configuração de ssl do Apache**: 
+   ```sh
+   C:\xampp\apache\conf\extra\httpd-ssl.conf
+   ```
+
+   5️⃣ **Localize a linha:**
+   ```apache
+   DocumentRoot "C:\xampp\htdocs"
+   ```
+
+   6️⃣ **Altere o caminho para a pasta de backend do projeto `Hangmangame`**, por exemplo:
+   ```apache
+   DocumentRoot "C:/Users/user/Documents/HangmanGame/Backend"
+   <Directory "C:/Users/user/Documents/HangmanGame/Backend">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+   </Directory>
+   ```
+
+   7️⃣ **Salve o arquivo e reinicie o Apache no XAMPP** para que as alterações tenham efeito.
+   
+   ✅ Agora, o Apache servirá os arquivos a partir da nova pasta definida.
+
+5️⃣ **Crie um .env na pasta de Backend. Modelo a ser seguido:**
+
+   ```.env
+   DB_HOST=
+   DB_NAME=
+   DB_USER=root
+   DB_PASS=
+   JWT_SECRET=
+   ```
+
+6️⃣ **Inicie os serviços do MySQL e Apache no XAMPP.**
+
+7️⃣ **Abra o phpmyadmin ou o MySQL no terminal, crie um banco de dados e importe o banco de testes disponivel no /DB do projeto**
+
+---
+
+## 🏆 Regras de Pontuação
+
+### 🎭 **Desafiador**
+
+⭐ **150 pontos iniciais**
+
+❌ Penalizações:
 - Palavras com mais de 4 letras repetidas: **-30 pontos**
 - Palavras com 4 ou mais letras: **-50 pontos**
+
+🎁 Bônus:
 - Palavras entre 5 a 7 letras: **+10 pontos**
 - Palavras entre 8 a 11 letras: **+30 pontos**
 - Palavras com mais de 12 letras: **+50 pontos**
 - Palavras com acentuação: **+20 pontos**
 - Palavras com espaços: **+10 pontos por espaço**
-- A cada dica dada: **-10 pontos**
-- A cada minuto de atraso: **-10 pontos**
 
-### **Adivinhador**
+📉 Penalidades adicionais:
+- Cada dica usada: **-10 pontos**
+- Cada minuto de atraso: **-10 pontos**
 
-- 110 pontos iniciais
-- Acerto de letra: **+10 pontos**
-- Acerto de palavra (com espaços): **+30 pontos**
-- Dica dada: **-10 pontos**
+### 🔍 **Adivinhador**
+
+⭐ **110 pontos iniciais**
+
+✅ Acertos:
+- Letra correta: **+10 pontos**
+- Palavra correta (com espaços): **+30 pontos**
 - Acerto sem dica: **+10 pontos**
 
-## Abstração do WebSocket para o Front-End
+❌ Penalidade:
+- Cada dica utilizada: **-10 pontos**
 
-O WebSocket será iniciado pelo back-end ao receber a primeira requisição e verificará se a porta 8000 já está em uso antes de tentar iniciar novamente. O objetivo é que o back-end gerencie todo o servidor WebSocket, enquanto o front-end apenas faz as requisições necessárias.
+---
 
-Além disso, será implementada uma lógica de recarga de estado para quando o servidor WebSocket cair. O sistema verificará a tabela `played` no banco de dados e, caso haja registros, iniciará a restauração dos dados. O WebSocket enviará um gatilho `{type: reconnect}` para que o front-end envie uma nova requisição automaticamente, sem interromper a experiência do usuário.
+## 📜 Licença
 
-## Contribuição
-
-Se deseja contribuir, siga os passos abaixo:
-
-1. Faça um **fork** do repositório.
-2. Crie uma **nova branch** com um nome descritivo:
-   ```sh
-   git checkout -b feature-nova-funcionalidade
-   ```
-3. Faça suas alterações e adicione os arquivos modificados:
-   ```sh
-   git add .
-   ```
-4. Realize um commit seguindo um padrão de mensagens claras:
-   ```sh
-   git commit -m "feat: Adicionada nova funcionalidade X"
-   ```
-5. Envie suas alterações para o seu repositório forkado:
-   ```sh
-   git push origin feature-nova-funcionalidade
-   ```
-6. Abra um **Pull Request** no repositório original e aguarde a revisão.
-
-## Licença
-
-Este projeto está licenciado sob a **GNU License**.
+🔖 Este projeto está licenciado sob a **GNU License**.
