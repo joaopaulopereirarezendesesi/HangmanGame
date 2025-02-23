@@ -218,7 +218,7 @@ O projeto utiliza as seguintes bibliotecas:
    composer install
    ```
 
-✅**Backend em funcionamente**
+✅**Backend em funcionamento**
 
 ---
 
