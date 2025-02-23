@@ -185,11 +185,6 @@ O projeto utiliza as seguintes bibliotecas:
    6️⃣ **Altere o caminho para a pasta de backend do projeto `Hangmangame`**, por exemplo:
    ```apache
    DocumentRoot "C:/Users/user/Documents/HangmanGame/Backend"
-   <Directory "C:/Users/user/Documents/HangmanGame/Backend">
-    Options Indexes FollowSymLinks
-    AllowOverride All
-    Require all granted
-   </Directory>
    ```
 
    7️⃣ **Salve o arquivo e reinicie o Apache no XAMPP** para que as alterações tenham efeito.
