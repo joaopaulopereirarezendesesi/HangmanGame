@@ -211,9 +211,9 @@ O projeto utiliza as seguintes bibliotecas:
 
 8️⃣ **Instalando dependências**
 
-   **Instale [Composer](https://getcomposer.org/)**
+   1️⃣ **Instale [Composer](https://getcomposer.org/)**
 
-   **Abra o CMD ou PowerShell na pasta /Backend e execute o seguinte comando**
+   2️⃣**Abra o CMD ou PowerShell na pasta /Backend e execute o seguinte comando**
    ```sh
    composer install
    ```
