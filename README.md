@@ -200,7 +200,7 @@ O projeto utiliza as seguintes bibliotecas:
    ```.env
    DB_HOST=
    DB_NAME=
-   DB_USER=root
+   DB_USER=
    DB_PASS=
    JWT_SECRET=
    ```
@@ -208,6 +208,17 @@ O projeto utiliza as seguintes bibliotecas:
 6️⃣ **Inicie os serviços do MySQL e Apache no XAMPP.**
 
 7️⃣ **Abra o phpmyadmin ou o MySQL no terminal, crie um banco de dados e importe o banco de testes disponivel no /DB do projeto**
+
+8️⃣ **Instalando dependências**
+
+   **Instale [Composer](https://getcomposer.org/)**
+
+   **Abra o CMD ou PowerShell na pasta /Backend e execute o seguinte comando**
+   ```sh
+   composer install
+   ```
+
+✅**Backend em funcionamente**
 
 ---
 
