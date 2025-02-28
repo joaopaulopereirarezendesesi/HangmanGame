@@ -2,64 +2,78 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebSocket Test - User 3</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #messages { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; margin-bottom: 10px; }
-        input, button { padding: 10px; font-size: 16px; margin: 5px 0; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      #messages {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 200px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+      }
+      input,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>WebSocket Test - User 3</h1>
     <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type your message here">
+    <input type="text" id="messageInput" placeholder="Type your message here" />
     <button id="sendButton">Send</button>
 
     <script>
-        const ws = new WebSocket('ws://localhost:8000'); // WebSocket server URL
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
+      const ws = new WebSocket("ws://localhost:8000"); // WebSocket server URL
+      const messagesDiv = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
 
-        ws.onopen = () => {
-            appendMessage("Connected to WebSocket server.");
-            
-            // Send a message when the connection is established
-            const message = {
-                type: 'joinRoom',
-                room: 1
-            };
-            ws.send(JSON.stringify(message)); // Join room 1 as User 1
+      ws.onopen = () => {
+        appendMessage("Connected to WebSocket server.");
+
+        // Send a message when the connection is established
+        const message = {
+          type: "joinRoom",
+          room: 2,
         };
+        ws.send(JSON.stringify(message)); // Join room 1 as User 1
+      };
 
-        ws.onmessage = (event) => {
-            appendMessage("Received: " + event.data);
-        };
+      ws.onmessage = (event) => {
+        appendMessage("Received: " + event.data);
+      };
 
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            if (message) {
-                const chatMessage = {
-                    type: 'chat',
-                    room: 1,
-                    user: 'User3',
-                    message: message
-                };
-                ws.send(JSON.stringify(chatMessage)); // Send message to room 1 as user1
-                appendMessage("Sent: " + message);
-                messageInput.value = '';
-            }
-        });
-
-        function appendMessage(message) {
-            const p = document.createElement('p');
-            p.textContent = message;
-            messagesDiv.appendChild(p);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+      sendButton.addEventListener("click", () => {
+        const message = messageInput.value;
+        if (message) {
+          const chatMessage = {
+            type: "chat",
+            room: 2,
+            user: "User3",
+            message: message,
+          };
+          ws.send(JSON.stringify(chatMessage)); // Send message to room 1 as user1
+          appendMessage("Sent: " + message);
+          messageInput.value = "";
         }
+      });
+
+      function appendMessage(message) {
+        const p = document.createElement("p");
+        p.textContent = message;
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+      }
     </script>
-</body>
+  </body>
 </html>

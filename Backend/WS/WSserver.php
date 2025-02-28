@@ -1,12 +1,12 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';  
-require_once __DIR__ . '/tools/helpers.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/tools/Utils.php';
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
-use Websocket\WShandler;
+use controller\WebSocketController;
 
 use React\Socket\Server as ReactServer;
 use React\EventLoop\Factory as EventLoopFactory;
@@ -18,13 +18,13 @@ $socket = new ReactServer('0.0.0.0:8000', $loop);
 $server = new IoServer(
     new HttpServer(
         new WsServer(
-            new WShandler()  
+            new WebSocketController()
         )
     ),
-    $socket,  
-    $loop    
+    $socket,
+    $loop
 );
 
-tools\Utils::displayMessage("Arquivos startados, servidor WebSocket iniciado!\n\n", 'success');
+tools\Utils::displayMessage("Arquivos startados, servidor WebSocket iniciado!\n", 'success');
 
 $server->run();

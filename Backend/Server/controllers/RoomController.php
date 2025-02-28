@@ -8,13 +8,11 @@ class RoomController
 {
     private $roomModel;
     private $playedModel;
-    private $wsHandler;
 
     public function __construct()
     {
         $this->roomModel = new \models\RoomModel();
         $this->playedModel = new \models\PlayedModel();
-        $this->wsHandler = new \Websocket\WShandler();
     }
 
     private function getUserIdFromToken()
@@ -105,7 +103,6 @@ class RoomController
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
-        $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'joined');
 
         \tools\Utils::jsonResponse(['message' => 'Entrou na sala com sucesso.']);
     }
@@ -120,7 +117,6 @@ class RoomController
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
-        $this->wsHandler->broadcastRoomUpdate($roomId, $userId, 'left');
 
         \tools\Utils::jsonResponse(['message' => 'Jogador removido com sucesso.']);
     }

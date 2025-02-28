@@ -21,7 +21,7 @@ class App
         array $allowedHeaders = ['Content-Type', 'Authorization']
     ): void {
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    
+
         if (in_array($origin, $allowedOrigins)) {
             header("Access-Control-Allow-Origin: $origin");
             header("Access-Control-Allow-Credentials: true");
@@ -29,16 +29,16 @@ class App
             header("HTTP/1.1 403 Forbidden");
             exit('Origem não permitida.');
         }
-    
+
         header("Access-Control-Allow-Methods: " . implode(', ', $allowedMethods));
         header("Access-Control-Allow-Headers: " . implode(', ', $allowedHeaders));
-    
+
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header("HTTP/1.1 204 No Content");
             exit();
         }
     }
-    
+
 
     private function validateConfig(): void
     {
@@ -78,13 +78,13 @@ class App
 }
 
 try {
-    $statusWS = tools\Utils::isPortInUse(8000);
+    // $statusWS = tools\Utils::isPortInUse(8000);
 
-    if (!$statusWS) {
-        $controlScript = __DIR__ . '/tools/WSserverControl.php';
-        $command = "php \"$controlScript\"";
-        pclose(popen($command, "r"));
-    }
+    // if (!$statusWS) {
+    //     $controlScript = __DIR__ . '/tools/WSserverControl.php';
+    //     $command = "php \"$controlScript\"";
+    //     pclose(popen($command, "r"));
+    // }
 
     new App();
 } catch (\Exception $e) {
