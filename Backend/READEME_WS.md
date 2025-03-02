@@ -42,7 +42,7 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 }
 ```
 
-### 3. `friendRequest`
+### 3. `login`
 **Realizar login automaticamente quando a conexão for estabelecida**
 ```json
 {
@@ -58,7 +58,7 @@ Ao conectar-se ao servidor WebSocket, o cliente automaticamente enviará a requi
 Se houver erros na mensagem enviada, o servidor responderá com um JSON contendo o tipo `error` e uma mensagem descritiva:
 ```json
 {
-  "type": "error",
-  "message": "Invalid message"
+  "type": "login",
+  "id_bd": 1
 }
 ```
