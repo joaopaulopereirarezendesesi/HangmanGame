@@ -47,6 +47,7 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 ```json
 {
   "type": "login",
+  "password": "123456",  
   "id_bd": 1
 }
 ```

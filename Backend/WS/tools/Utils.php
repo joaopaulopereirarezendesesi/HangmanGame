@@ -35,14 +35,14 @@ class Utils
     public static function displayMessage($message, $type = 'info')
     {
         $colors = [
-            'info' => "\033[34m",        // Azul
-            'success' => "\033[32m",     // Verde
-            'error' => "\033[31m",       // Vermelho
-            'warning' => "\033[33m",     // Amarelo
-            'player_join' => "\033[36m", // Ciano
+            'info' => "\033[34m",         // Azul
+            'success' => "\033[32m",      // Verde
+            'error' => "\033[31m",        // Vermelho
+            'warning' => "\033[33m",      // Amarelo
+            'player_join' => "\033[36m",  // Ciano
             'player_leave' => "\033[35m", // Magenta
-            'default' => "\033[37m",     // Branco
-            'reset' => "\033[0m"         // Reset
+            'default' => "\033[37m",      // Branco
+            'reset' => "\033[0m"          // Reset
         ];
 
         $color = $colors[$type] ?? $colors['default'];

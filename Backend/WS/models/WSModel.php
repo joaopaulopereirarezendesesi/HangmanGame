@@ -14,17 +14,7 @@ class WSModel
         $this->utils = new Utils(); 
     }
 
-    public function getAllRoomsAndUsers()
-    {
-        try {
-            $query = "SELECT ID_U, ID_R FROM played";
-            $roomsAndUsers = $this->utils->executeQuery($query, [], true);
 
-            return $roomsAndUsers;
-        } catch (Exception $e) {
-            throw new Exception("Erro ao restaurar usuários e salas: " . $e->getMessage());
-        }
-    }
 
     public function changeStatus($fromUser, bool $status)
     {
@@ -43,8 +33,6 @@ class WSModel
         }
     }
     
-    
-
     public function sendFriendRequest($fromUser, $toUser)
     {
         try {
@@ -61,4 +49,25 @@ class WSModel
             return false;
         }
     }
+
+    public function verifiedIdPassword($id)
+    {
+        try {
+            $query = "SELECT PASSWORD FROM users WHERE ID_U = :id";
+            $params = [':id' => $id];
+    
+            $result = $this->utils->executeQuery($query, $params);
+            
+            if ($result && isset($result[0]['PASSWORD'])) {
+                return $result[0]['PASSWORD'];
+            }
+    
+            return false; 
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+
 }
+

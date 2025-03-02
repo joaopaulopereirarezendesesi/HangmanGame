@@ -35,7 +35,10 @@ class WebSocketController implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         Utils::displayMessage("Novo cliente conectado: {$conn->resourceId}", 'player_join');
-        $this->clients[$conn->resourceId] = $conn;
+        $this->clients[$conn->resourceId] = [
+            "conn" => $conn,
+            "authenticated" => false
+        ];
     }
 
     public function onClose(ConnectionInterface $conn)
@@ -66,7 +69,7 @@ class WebSocketController implements MessageComponentInterface
 
         switch ($data->type) {
             case 'login':
-                $this->chatHandler->handle($from, $data->id_bd);
+                $this->chatHandler->handle($from, $data->id_bd, $data->password);
                 break;
 
             case 'chat':
