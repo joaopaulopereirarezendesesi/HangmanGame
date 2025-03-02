@@ -7,7 +7,7 @@ use Ratchet\ConnectionInterface;
 use models\WSModel;
 use tools\Utils;
 
-class RoomHandler
+class LoginHandler
 {
     private WebSocketController $wsController;
     private WSModel $WSModel;
