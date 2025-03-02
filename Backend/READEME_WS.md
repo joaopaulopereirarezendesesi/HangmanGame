@@ -51,7 +51,7 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
   "toUser": 2
 }
 ```
-Ao conectar-se ao servidor WebSocket, o cliente automaticamente enviará a requisição de login com o `id_bd` do usuário. O servidor processará essa requisição e marcará o usuário como online, além disso, isso serve para a lógica interna do WebSocket, para que o servidor consiga indentificar que é esse usuário para a aplicação.
+Ao conectar-se ao servidor WebSocket, o cliente automaticamente enviará a requisição de login com o `id_bd` do usuário. O servidor processará essa requisição e marcará o usuário como online no banco de dados, além disso, isso serve para a lógica interna do WebSocket, para que o servidor consiga indentificar que é esse usuário para a aplicação.
 
 ## Tratamento de Erros
 
