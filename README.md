@@ -102,7 +102,7 @@ O projeto utiliza as seguintes bibliotecas:
 
 ✅ **Backend pronto para uso!**
 
->EndPoints, padrões de requisição e funcionalidades documentadas em /Backend/README_BE.md
+>EndPoints, padrões de requisição e funcionalidades documentados em /Backend/README_BE.md
 
 ---
 
