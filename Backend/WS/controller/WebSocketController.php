@@ -7,25 +7,29 @@ use Ratchet\ConnectionInterface;
 use handler\ChatHandler;
 use handler\RoomHandler;
 use handler\FriendHandler;
-use handler\ReconnectHandler;
+//use handler\ReconnectHandler;
 use tools\Utils;
+use models\WSModel;
 
 class WebSocketController implements MessageComponentInterface
 {
     private ChatHandler $chatHandler;
     private RoomHandler $roomHandler;
     private FriendHandler $friendHandler;
-    private ReconnectHandler $reconnectHandler;
+    private WSModel $WSModel;
+    //private ReconnectHandler $reconnectHandler;
 
     public array $clients = [];
     public array $rooms = [];
+    public array $users = []; 
 
     public function __construct()
     {
         $this->chatHandler = new ChatHandler($this);
         $this->roomHandler = new RoomHandler($this);
         $this->friendHandler = new FriendHandler($this);
-        $this->reconnectHandler = new ReconnectHandler($this);
+        $this->WSModel = new WSModel();
+        //$this->reconnectHandler = new ReconnectHandler($this);
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -37,9 +41,13 @@ class WebSocketController implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         Utils::displayMessage("Cliente desconectado: {$conn->resourceId}", 'player_leave');
-        unset($this->clients[$conn->resourceId], $this->rooms[$conn->resourceId]);
+        unset($this->clients[$conn->resourceId], $this->rooms[$conn->resourceId], $this->users[$conn->resourceId]);
+        if (isset($this->users[$conn->resourceId])) {
+            $id_bd = $this->users[$conn->resourceId];
+            $this->WSModel->changeStatus($id_bd, false); 
+        }
     }
-
+    
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg);
@@ -57,6 +65,10 @@ class WebSocketController implements MessageComponentInterface
         }
 
         switch ($data->type) {
+            case 'login':
+                $this->chatHandler->handle($from, $data->id_bd);
+                break;
+
             case 'chat':
                 $this->chatHandler->handle($from, $data);
                 break;
@@ -65,12 +77,12 @@ class WebSocketController implements MessageComponentInterface
                 $this->roomHandler->handle($from, (string) $data->room);
                 break;
 
-            case 'reconnect':
-                $this->reconnectHandler->handle($from, $data);
-                break;
+            // case 'reconnect':
+            //     $this->reconnectHandler->handle($from, $data);
+            //     break;
 
             case 'friendRequest':
-                $this->friendHandler->handle($data->$from, $data->$data);
+                $this->friendHandler->handle($data->fromUser, $data->toUser);
                 break;
 
             default:

@@ -16,23 +16,32 @@ class FriendHandler
         $this->WSModel = new WSModel();
         $this->wsController = $wsController;
     }
+
     public function handle(string $fromUser, string $toUser)
     {
         Utils::displayMessage("Processando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
 
         $result = $this->WSModel->sendFriendRequest($fromUser, $toUser);
         $status = $result ? 'enviada' : 'já existe';
+        $toConnection = null;
+        foreach ($this->wsController->users as $user) {
+            if ($user['id_bd'] === $toUser) {
+                $toConnection = $user['connection'];
+                break;
+            }
+        }
 
-        foreach ($this->wsController->clients as $client) {
-            $client->send(json_encode([
+        if ($toConnection) {
+            $toConnection->send(json_encode([
                 'type' => 'friendRequest',
                 'fromUser' => $fromUser,
                 'toUser' => $toUser,
                 'status' => $status
             ]));
-        }
 
-        $message = $result ? "Solicitação enviada com sucesso" : "Solicitação já existe";
-        Utils::displayMessage($message, $result ? 'success' : 'error');
+            Utils::displayMessage("Solicitação enviada para {$toUser}", 'success');
+        } else {
+            Utils::displayMessage("Usuário {$toUser} não encontrado online", 'error');
+        }
     }
 }

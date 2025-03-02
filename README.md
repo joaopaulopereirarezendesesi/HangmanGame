@@ -92,7 +92,7 @@ O projeto utiliza as seguintes bibliotecas:
 
 8. **Configure o banco de dados:**
    - Inicie os serviços do MySQL e Apache no XAMPP.
-   - Crie um banco e importe o banco de testes disponível na pasta `/DB`.
+   - Crie um banco e importe o banco disponível na pasta `/DB`.
 
 9. **Instale as dependências do backend:**
    - Vá até a pasta Backend/Server e execute:
@@ -117,7 +117,7 @@ O projeto utiliza as seguintes bibliotecas:
    ```
 
    2. **Instale as dependências do WebSocket:**
-   -Vá até a pasta Backend/WS e execute:
+   - Vá até a pasta Backend/WS e execute:
    ```sh
    composer install
    ```

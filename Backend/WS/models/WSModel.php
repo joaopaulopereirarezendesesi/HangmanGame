@@ -26,6 +26,25 @@ class WSModel
         }
     }
 
+    public function changeStatus($fromUser, bool $status)
+    {
+        try {
+            $query = "UPDATE `users` SET `ONLINE` = :status WHERE `ID_U` = :fromUser;";
+            $params = [
+                ':fromUser' => $fromUser,
+                ':status' => $status
+            ];
+    
+            $this->utils->executeQuery($query, $params);
+    
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    
+
     public function sendFriendRequest($fromUser, $toUser)
     {
         try {
