@@ -54,6 +54,13 @@ class WebSocketController implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg);
+        $id = $from->resourceId;
+
+        if (!$this->clients[$id]['authenticated'] && $data->type !== 'login') {
+            Utils::displayMessage("Cliente não autenticado tentou enviar {$data->type}", 'error');
+            $from->send(json_encode(['error' => 'Autenticação necessária']));
+            return;
+        }
 
         if (!$data) {
             Utils::displayMessage("Dados inválidos recebidos: {$msg}", 'error');
