@@ -56,7 +56,7 @@ class WSModel
             $query = "SELECT PASSWORD FROM users WHERE ID_U = :id";
             $params = [':id' => $id];
     
-            $result = $this->utils->executeQuery($query, $params);
+            $result = $this->utils->executeQuery($query, $params, true);
             
             if ($result && isset($result[0]['PASSWORD'])) {
                 return $result[0]['PASSWORD'];

@@ -7,6 +7,7 @@ use Ratchet\ConnectionInterface;
 use handler\ChatHandler;
 use handler\RoomHandler;
 use handler\FriendHandler;
+use handler\LoginHandler;
 //use handler\ReconnectHandler;
 use tools\Utils;
 use models\WSModel;
@@ -16,6 +17,7 @@ class WebSocketController implements MessageComponentInterface
     private ChatHandler $chatHandler;
     private RoomHandler $roomHandler;
     private FriendHandler $friendHandler;
+    private LoginHandler $LoginHandler;
     private WSModel $WSModel;
     //private ReconnectHandler $reconnectHandler;
 
@@ -25,6 +27,7 @@ class WebSocketController implements MessageComponentInterface
 
     public function __construct()
     {
+        $this->LoginHandler = new LoginHandler($this);
         $this->chatHandler = new ChatHandler($this);
         $this->roomHandler = new RoomHandler($this);
         $this->friendHandler = new FriendHandler($this);
@@ -69,6 +72,7 @@ class WebSocketController implements MessageComponentInterface
         }
 
         if (!isset($data->type)) {
+            Utils::displayMessage($data, 'error');
             Utils::displayMessage("Dados incompletos recebidos", 'error');
             $from->send(json_encode(['error' => 'Tipo de mensagem não especificado']));
             return;
@@ -76,7 +80,7 @@ class WebSocketController implements MessageComponentInterface
 
         switch ($data->type) {
             case 'login':
-                $this->chatHandler->handle($from, $data->id_bd, $data->password);
+                $this->LoginHandler->handle($from, $data->id_bd, $data->password);
                 break;
 
             case 'chat':

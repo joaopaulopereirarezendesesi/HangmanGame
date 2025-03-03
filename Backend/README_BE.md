@@ -39,7 +39,8 @@ Esta API fornece funcionalidades para gerenciamento de usuários e salas, inclui
 ```json
 {
   "email": "usuario@email.com",
-  "password": "Senha@123"
+  "password": "Senha@123",
+  "remember": true
 }
 ```
 

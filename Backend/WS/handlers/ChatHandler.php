@@ -28,8 +28,15 @@ class ChatHandler
     private function sendToRoom(string $roomId, string $message, string $user, ConnectionInterface $from): void
     {
         Utils::displayMessage("Enviando mensagem para a sala {$roomId}: {$message}", 'info');
-
-        foreach ($this->wsController->clients as $resourceId => $client) {
+    
+        foreach ($this->wsController->clients as $resourceId => $clientData) {
+            if (!isset($clientData['conn']) || !($clientData['conn'] instanceof ConnectionInterface)) {
+                Utils::displayMessage("Erro: Cliente inválido detectado em clients[$resourceId].", 'error');
+                continue;
+            }
+    
+            $client = $clientData['conn']; 
+    
             if (($this->wsController->rooms[$resourceId] ?? null) === $roomId && $client !== $from) {
                 $client->send(json_encode([
                     'type' => 'chat',
@@ -40,4 +47,5 @@ class ChatHandler
             }
         }
     }
+    
 }

@@ -1,11 +1,9 @@
-<!-- Esse código foi feito usando ChatGPT! -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WebSocket Test - User 2</title>
+    <title>WebSocket Chat</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -27,52 +25,69 @@
     </style>
   </head>
   <body>
-    <h1>WebSocket Test - User 2</h1>
+    <h1>WebSocket Chat</h1>
     <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type your message here" />
-    <button id="sendButton">Send</button>
+    <input type="text" id="messageInput" placeholder="Digite sua mensagem" />
+    <button id="sendButton">Enviar</button>
 
     <script>
-      const ws = new WebSocket("ws://localhost:8000"); // WebSocket server URL
+      const ws = new WebSocket("ws://localhost:8000");
       const messagesDiv = document.getElementById("messages");
       const messageInput = document.getElementById("messageInput");
       const sendButton = document.getElementById("sendButton");
+      let roomJoined = false;
 
       ws.onopen = () => {
-        appendMessage("Connected to WebSocket server.");
+        appendMessage("Conectado ao servidor WebSocket.");
 
-        // Send a message when the connection is established
-        const message = {
-          type: "joinRoom",
-          room: 1,
-        };
-        ws.send(JSON.stringify(message)); // Join room 1 as User 2
+        // Enviar login ao conectar
+        ws.send(
+          JSON.stringify({
+            type: "login",
+            id_bd: 35,
+            password: "pass123",
+          })
+        );
       };
 
       ws.onmessage = (event) => {
-        appendMessage("Received: " + event.data);
+        const data = JSON.parse(event.data);
+        appendMessage(`Recebido: ${event.data}`);
+
+        if (data.type === "login" && data.success) {
+          appendMessage("Login bem-sucedido. Entrando na sala...");
+          joinRoom("1");
+        }
+
+        if (data.type === "joinRoom" && data.success) {
+          roomJoined = true;
+          appendMessage("Entrou na sala com sucesso!");
+        }
       };
+
+      function joinRoom(room) {
+        ws.send(JSON.stringify({ type: "joinRoom", room }));
+      }
 
       sendButton.addEventListener("click", () => {
         const message = messageInput.value;
-        if (message) {
-          const chatMessage = {
-            type: "chat",
-            room: 1,
-            user: "user2",
-            message: message,
-          };
-          ws.send(JSON.stringify(chatMessage)); // Send message to room 1 as user2
-          appendMessage("Sent: " + message);
+          ws.send(
+            JSON.stringify({
+              type: "chat",
+              room: 1,
+              user: "user2",
+              message: message
+            })
+          );
+          appendMessage("Enviado: " + message);
           messageInput.value = "";
-        }
       });
 
       function appendMessage(message) {
         const p = document.createElement("p");
         p.textContent = message;
         messagesDiv.appendChild(p);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
     </script>
   </body>

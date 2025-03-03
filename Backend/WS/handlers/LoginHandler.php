@@ -20,8 +20,9 @@ class LoginHandler
 
     public function handle(ConnectionInterface $conn, $id_bd, $password): void
     {
+  
         $passwordBD = $this->WSModel->verifiedIdPassword($id_bd);
-
+        
         if (!$passwordBD) {
             $conn->send(json_encode(['error' => "Usuário não encontrado"]));
             return;
@@ -37,6 +38,11 @@ class LoginHandler
         $this->WSModel->changeStatus($id_bd, true);
 
         Utils::displayMessage("Cliente {$conn->resourceId} fez login", 'player_join');
-        $conn->send(json_encode(['success' => "Fez login com sucesso"]));
+        $conn->send(json_encode(
+            [
+                'type' => 'login',
+                'success' => true
+            ]
+        ));
     }
 }

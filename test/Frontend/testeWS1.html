@@ -1,65 +1,94 @@
-<!-- Esse código foi feito usando ChatGPT! -->
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Test - User 1</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Chat</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #messages { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; margin-bottom: 10px; }
-        input, button { padding: 10px; font-size: 16px; margin: 5px 0; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      #messages {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 200px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+      }
+      input,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px 0;
+      }
     </style>
-</head>
-<body>
-    <h1>WebSocket Test - User 1</h1>
+  </head>
+  <body>
+    <h1>WebSocket Chat</h1>
     <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type your message here">
-    <button id="sendButton">Send</button>
+    <input type="text" id="messageInput" placeholder="Digite sua mensagem" />
+    <button id="sendButton">Enviar</button>
 
     <script>
-        const ws = new WebSocket('ws://localhost:8000'); // WebSocket server URL
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
+      const ws = new WebSocket("ws://localhost:8000");
+      const messagesDiv = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      let roomJoined = false;
 
-        ws.onopen = () => {
-            appendMessage("Connected to WebSocket server.");
-            
-            // Send a message when the connection is established
-            const message = {
-                type: 'joinRoom',
-                room: 1
-            };
-            ws.send(JSON.stringify(message)); // Join room 1 as User 1
-        };
+      ws.onopen = () => {
+        appendMessage("Conectado ao servidor WebSocket.");
 
-        ws.onmessage = (event) => {
-            appendMessage("Received: " + event.data);
-        };
+        // Enviar login ao conectar
+        ws.send(
+          JSON.stringify({
+            type: "login",
+            id_bd: 36,
+            password: "pass123",
+          })
+        );
+      };
 
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            if (message) {
-                const chatMessage = {
-                    type: 'chat',
-                    room: 1,
-                    user: 'user1',
-                    message: message
-                };
-                ws.send(JSON.stringify(chatMessage)); // Send message to room 1 as user1
-                appendMessage("Sent: " + message);
-                messageInput.value = '';
-            }
-        });
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        appendMessage(`Recebido: ${event.data}`);
 
-        function appendMessage(message) {
-            const p = document.createElement('p');
-            p.textContent = message;
-            messagesDiv.appendChild(p);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+        if (data.type === "login" && data.success) {
+          appendMessage("Login bem-sucedido. Entrando na sala...");
+          joinRoom("1");
         }
+
+        if (data.type === "joinRoom" && data.success) {
+          roomJoined = true;
+          appendMessage("Entrou na sala com sucesso!");
+        }
+      };
+
+      function joinRoom(room) {
+        ws.send(JSON.stringify({ type: "joinRoom", room }));
+      }
+
+      sendButton.addEventListener("click", () => {
+        const message = messageInput.value;
+          ws.send(
+            JSON.stringify({
+              type: "chat",
+              room: 1,
+              user: "user1",
+              message: message
+            })
+          );
+          appendMessage("Enviado: " + message);
+          messageInput.value = "";
+      });
+
+      function appendMessage(message) {
+        const p = document.createElement("p");
+        p.textContent = message;
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
     </script>
-</body>
+  </body>
 </html>

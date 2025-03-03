@@ -19,7 +19,9 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 ```json
 {
   "type": "chat",
-  "message": "Olá, mundo!"
+  "room": 1,
+  "user": "user1",
+  "message": "Fala Cambada"
 }
 ```
 
@@ -28,7 +30,7 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 ```json
 {
   "type": "joinRoom",
-  "room": "sala1"
+  "room": 1
 }
 ```
 
