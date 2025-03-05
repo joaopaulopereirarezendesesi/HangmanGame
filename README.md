@@ -92,7 +92,8 @@ O projeto utiliza as seguintes bibliotecas:
 
 8. **Configure o banco de dados:**
    - Inicie os serviços do MySQL e Apache no XAMPP.
-   - Crie um banco e importe o banco disponível na pasta `/DB`.
+   - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
+   - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
 
 9. **Instale as dependências do backend:**
    - Vá até a pasta Backend/Server e execute:
