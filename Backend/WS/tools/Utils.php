@@ -28,7 +28,7 @@ class Utils
 
             return $stmt;
         } catch (PDOException $e) {
-            throw new Exception("Erro ao executar a consulta: " . $e->getMessage());
+            throw new Exception("Error executing query: " . $e->getMessage());
         }
     }
 

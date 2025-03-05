@@ -37,7 +37,7 @@ class WebSocketController implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
-        Utils::displayMessage("Novo cliente conectado: {$conn->resourceId}", 'player_join');
+        Utils::displayMessage("New client connected: {$conn->resourceId}", 'player_join');
         $this->clients[$conn->resourceId] = [
             "conn" => $conn,
             "authenticated" => false
@@ -46,7 +46,7 @@ class WebSocketController implements MessageComponentInterface
 
     public function onClose(ConnectionInterface $conn)
     {
-        Utils::displayMessage("Cliente desconectado: {$conn->resourceId}", 'player_leave');
+        Utils::displayMessage("Client disconnected: {$conn->resourceId}", 'player_leave');
         unset($this->clients[$conn->resourceId], $this->rooms[$conn->resourceId], $this->users[$conn->resourceId]);
         if (isset($this->users[$conn->resourceId])) {
             $id_bd = $this->users[$conn->resourceId];
@@ -60,21 +60,21 @@ class WebSocketController implements MessageComponentInterface
         $id = $from->resourceId;
 
         if (!$this->clients[$id]['authenticated'] && $data->type !== 'login') {
-            Utils::displayMessage("Cliente não autenticado tentou enviar {$data->type}", 'error');
-            $from->send(json_encode(['error' => 'Autenticação necessária']));
+            Utils::displayMessage("Unauthenticated client tried to send {$data->type}", 'error');
+            $from->send(json_encode(['error' => 'Authentication required']));
             return;
         }
 
         if (!$data) {
-            Utils::displayMessage("Dados inválidos recebidos: {$msg}", 'error');
-            $from->send(json_encode(['error' => 'Dados inválidos']));
+            Utils::displayMessage("Invalid data received: {$msg}", 'error');
+            $from->send(json_encode(['error' => 'Invalid data']));
             return;
         }
 
         if (!isset($data->type)) {
             Utils::displayMessage($data, 'error');
-            Utils::displayMessage("Dados incompletos recebidos", 'error');
-            $from->send(json_encode(['error' => 'Tipo de mensagem não especificado']));
+            Utils::displayMessage("Incomplete data received", 'error');
+            $from->send(json_encode(['error' => 'Message type not specified']));
             return;
         }
 
@@ -96,18 +96,18 @@ class WebSocketController implements MessageComponentInterface
             //     break;
 
             case 'friendRequest':
-                $this->friendHandler->handle($data->fromUser, $data->toUser, $data->actionRequest, $data->response);
+                $this->friendHandler->handle($from, $data->fromUser, $data->toUser, $data->actionRequest, $data->response);
                 break;
 
             default:
-                Utils::displayMessage("Tipo inválido: {$data->type}", 'error');
-                $from->send(json_encode(['error' => 'Tipo de mensagem inválido']));
+                Utils::displayMessage("Invalid type: {$data->type}", 'error');
+                $from->send(json_encode(['error' => 'Invalid message type']));
         }
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        Utils::displayMessage("Erro com o cliente {$conn->resourceId}: " . $e->getMessage(), 'error');
+        Utils::displayMessage("Error with client {$conn->resourceId}: " . $e->getMessage(), 'error');
         $conn->send(json_encode(['error' => $e->getMessage()]));
         $conn->close();
     }

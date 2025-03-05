@@ -20,16 +20,15 @@ class LoginHandler
 
     public function handle(ConnectionInterface $conn, $id_bd, $password): void
     {
-  
         $passwordBD = $this->WSModel->verifiedIdPassword($id_bd);
         
         if (!$passwordBD) {
-            $conn->send(json_encode(['error' => "Usuário não encontrado"]));
+            $conn->send(json_encode(['error' => "User not found"]));
             return;
         }
 
         if (!password_verify($password, $passwordBD)) {
-            $conn->send(json_encode(['error' => "Senha inválida"]));
+            $conn->send(json_encode(['error' => "Invalid password"]));
             return;
         }
 
@@ -37,7 +36,7 @@ class LoginHandler
         $this->wsController->users[$conn->resourceId] = ['id_bd' => $id_bd, 'connection' => $conn];
         $this->WSModel->changeStatus($id_bd, true);
 
-        Utils::displayMessage("Cliente {$conn->resourceId} fez login", 'player_join');
+        Utils::displayMessage("Client {$conn->resourceId} logged in", 'player_join');
         $conn->send(json_encode(
             [
                 'type' => 'login',

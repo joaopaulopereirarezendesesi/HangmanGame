@@ -24,6 +24,15 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
   "message": "Fala Cambada"
 }
 ```
+#### Resposta do servidor:
+```json
+{
+  "type": "chat",
+  "room": 1,
+  "user": "user1",
+  "message": "Fala Cambada"
+}
+```
 
 ### 2. `joinRoom`
 **Entrar em uma sala específica**
@@ -31,6 +40,12 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 {
   "type": "joinRoom",
   "room": 1
+}
+```
+#### Resposta do servidor:
+```json
+{
+  "success": "Joined room 1"
 }
 ```
 
@@ -44,15 +59,42 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
   "actionRequest": "friendrequest"
 }
 ```
-
 e
-
 ```json
 {
   "type": "friendRequest",
   "fromUser": 1,
   "toUser": 2,
   "actionRequest": "responserequest",
+  "response": "<accepted e rejected>"
+}
+```
+#### Resposta do servidor(friendrequest):
+- Remetente:
+```json
+{
+  "type": "friendRequest",
+  "fromUser": 1,
+  "toUser": 2,
+  "status": <"already exists ou sent">
+}
+```
+- Destinatário: 
+```json
+{
+  "type": "friendRequest",
+  "fromUser": 1,
+  "toUser": 2,
+  "status": "received"
+}
+```
+#### Resposta do servidor(responserequest):
+Não tem resposta ao destinatário do pedido
+```json
+{
+  "type": "friendRequest",
+  "fromUser": 1,
+  "toUser": 2,
   "response": "<accepted e rejected>"
 }
 ```
@@ -66,7 +108,14 @@ e
   "id_bd": 1
 }
 ```
-Ao conectar-se ao servidor WebSocket, o cliente automaticamente enviará a requisição de login com o `id_bd` do usuário. O servidor processará essa requisição e marcará o usuário como online no banco de dados, além disso, isso serve para a lógica interna do WebSocket, para que o servidor consiga indentificar que é esse usuário para a aplicação.
+Ao conectar-se ao servidor WebSocket, o cliente automaticamente enviará a requisição de login com o `id_bd` do usuário. O servidor processará essa requisição e marcará o usuário como online no banco de dados, além disso, isso serve para a lógica interna do WebSocket, para que o servidor consiga identificar que é esse usuário para a aplicação.
+#### Resposta do servidor:
+```json
+{
+  "type": "login",
+  "success": true
+}
+```
 
 ## Tratamento de Erros
 

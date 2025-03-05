@@ -3,6 +3,7 @@
 namespace handler;
 
 use Controller\WebSocketController;
+use Ratchet\ConnectionInterface;
 use models\WSModel;
 use tools\Utils;
 
@@ -17,23 +18,31 @@ class FriendHandler
         $this->wsController = $wsController;
     }
 
-    public function handle($fromUser, $toUser, $actionRequest, $response = null)
+    public function handle(ConnectionInterface $from, $fromUser, $toUser, $actionRequest, $response = null)
     {
         switch ($actionRequest) {
             case 'friendrequest':
-                Utils::displayMessage("Processando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+                Utils::displayMessage("Processing friend request from {$fromUser} to {$toUser}", 'info');
 
                 $result = $this->WSModel->sendFriendRequest($fromUser, $toUser);
-                $status = $result ? 'enviada' : 'já existe';
+                $status = $result ? 'sent' : 'already exists';
+                if ($status === 'already exists') {
+                    $this->sendFriendRequestResponse($actionRequest, $from, $fromUser, $toUser, $status);
+                    Utils::displayMessage("Friend request already exists", 'info');
+                    break;
+                } else { 
+                    Utils::displayMessage("Friend request sent", 'info');
+                    $this->sendFriendRequestResponse($actionRequest, $from, $fromUser, $toUser, $status);
+                }
 
                 $toConnection = $this->getUserConnection($toUser);
 
                 if ($toConnection) {
-                    $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser);
-                    Utils::displayMessage("Solicitação enviada para {$toUser}", 'success');
+                    $this->sendFriendRequestResponse($actionRequest, $toConnection, $fromUser, $toUser, 'received');
+                    Utils::displayMessage("Request sent to {$toUser}", 'success');
                 } else {
                     $this->WSModel->insertFriendRequest($fromUser, $toUser);
-                    Utils::displayMessage("Usuário {$toUser} não está online, solicitação salva no banco de dados", 'info');
+                    Utils::displayMessage("User {$toUser} is not online, request saved in the database", 'info');
                 }
                 break;
 
@@ -41,16 +50,16 @@ class FriendHandler
                 $toConnection = $this->getUserConnection($fromUser);
 
                 if ($response === 'accepted') {
-                    Utils::displayMessage("Aceitando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+                    Utils::displayMessage("Accepting friend request from {$fromUser} to {$toUser}", 'info');
                     $this->WSModel->acceptFriendRequest($fromUser, $toUser);
 
                     if ($toConnection) {
-                        $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser, 'aceita');
+                        $this->sendFriendRequestResponse($actionRequest, $toConnection, $fromUser, $toUser, 'accepted');
                     }
                 } else {
-                    Utils::displayMessage("Recusando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+                    Utils::displayMessage("Rejecting friend request from {$fromUser} to {$toUser}", 'info');
                     if ($toConnection) {
-                        $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser, 'rejeitada');
+                        $this->sendFriendRequestResponse($actionRequest, $toConnection, $fromUser, $toUser, 'rejected');
                     }
                 }
                 break;
@@ -63,12 +72,10 @@ class FriendHandler
         return $user ? array_values($user)[0]['connection'] : null;
     }
 
-    private function sendFriendRequestResponse($connection, $fromUser, $toUser, $status = null)
+    private function sendFriendRequestResponse($type, $connection, $fromUser, $toUser, $status = null)
     {
-        $status = $status ?? 'enviada';
-        
         $connection->send(json_encode([
-            'type' => 'friendRequest',
+            'type' => $type,
             'fromUser' => $fromUser,
             'toUser' => $toUser,
             'status' => $status

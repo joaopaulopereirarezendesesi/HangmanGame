@@ -24,8 +24,8 @@ final class Database
                     self::getDefaultOptions($options)
                 );
             } catch (PDOException $e) {
-                Utils::displayMessage("Erro na conexão: " . $e->getMessage(), 'error');
-                throw new PDOException("Erro ao conectar ao banco de dados.");
+                Utils::displayMessage("Connection error: " . $e->getMessage(), 'error');
+                throw new PDOException("Error connecting to the database.");
             }
         }
 

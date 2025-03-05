@@ -18,8 +18,8 @@ class ChatHandler
     public function handle(ConnectionInterface $from, $data)
     {
         if (!isset($data->room, $data->message, $data->user)) {
-            Utils::displayMessage("Dados incompletos para envio de mensagem.", 'error');
-            $from->send(json_encode(['error' => 'Dados incompletos']));
+            Utils::displayMessage("Incomplete data for sending message.", 'error');
+            $from->send(json_encode(['error' => 'Incomplete data']));
             return;
         }
         $this->sendToRoom($data->room, $data->message, $data->user, $from);
@@ -27,11 +27,11 @@ class ChatHandler
 
     private function sendToRoom(string $roomId, string $message, string $user, ConnectionInterface $from): void
     {
-        Utils::displayMessage("Enviando mensagem para a sala {$roomId}: {$message}", 'info');
+        Utils::displayMessage("Sending message to room {$roomId}: {$message}", 'info');
     
         foreach ($this->wsController->clients as $resourceId => $clientData) {
             if (!isset($clientData['conn']) || !($clientData['conn'] instanceof ConnectionInterface)) {
-                Utils::displayMessage("Erro: Cliente inválido detectado em clients[$resourceId].", 'error');
+                Utils::displayMessage("Error: Invalid client detected in clients[$resourceId].", 'error');
                 continue;
             }
     
@@ -47,5 +47,4 @@ class ChatHandler
             }
         }
     }
-    
 }

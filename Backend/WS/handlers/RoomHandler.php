@@ -18,7 +18,7 @@ class RoomHandler
     public function handle(ConnectionInterface $conn, string $room): void
     {
         $this->wsController->rooms[$conn->resourceId] = $room;
-        Utils::displayMessage("Cliente {$conn->resourceId} entrou na sala {$room}", 'player_join');
-        $conn->send(json_encode(['success' => "Entrou na sala {$room}"]));
+        Utils::displayMessage("Client {$conn->resourceId} joined room {$room}", 'player_join');
+        $conn->send(json_encode(['success' => "Joined room {$room}"]));
     }
 }
