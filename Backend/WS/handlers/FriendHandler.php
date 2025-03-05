@@ -17,31 +17,61 @@ class FriendHandler
         $this->wsController = $wsController;
     }
 
-    public function handle(string $fromUser, string $toUser)
+    public function handle($fromUser, $toUser, $actionRequest, $response = null)
     {
-        Utils::displayMessage("Processando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+        switch ($actionRequest) {
+            case 'friendrequest':
+                Utils::displayMessage("Processando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
 
-        $result = $this->WSModel->sendFriendRequest($fromUser, $toUser);
-        $status = $result ? 'enviada' : 'já existe';
-        $toConnection = null;
-        foreach ($this->wsController->users as $user) {
-            if ($user['id_bd'] === $toUser) {
-                $toConnection = $user['connection'];
+                $result = $this->WSModel->sendFriendRequest($fromUser, $toUser);
+                $status = $result ? 'enviada' : 'já existe';
+
+                $toConnection = $this->getUserConnection($toUser);
+
+                if ($toConnection) {
+                    $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser);
+                    Utils::displayMessage("Solicitação enviada para {$toUser}", 'success');
+                } else {
+                    $this->WSModel->insertFriendRequest($fromUser, $toUser);
+                    Utils::displayMessage("Usuário {$toUser} não está online, solicitação salva no banco de dados", 'info');
+                }
                 break;
-            }
-        }
 
-        if ($toConnection) {
-            $toConnection->send(json_encode([
-                'type' => 'friendRequest',
-                'fromUser' => $fromUser,
-                'toUser' => $toUser,
-                'status' => $status
-            ]));
+            case 'responserequest':
+                $toConnection = $this->getUserConnection($fromUser);
 
-            Utils::displayMessage("Solicitação enviada para {$toUser}", 'success');
-        } else {
-            Utils::displayMessage("Usuário {$toUser} não encontrado online", 'error');
+                if ($response === 'accepted') {
+                    Utils::displayMessage("Aceitando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+                    $this->WSModel->acceptFriendRequest($fromUser, $toUser);
+
+                    if ($toConnection) {
+                        $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser, 'aceita');
+                    }
+                } else {
+                    Utils::displayMessage("Recusando solicitação de amizade de {$fromUser} para {$toUser}", 'info');
+                    if ($toConnection) {
+                        $this->sendFriendRequestResponse($toConnection, $fromUser, $toUser, 'rejeitada');
+                    }
+                }
+                break;
         }
+    }
+
+    private function getUserConnection($userId)
+    {
+        $user = array_filter($this->wsController->users, fn($user) => $user['id_bd'] === $userId);
+        return $user ? array_values($user)[0]['connection'] : null;
+    }
+
+    private function sendFriendRequestResponse($connection, $fromUser, $toUser, $status = null)
+    {
+        $status = $status ?? 'enviada';
+        
+        $connection->send(json_encode([
+            'type' => 'friendRequest',
+            'fromUser' => $fromUser,
+            'toUser' => $toUser,
+            'status' => $status
+        ]));
     }
 }

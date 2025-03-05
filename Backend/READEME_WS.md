@@ -35,12 +35,25 @@ Por padrão, ele será executado na porta 8000. Se quiser rodar em uma porta dif
 ```
 
 ### 3. `friendRequest`
-**Solicitação de amizade entre usuários**
+**Solicitação de amizade entre usuários, tem 2 tipos:**
 ```json
 {
   "type": "friendRequest",
   "fromUser": 1,
-  "toUser": 2
+  "toUser": 2,
+  "actionRequest": "friendrequest"
+}
+```
+
+e
+
+```json
+{
+  "type": "friendRequest",
+  "fromUser": 1,
+  "toUser": 2,
+  "actionRequest": "responserequest",
+  "response": "<accepted e rejected>"
 }
 ```
 

@@ -96,7 +96,7 @@ class WebSocketController implements MessageComponentInterface
             //     break;
 
             case 'friendRequest':
-                $this->friendHandler->handle($data->fromUser, $data->toUser);
+                $this->friendHandler->handle($data->fromUser, $data->toUser, $data->actionRequest, $data->response);
                 break;
 
             default:

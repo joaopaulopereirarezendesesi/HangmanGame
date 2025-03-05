@@ -14,8 +14,6 @@ class WSModel
         $this->utils = new Utils(); 
     }
 
-
-
     public function changeStatus($fromUser, bool $status)
     {
         try {
@@ -67,7 +65,39 @@ class WSModel
             return false;
         }
     }
-    
 
+    public function insertFriendRequest($id_r, $id_d)
+    {
+        try {
+            $query = "INSERT INTO `friend_requests` (`sender_id`, `receiver_id`) VALUES (:id_r, :id_d)";
+            $params = [
+                ':id_r' => $id_r,
+                ':id_d' => $id_d
+            ];
+
+            $this->utils->executeQuery($query, $params);
+    
+            return true; 
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function acceptFriendRequest($id_r, $id_d)
+    {
+        try {
+            $query = "INSERT INTO `friends` (`ID_U`, `ID_A`) VALUES (:id_r, :id_d), (:id_d, :id_r);";
+            $params = [
+                ':id_r' => $id_r,
+                ':id_d' => $id_d
+            ];
+
+            $this->utils->executeQuery($query, $params);
+    
+            return true; 
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
 
