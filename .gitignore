@@ -1,7 +1,7 @@
 Backend/Server/vendor
-Backend/Server/composer.json
+Backend/Server/composer.lock
 Backend/Server/.env
-Backend/WS/composer.json
+Backend/WS/composer.lock
 Backend/WS/vendor
 Backend/WS/.env
 LICENSE
