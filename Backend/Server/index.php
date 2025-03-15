@@ -9,14 +9,14 @@ class App
 {
     public function __construct()
     {
-        //$this->configureCORS();
+        $this->configureCORS();
         $this->validateConfig();
         $this->handleOptionsRequest();
         $this->initializeRouter();
     }
 
     function configureCORS(
-        array $allowedOrigins = ['http://localhost:5500'],
+        array $allowedOrigins = ['http://localhost:5173'],
         array $allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         array $allowedHeaders = ['Content-Type', 'Authorization']
     ): void {

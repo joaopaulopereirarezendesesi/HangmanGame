@@ -28,19 +28,19 @@ class RoomModel
             $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
                       VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
-            $params = [
-                ':id_o' => $id_o,
-                ':room_name' => $room_name,
-                ':private' => $private,
-                ':password' => password_hash($password, PASSWORD_ARGON2ID),
-                ':player_capacity' => $player_capacity,
-                ':time_limit' => $time_limit,
-                ':points' => $points
-            ];
+        $params = [
+            ':id_o' => $id_o,
+            ':room_name' => $room_name,
+            ':private' => $private,
+            ':password' => $private === true ? password_hash($password, PASSWORD_ARGON2ID) : null,
+            ':player_capacity' => $player_capacity,
+            ':time_limit' => $time_limit,
+            ':points' => $points
+        ];
 
             $this->utils->executeQuery($query, $params); 
 
-            return json_encode(['idroom' => $this->getRoomNameId($room_name)]);
+            return $this->getRoomNameId($room_name);
         } catch (Exception $e) {
             throw new Exception("Erro ao criar sala: " . $e->getMessage());
         }
@@ -87,4 +87,19 @@ class RoomModel
             throw new Exception("Erro ao verificar nome da sala: " . $e->getMessage());
         }
     }
+
+    public function getRooms()
+    {
+        try {
+            $query = "SELECT * FROM rooms";
+
+            $result = $this->utils->executeQuery($query, [], true); 
+
+            return $result ?? null;
+        } catch (Exception $e) {
+            throw new Exception("Erro ao obter sala: " . $e->getMessage());
+        }
+    }
+
+   
 }

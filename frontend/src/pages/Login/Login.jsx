@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AppContext from "../../context/AppContext";
-import { useNavigate } from "react-router-dom"; // Para navegação
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./Login.module.css";
@@ -39,9 +39,12 @@ function Login() {
     event.preventDefault();
     const remember = event.target.remember.checked;
 
+    console.log(email);
+    console.log(password);
+
     try {
       const response = await axios.post(
-        "http://localhost:4000/?url=User/login",
+        "http://localhost:80/?url=User/login",
         new URLSearchParams({
           email,
           password,
@@ -60,6 +63,7 @@ function Login() {
         console.log("Nickname do cookie:", nickname);
 
         localStorage.setItem("token", userId);
+        localStorage.setItem("userName", nickname);
         navigate("/game");
       }
     } catch (error) {
@@ -118,7 +122,7 @@ function Login() {
           console.log("Nickname do cookie:", nickname);
 
           localStorage.setItem("token", userId); // Armazenando token no localStorage
-          navigate("/game"); // Redireciona após login
+          navigate("/rooms"); // Redireciona após login
         }
       } else if (response.data.errors || response.data.error) {
         console.log(response.data.errors);

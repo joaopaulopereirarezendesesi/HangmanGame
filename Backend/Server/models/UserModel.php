@@ -103,4 +103,18 @@ class UserModel
             throw new Exception("Erro ao obter a senha: " . $e->getMessage());
         }
     }
+
+    public function getRoomOrganizer($id_o)
+    {
+        try {
+            $query = "SELECT * FROM users WHERE ID_U = :id_o";
+            $params = [':id_o' => $id_o];
+
+            $result = $this->utils->executeQuery($query, $params, true); 
+
+            return $result[0] ?? null;
+        } catch (Exception $e) {
+            throw new Exception("Erro ao obter sala: " . $e->getMessage());
+        }
+    }
 }

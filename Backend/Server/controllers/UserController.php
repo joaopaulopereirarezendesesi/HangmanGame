@@ -96,11 +96,8 @@ class UserController
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
             setcookie('token', $token, time() + 3600, '/', '', true, true);
-    
-            if (isset($_POST['remember']) && $_POST['remember'] == 'true') {
-                setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
-                setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
-            }
+            setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
+            setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
     
             \tools\Utils::jsonResponse([
                 'message' => 'Login bem-sucedido',
@@ -148,5 +145,23 @@ class UserController
     function validateEmail($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    public function getRoomOrganizer()
+    {
+        // Obtém os dados da requisição JSON
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        // Verifica se o parâmetro id_o está presente no JSON
+        if (!isset($input['id_o'])) {
+            throw new Exception('ID do organizador não fornecido.');
+        }
+
+        $id_o = $input['id_o'];
+
+        // Chama o modelo para obter a sala com o ID do organizador
+        \tools\Utils::jsonResponse([
+        'rooms' => $this->userModel->getRoomOrganizer($id_o)
+        ]);
     }
 }

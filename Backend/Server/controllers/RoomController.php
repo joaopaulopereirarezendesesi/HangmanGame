@@ -35,31 +35,38 @@ class RoomController
         if (!$id_o) return;
 
         $data = \tools\Utils::validateParams($_POST, ['id']);
+
+        if (!is_array($data) || !isset($data['id'])) {
+            \tools\Utils::errorResponse('ID do usuário não encontrado ou inválido.', 400);
+            return;
+        }
+
         $id_o = $data['id'];
         $points = $_POST['points'] ?? 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
-        $private = isset($_POST['private']) ? (bool)$_POST['private'] : false;
+        $private = $_POST['private'];
 
         if ($this->roomModel->doesRoomNameExist($room_name)) {
             \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
             return;
         }
 
-        $password = $private ? $_POST['password'] ?? null : null;
-        if ($private && empty($password)) {
+        if ($private && empty($_POST['password'])) {
             \tools\Utils::errorResponse('Senha obrigatória para salas privadas.');
             return;
         }
 
+        $password = $private ? $_POST['password'] : null;
+ 
         $player_capacity = (int)($_POST['player_capacity'] ?? 10);
         $time_limit = (int)($_POST['time_limit'] ?? 5);
-        if ($player_capacity < 1 || $time_limit < 1) {
+        if ($player_capacity < 2 || $time_limit < 2) {
             \tools\Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
             return;
         }
 
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
-        $roomId = $result['idroom'];
+        $roomId = $result;
 
         $this->joinRoom($roomId, $id_o, $password);
 
@@ -125,4 +132,13 @@ class RoomController
     {
         return !empty($password) && password_verify($password, $hashedPassword);
     }
+
+    public function getRooms()
+    {
+        \tools\Utils::jsonResponse([
+            'rooms' =>  $this->roomModel->getRooms()
+        ]);
+    }
+
+    
 }
