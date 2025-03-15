@@ -1,3 +1,43 @@
+INSERT INTO `users` (`ID_U`, `NICKNAME`, `EMAIL`, `PASSWORD`, `ONLINE`) VALUES
+(35, 'player1', 'player1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(36, 'player2', 'player2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(37, 'player3', 'player3@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(38, 'player4', 'player4@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(39, 'player5', 'player5@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(40, 'player6', 'player6@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(41, 'player7', 'player7@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(42, 'player8', 'player8@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(43, 'player9', 'player9@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(44, 'player10', 'player10@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(45, 'player11', 'player11@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(46, 'player12', 'player12@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(47, 'player13', 'player13@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(48, 'player14', 'player14@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(49, 'player15', 'player15@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(50, 'player16', 'player16@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(51, 'player17', 'player17@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(52, 'player18', 'player18@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(53, 'player19', 'player19@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(54, 'player20', 'player20@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(55, 'player21', 'player21@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(56, 'player22', 'player22@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(57, 'player23', 'player23@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(58, 'player24', 'player24@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(59, 'player25', 'player25@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(60, 'player26', 'player26@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(61, 'player27', 'player27@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(62, 'player28', 'player28@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(63, 'player29', 'player29@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(64, 'player30', 'player30@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(65, 'owner1', 'owner1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(66, 'owner2', 'owner2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
+(67, 'owner3', 'owner3@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true);
+
+INSERT INTO `rooms` (`ID_R`, `ROOM_NAME`, `ID_O`, `PRIVATE`, `PASSWORD`, `PLAYER_CAPACITY`, `TIME_LIMIT`, `POINTS`) VALUES
+(8, 'Room 1', 65, 0, NULL, 10, 5, 100),
+(9, 'Room 2', 66, 0, NULL, 10, 5, 150),
+(10, 'Room 3', 67, 0, NULL, 10, 5, 200);
+
 INSERT INTO `played` (`ID_PLAYED`, `ID_U`, `ID_R`, `SCORE`, `IS_THE_CHALLENGER`) VALUES
 (1, 35, 8, 0, 0),
 (2, 36, 8, 0, 0),
@@ -29,11 +69,6 @@ INSERT INTO `played` (`ID_PLAYED`, `ID_U`, `ID_R`, `SCORE`, `IS_THE_CHALLENGER`)
 (28, 62, 10, 0, 0),
 (29, 63, 10, 0, 0),
 (30, 64, 10, 0, 0);
-
-INSERT INTO `rooms` (`ID_R`, `ROOM_NAME`, `ID_O`, `PRIVATE`, `PASSWORD`, `PLAYER_CAPACITY`, `TIME_LIMIT`, `POINTS`) VALUES
-(8, 'Room 1', 65, 0, NULL, 10, 5, 100),
-(9, 'Room 2', 66, 0, NULL, 10, 5, 150),
-(10, 'Room 3', 67, 0, NULL, 10, 5, 200);
 
 INSERT INTO `wordsmatter` (`matter`, `word`, `definition`) VALUES
 ('Geografia', 'Continente', 'Grande massa de terra delimitada pelos oceanos.'),
@@ -221,38 +256,3 @@ INSERT INTO `wordsmatter` (`matter`, `word`, `definition`) VALUES
 ('Ciência Política', 'Anarquia', 'Ausência de um governo ou autoridade central.'),
 ('Ciência Política', 'Política Pública', 'Conjunto de ações governamentais destinadas a resolver problemas sociais.'),
 ('Ciência Política', 'Geopolítica', 'Estudo das relações entre política e geografia.');
-
-INSERT INTO `users` (`ID_U`, `NICKNAME`, `EMAIL`, `PASSWORD`, `ONLINE`) VALUES
-(35, 'player1', 'player1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(36, 'player2', 'player2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(37, 'player3', 'player3@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(38, 'player4', 'player4@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(39, 'player5', 'player5@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(40, 'player6', 'player6@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(41, 'player7', 'player7@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(42, 'player8', 'player8@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(43, 'player9', 'player9@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(44, 'player10', 'player10@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(45, 'player11', 'player11@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(46, 'player12', 'player12@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(47, 'player13', 'player13@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(48, 'player14', 'player14@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(49, 'player15', 'player15@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(50, 'player16', 'player16@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(51, 'player17', 'player17@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(52, 'player18', 'player18@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(53, 'player19', 'player19@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(54, 'player20', 'player20@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(55, 'player21', 'player21@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(56, 'player22', 'player22@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(57, 'player23', 'player23@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(58, 'player24', 'player24@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(59, 'player25', 'player25@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(60, 'player26', 'player26@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(61, 'player27', 'player27@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(62, 'player28', 'player28@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(63, 'player29', 'player29@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(64, 'player30', 'player30@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(65, 'owner1', 'owner1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(66, 'owner2', 'owner2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
-(67, 'owner3', 'owner3@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true);
