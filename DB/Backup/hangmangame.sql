@@ -147,6 +147,18 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Estrutura para tabela `wordsmatter`
+--
+
+CREATE TABLE `wordsmatter` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `matter` VARCHAR(255) NOT NULL,
+  `word` VARCHAR(255) NOT NULL,
+  `definition` TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
 -- Índices para tabelas despejadas
 --
 
