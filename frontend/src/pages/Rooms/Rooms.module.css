@@ -130,6 +130,9 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rooms .content .roomsGames .games .text {

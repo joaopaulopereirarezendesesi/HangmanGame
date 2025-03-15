@@ -18,11 +18,12 @@ function Rooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
   const nickname = Cookies.get("nickname");
+  const userId = parseInt(Cookies.get("user_id"));
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchRooms();
-    // fetchOrganizeRoom();
+    fetchFriends();
   }, []);
 
   const fetchRooms = async () => {
@@ -36,11 +37,10 @@ function Rooms() {
       );
 
       setRooms(response.data.rooms);
-      console.log(response.data.rooms);
 
       // Passa o ID_R e o ID_O para obter o nome do organizador de cada sala
       response.data.rooms.forEach((room) => {
-        fetchOrganizeRoom(room.ID_O, room.ID_R); // Passa ID_O e ID_R
+        fetchOrganizeRoom(room.ID_O, room.ID_R);
       });
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -71,9 +71,26 @@ function Rooms() {
     }
   };
 
-  // const handleFetchRoomOrganizer = (id_o) => {
-  //   fetchOrganizeRoom(id_o); // Passando o id_o para a função
-  // };
+  const fetchFriends = async () => {
+    try {
+      console.log(typeof userId);
+      const response = await axios.post(
+        "http://localhost:80/?url=Friends/getFriendsById",
+        { id: userId },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log("MEUS AMIGUXOS: ", response.data);
+    } catch (error) {
+      console.error(
+        "Erro ao buscar amigos: ",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
 
   const handleLogout = () => {
     // Remove os dados de login
