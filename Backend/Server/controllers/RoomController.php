@@ -44,7 +44,7 @@ class RoomController
         $id_o = $data['id'];
         $points = $_POST['points'] ?? 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
-        $private = $_POST['private'];
+        $private = (bool)$_POST['private'];
 
         if ($this->roomModel->doesRoomNameExist($room_name)) {
             \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
@@ -56,7 +56,7 @@ class RoomController
             return;
         }
 
-        $password = $private ? $_POST['password'] : null;
+        $password = $_POST['password'];
  
         $player_capacity = (int)($_POST['player_capacity'] ?? 10);
         $time_limit = (int)($_POST['time_limit'] ?? 5);

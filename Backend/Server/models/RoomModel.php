@@ -32,7 +32,7 @@ class RoomModel
             ':id_o' => $id_o,
             ':room_name' => $room_name,
             ':private' => $private,
-            ':password' => $private === true ? password_hash($password, PASSWORD_ARGON2ID) : null,
+            ':password' => $private ? password_hash($password, PASSWORD_ARGON2ID) : null,
             ':player_capacity' => $player_capacity,
             ':time_limit' => $time_limit,
             ':points' => $points

@@ -30,8 +30,11 @@
   font-weight: bold;
 }
 
+
 .modalContent input,
 .modalContent select {
+  background: white !important;
+  color: black !important;
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -56,6 +59,11 @@
 .modalContent button:first-child {
   background: #4caf50;
   color: white;
+}
+
+._modalContent_1jwqt_27 button {
+  background: white;
+  color: black;
 }
 
 .message {
