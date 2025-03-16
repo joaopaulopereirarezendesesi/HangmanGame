@@ -33,6 +33,21 @@ INSERT INTO `users` (`ID_U`, `NICKNAME`, `EMAIL`, `PASSWORD`, `ONLINE`) VALUES
 (66, 'owner2', 'owner2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true),
 (67, 'owner3', 'owner3@example.com', '$argon2id$v=19$m=65536,t=4,p=1$UkovbjVQalhzRGVyLkpYaw$TjWIRd3vCv5S+Ys9tLSFpRN3uUnklN3ET4sK3U3+XNc', true);
 
+INSERT INTO `friends` (`ID_U`, `ID_A`) VALUES
+(35, 36), (35, 37), (35, 38), (35, 39), (35, 40),
+(36, 41), (36, 42), (36, 43), (36, 44), (36, 45),
+(37, 46), (37, 47), (37, 48), (37, 49), (37, 50),
+(38, 51), (38, 52), (38, 53), (38, 54), (38, 55),
+(39, 56), (39, 57), (39, 58), (39, 59), (39, 60),
+(40, 61), (40, 62), (40, 63), (40, 64), (40, 65),
+(41, 66), (41, 67), (41, 35), (41, 36), (41, 37),
+(42, 38), (42, 39), (42, 40), (42, 41), (42, 42),
+(43, 43), (43, 44), (43, 45), (43, 46), (43, 47),
+(44, 48), (44, 49), (44, 50), (44, 51), (44, 52),
+(45, 53), (45, 54), (45, 55), (45, 56), (45, 57),
+(46, 58), (46, 59), (46, 60), (46, 61), (46, 62),
+(47, 63), (47, 64), (47, 65), (47, 66), (47, 67);
+
 INSERT INTO `rooms` (`ID_R`, `ROOM_NAME`, `ID_O`, `PRIVATE`, `PASSWORD`, `PLAYER_CAPACITY`, `TIME_LIMIT`, `POINTS`) VALUES
 (8, 'Room 1', 65, 0, NULL, 10, 5, 100),
 (9, 'Room 2', 66, 0, NULL, 10, 5, 150),
