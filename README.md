@@ -140,7 +140,7 @@ O projeto utiliza as seguintes bibliotecas:
    Utils::debug_log("Variavel: " . $variavel);
    ```
 
-    2. **Em arquivos sem namespace verifique se tem um require_once:**
+   2. **Em arquivos sem namespace verifique se tem um require_once:**
    ```php
     require_once __DIR__ . '/../tools/helpers.php';
    ```
