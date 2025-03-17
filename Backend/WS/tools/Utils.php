@@ -62,4 +62,11 @@ class Utils
     {
         self::jsonResponse(['error' => $message], $code);
     }
+
+    public static function debug_log($message) {
+        $logFile = __DIR__ . '../debug.log';
+        $date = date('Y-m-d H:i:s'); 
+        $logMessage = "[$date] $message\n"; 
+        file_put_contents($logFile, $logMessage, FILE_APPEND);
+    }
 }

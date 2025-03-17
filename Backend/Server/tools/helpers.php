@@ -116,7 +116,13 @@ class Utils
     
         return array_intersect_key($request, array_flip($requiredParams));
     }
-    
+
+    public static function debug_log($message) {
+        $logFile = __DIR__ . '../debug.log';
+        $date = date('Y-m-d H:i:s'); 
+        $logMessage = "[$date] $message\n"; 
+        file_put_contents($logFile, $logMessage, FILE_APPEND);
+    }
 
     public static function validatePassword($password) {
         return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);

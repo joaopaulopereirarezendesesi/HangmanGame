@@ -127,6 +127,36 @@ O projeto utiliza as seguintes bibliotecas:
 
 ---
 
+## 🔧 Ferramenta de depuração
+
+   1. **Em arquivos que tem namespace em cima verifique se está sendo chamda a rota:**
+   ```php
+   use tools\Utils;
+   ```
+
+   - caso não estiver presente adicione e chame a rota de depuração assim:
+
+   ```php
+   Utils::debug_log("Variavel: " . $variavel);
+   ```
+
+    2. **Em arquivos sem namespace verifique se tem um require_once:**
+   ```php
+    require_once __DIR__ . '/../tools/helpers.php';
+   ```
+
+   - caso não estiver presente adicione e chame a rota de depuração assim:
+
+   ```php
+   tools\Utils::debug_log("Variavel: " . $variavel);
+   ```
+   
+   . : Operador de concatenação de string
+
+   Essa função vai gerar um log no arquivo /debug.log para debug ou qual quer outra coisa
+
+---
+
 ## 📜 Licença
 
 🔖 Este projeto está licenciado sob a **GNU License**.
