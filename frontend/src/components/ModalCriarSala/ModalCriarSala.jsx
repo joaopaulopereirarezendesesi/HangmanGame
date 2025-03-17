@@ -5,47 +5,46 @@ import axios from "axios";
 import RoomStatus from "../RoomStatus/RoomStatus";
 
 const ModalCriarSala = ({ setIsModalOpen }) => {
-  const [roomName, setRoomName] = useState(""); // Nome da sala
-  const [privateRoom, setPrivateRoom] = useState(false); // Sala privada
-  const [password, setPassword] = useState(""); // Senha
-  const [capacity, setCapacity] = useState(2); // Capacidade
-  const [time, setTime] = useState("1000"); // Tempo
-  const [points, setPoints] = useState("1000"); // Pontos
+  const [roomName, setRoomName] = useState(""); 
+  const [privateRoom, setPrivateRoom] = useState(false); 
+  const [password, setPassword] = useState(""); 
+  const [capacity, setCapacity] = useState(2); 
+  const [time, setTime] = useState("1000"); 
+  const [points, setPoints] = useState("1000"); 
 
   const handleSave = async () => {
     try {
       const userId = Cookies.get("user_id");
-      const token = Cookies.get("token");
 
-      console.log(token);
-      console.log(userId);
-      console.log(roomName);
-      console.log(privateRoom);
-      console.log(password);
-      console.log(capacity);
-      console.log(time);
-      console.log(points);
+      console.log("Enviando:", {
+        id: userId,
+        room_name: roomName,
+        private: privateRoom ? "1" : "0", 
+        password: privateRoom ? password : "", 
+        player_capacity: capacity,
+        time_limit: time,
+        points: points,
+      });
 
-      console.log(privateRoom ? password : null);
+      const formData = new URLSearchParams();
+      formData.append("id", userId);
+      formData.append("room_name", roomName);
+      formData.append("private", privateRoom ? "1" : "0");
+      formData.append("password", privateRoom ? password : "");
+      formData.append("player_capacity", String(capacity));
+      formData.append("time_limit", String(time));
+      formData.append("points", String(points));
 
       const response = await axios.post(
         "http://localhost:80/?url=Room/createRoom",
-        new URLSearchParams({
-          id: userId,
-          room_name: roomName,
-          private: privateRoom,
-          password: privateRoom ? password : null,
-          player_capacity: capacity,
-          time_limit: time,
-          points: points,
-        }),
+        formData,
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
         }
       );
 
-      console.log(response.data);
+      console.log(response.data); 
 
       console.log("SALA CRIADA!");
       setRoomName("");
@@ -57,6 +56,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro na requisição:", error);
+      console.log(error.response?.data);
     }
   };
 
@@ -99,7 +99,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
           <input
             type="number"
             value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
+            onChange={(e) => setCapacity(Number(e.target.value))}
             min="2"
             max="20"
           />
@@ -111,7 +111,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
             name="time"
             id="time"
             value={time}
-            onChange={(e) => setTime(e.target.value)}
+            onChange={(e) => setTime(Number(e.target.value))}
           >
             <option value="1000">1000ms</option>
             <option value="1500">1500ms</option>
@@ -126,7 +126,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
             name="points"
             id="points"
             value={points}
-            onChange={(e) => setPoints(e.target.value)}
+            onChange={(e) => setPoints(Number(e.target.value))}
           >
             <option value="1000">1000</option>
             <option value="1500">1500</option>

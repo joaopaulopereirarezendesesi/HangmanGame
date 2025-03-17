@@ -33,43 +33,53 @@ class RoomController
     {
         $id_o = $this->getUserIdFromToken();
         if (!$id_o) return;
-
+        
         $data = \tools\Utils::validateParams($_POST, ['id']);
-
+        
         if (!is_array($data) || !isset($data['id'])) {
             \tools\Utils::errorResponse('ID do usuário não encontrado ou inválido.', 400);
             return;
         }
-
-        $id_o = $data['id'];
-        $points = $_POST['points'] ?? 2000;
+        
+        $id_o = (int) $data['id'];
+        $points = isset($_POST['points']) ? (int) $_POST['points'] : 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
-        $private = (bool)$_POST['private'];
-
+        $private = filter_var($_POST['private'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        
         if ($this->roomModel->doesRoomNameExist($room_name)) {
             \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
             return;
         }
-
-        if ($private && empty($_POST['password'])) {
+        
+        $password = $_POST['password'] ?? '';
+        
+        if ($private && empty($password)) {
             \tools\Utils::errorResponse('Senha obrigatória para salas privadas.');
             return;
         }
-
-        $password = $_POST['password'];
- 
-        $player_capacity = (int)($_POST['player_capacity'] ?? 10);
-        $time_limit = (int)($_POST['time_limit'] ?? 5);
+        
+        $player_capacity = isset($_POST['player_capacity']) ? (int) $_POST['player_capacity'] : 10;
+        $time_limit = isset($_POST['time_limit']) ? (int) $_POST['time_limit'] : 5;
+        
         if ($player_capacity < 2 || $time_limit < 2) {
             \tools\Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
             return;
         }
+        
+
+        \tools\Utils::debug_log(json_encode([
+            'id_o' => $id_o,
+            'points' => $points,
+            'room_name' => $room_name,
+            'private' => $private,
+            'password' => $password ?? 'N/A',
+            'player_capacity' => $player_capacity ?? 'N/A',
+            'time_limit' => $time_limit ?? 'N/A'
+        ], JSON_PRETTY_PRINT));
 
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
         $roomId = $result;
-
-        $this->joinRoom($roomId, $id_o, $password);
-
+        
         \tools\Utils::jsonResponse([
             'idsala' => $roomId,
             'id_o' => $id_o,
@@ -79,6 +89,8 @@ class RoomController
             'tampodasala' => $time_limit,
             'pontos' => $points
         ]);
+
+        $this->joinRoom($roomId, $id_o, $password);
     }
 
     private function generateRoomName()

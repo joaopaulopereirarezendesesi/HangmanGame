@@ -24,19 +24,19 @@ class RoomModel
 
     public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
     {
-        try {
+        try { 
             $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
-                      VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
+                    VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
-        $params = [
-            ':id_o' => $id_o,
-            ':room_name' => $room_name,
-            ':private' => $private,
-            ':password' => $private ? password_hash($password, PASSWORD_ARGON2ID) : null,
-            ':player_capacity' => $player_capacity,
-            ':time_limit' => $time_limit,
-            ':points' => $points
-        ];
+            $params = [
+             ':id_o' => $id_o,
+                ':room_name' => $room_name,
+                ':private' => $private,
+                ':password' => $private ? password_hash($password, PASSWORD_ARGON2ID) : null,
+                ':player_capacity' => $player_capacity,
+               ':time_limit' => $time_limit,
+               ':points' => $points
+            ];
 
             $this->utils->executeQuery($query, $params); 
 
