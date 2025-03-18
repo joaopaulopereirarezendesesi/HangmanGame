@@ -156,12 +156,21 @@ class RoomController
 
     public function getRooms()
     {
-        $getrooms = $this->roomModel->getRooms();
-        Utils::jsonResponse($getrooms, 200);
+        try {
+            $getrooms = $this->roomModel->getRooms();
+            if ($getrooms) {
+                Utils::jsonResponse(["rooms" => $getrooms], 200); 
+            } else {
+                Utils::jsonResponse(["message" => "Nenhuma sala encontrada"], 404); 
+            }
+        } catch (Exception $e) {
+            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+        }
     }
+    
 
     public function countPlayers() {
         $countPlayers = $this->playedModel->countPlayersInRoom((int)$_POST["id"]);
-        Utils::jsonResponse($countPlayers, 200);
+        Utils::jsonResponse(["players" => $countPlayers], 200);
     }
 }

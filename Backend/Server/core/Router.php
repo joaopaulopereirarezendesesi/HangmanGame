@@ -15,11 +15,9 @@ class Router
         $action = $this->sanitizeActionName($url['action']);
         $param = $url['param'];
 
-        // Adicione o namespace completo ao controlador
         $controllerNamespace = 'controllers\\';
         $controllerClass = $controllerNamespace . $controllerName;
 
-        // Verifique se a classe existe e é válida
         if (class_exists($controllerClass)) {
             $controller = new $controllerClass();
 

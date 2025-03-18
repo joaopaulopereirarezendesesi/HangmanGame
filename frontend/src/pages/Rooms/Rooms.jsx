@@ -39,6 +39,7 @@ function Rooms() {
       setRooms(response.data.rooms);
 
       // Passa o ID_R e o ID_O para obter o nome do organizador de cada sala
+      console.log("SALAS: ", response.data.rooms);
       response.data.rooms.forEach((room) => {
         fetchOrganizeRoom(room.ID_O, room.ID_R);
       });
