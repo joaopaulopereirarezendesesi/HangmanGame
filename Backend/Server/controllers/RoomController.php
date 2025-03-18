@@ -1,8 +1,13 @@
 <?php
 
+namespace controllers;
+
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../tools/helpers.php';
-require_once __DIR__ . '/../core/JwtHandler.php';
+
+use models\RoomModel;
+use models\PlayedModel;
+use tools\Utils;
+use core\JwtHandler;
 
 class RoomController
 {
@@ -11,20 +16,21 @@ class RoomController
 
     public function __construct()
     {
-        $this->roomModel = new \models\RoomModel();
-        $this->playedModel = new \models\PlayedModel();
+        $this->roomModel = new RoomModel();
+        $this->playedModel = new PlayedModel();
     }
 
     private function getUserIdFromToken()
     {
-        $token = \tools\Utils::getToken();
+        $token = Utils::getToken();
         if (!$token) {
-            \tools\Utils::errorResponse('Token não encontrado.', 401);
+            Utils::errorResponse('Token não encontrado.', 401);
             return null;
         }
 
-        $decoded = \core\JwtHandler::validateToken($token);
-        if (!$decoded) return null;
+        $decoded = JwtHandler::validateToken($token);
+        if (!$decoded)
+            return null;
 
         return $decoded['user_id'];
     }
@@ -32,42 +38,42 @@ class RoomController
     public function createRoom()
     {
         $id_o = $this->getUserIdFromToken();
-        if (!$id_o) return;
-        
-        $data = \tools\Utils::validateParams($_POST, ['id']);
-        
+        if (!$id_o)
+            return;
+
+        $data = Utils::validateParams($_POST, ['id']);
+
         if (!is_array($data) || !isset($data['id'])) {
-            \tools\Utils::errorResponse('ID do usuário não encontrado ou inválido.', 400);
+            Utils::errorResponse('ID do usuário não encontrado ou inválido.', 400);
             return;
         }
-        
+
         $id_o = (int) $data['id'];
         $points = isset($_POST['points']) ? (int) $_POST['points'] : 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
         $private = filter_var($_POST['private'] ?? false, FILTER_VALIDATE_BOOLEAN);
-        
+
         if ($this->roomModel->doesRoomNameExist($room_name)) {
-            \tools\Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
+            Utils::errorResponse('Nome de sala já em uso. Escolha outro.');
             return;
         }
-        
+
         $password = $_POST['password'] ?? '';
-        
+
         if ($private && empty($password)) {
-            \tools\Utils::errorResponse('Senha obrigatória para salas privadas.');
+            Utils::errorResponse('Senha obrigatória para salas privadas.');
             return;
         }
-        
+
         $player_capacity = isset($_POST['player_capacity']) ? (int) $_POST['player_capacity'] : 10;
         $time_limit = isset($_POST['time_limit']) ? (int) $_POST['time_limit'] : 5;
-        
+
         if ($player_capacity < 2 || $time_limit < 2) {
-            \tools\Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
+            Utils::errorResponse('Capacidade de jogadores ou tempo limite inválidos.');
             return;
         }
-        
 
-        \tools\Utils::debug_log(json_encode([
+        Utils::debug_log(json_encode([
             'id_o' => $id_o,
             'points' => $points,
             'room_name' => $room_name,
@@ -79,8 +85,8 @@ class RoomController
 
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
         $roomId = $result;
-        
-        \tools\Utils::jsonResponse([
+
+        Utils::jsonResponse([
             'idsala' => $roomId,
             'id_o' => $id_o,
             'nomesala' => $room_name,
@@ -89,6 +95,8 @@ class RoomController
             'tampodasala' => $time_limit,
             'pontos' => $points
         ]);
+
+        Utils::jsonResponse("ALOWW");
 
         $this->joinRoom($roomId, $id_o, $password);
     }
@@ -102,28 +110,29 @@ class RoomController
     public function joinRoom($roomId, $userId, $password = null)
     {
         $JWT = $this->getUserIdFromToken();
-        if (!$JWT) return;
+        if (!$JWT)
+            return;
 
         $room = $this->roomModel->getRoomById($roomId);
 
         if (!$room) {
-            \tools\Utils::errorResponse('Sala não encontrada.');
+            Utils::errorResponse('Sala não encontrada.');
             return;
         }
 
         if ($room['PRIVATE'] && !$this->validateRoomPassword($room['PASSWORD'], $password)) {
-            \tools\Utils::errorResponse('Senha inválida.');
+            Utils::errorResponse('Senha inválida.');
             return;
         }
 
         if ($this->playedModel->getPlayersCountInRoom($roomId) >= $room['PLAYER_CAPACITY']) {
-            \tools\Utils::errorResponse('Sala cheia.');
+            Utils::errorResponse('Sala cheia.');
             return;
         }
 
         $this->playedModel->joinRoom($userId, $roomId);
 
-        \tools\Utils::jsonResponse(['message' => 'Entrou na sala com sucesso.']);
+        Utils::jsonResponse(['message' => 'Entrou na sala com sucesso.']);
     }
 
     public function removePlayerFromRoom($roomId, $userId)
@@ -131,13 +140,13 @@ class RoomController
         $room = $this->roomModel->getRoomById($roomId);
 
         if (!$room) {
-            \tools\Utils::errorResponse('Sala não encontrada.');
+            Utils::errorResponse('Sala não encontrada.');
             return;
         }
 
         $this->playedModel->leaveRoom($userId, $roomId);
 
-        \tools\Utils::jsonResponse(['message' => 'Jogador removido com sucesso.']);
+        Utils::jsonResponse(['message' => 'Jogador removido com sucesso.']);
     }
 
     function validateRoomPassword($hashedPassword, $password)
@@ -147,10 +156,12 @@ class RoomController
 
     public function getRooms()
     {
-        \tools\Utils::jsonResponse([
-            'rooms' =>  $this->roomModel->getRooms()
-        ]);
+        $getrooms = $this->roomModel->getRooms();
+        Utils::jsonResponse($getrooms, 200);
     }
 
-    
+    public function countPlayers() {
+        $countPlayers = $this->playedModel->countPlayersInRoom((int)$_POST["id"]);
+        Utils::jsonResponse($countPlayers, 200);
+    }
 }

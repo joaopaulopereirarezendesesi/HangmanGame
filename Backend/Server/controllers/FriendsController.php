@@ -1,8 +1,12 @@
 <?php
 
+namespace controllers;
+
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../tools/helpers.php';
-require_once __DIR__ . '/../core/JwtHandler.php';
+
+use models\FriendsModel;
+use tools\Utils;
+use Exception;
 
 class FriendsController
 {
@@ -10,7 +14,7 @@ class FriendsController
 
     public function __construct()
     {
-        $this->friendsModel = new \models\FriendsModel();
+        $this->friendsModel = new FriendsModel();
     }
 
     public function getFriendsById() {
@@ -19,18 +23,16 @@ class FriendsController
             
             if (isset($data['id'])) {
                 $friends = $this->friendsModel->getFriendsById((int)$data['id']);
-                \tools\Utils::jsonResponse([
+                Utils::jsonResponse([
                     'friends' => $friends
                 ], 200);
             } else {
                 throw new Exception("ID não fornecido.");
             }
         } catch (Exception $e) {
-            \tools\Utils::jsonResponse([
+            Utils::jsonResponse([
                 'error' => $e->getMessage()
             ], 500);
         }
     }
-    
-    
 }

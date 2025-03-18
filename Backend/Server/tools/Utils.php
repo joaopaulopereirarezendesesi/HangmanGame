@@ -16,7 +16,7 @@ class Utils
 
     public function __construct()
     {
-        $this->db = Database::connect(); 
+        $this->db = Database::connect();
     }
 
     public function executeQuery($query, $params = [], $fetch = false)
@@ -35,27 +35,28 @@ class Utils
         }
     }
 
-    public function sendEmailWithInlineImage($to, $subject, $body, $imagePath, $from = 'hangmangame.com@gmail.com', $fromName = 'HangmanGame.com') {
+    public function sendEmailWithInlineImage($to, $subject, $body, $imagePath, $from = 'hangmangame.com@gmail.com', $fromName = 'HangmanGame.com')
+    {
         $mail = new PHPMailer(true);
-    
+
         try {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'hangmangame.com@gmail.com'; 
-            $mail->Password = 'HangMangame123'; 
+            $mail->Username = 'hangmangame.com@gmail.com';
+            $mail->Password = 'HangMangame123';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
-    
+
             $mail->setFrom($from, $fromName);
             $mail->addAddress($to);
-    
+
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = $body;
-    
+
             $mail->addEmbeddedImage($imagePath, 'image1');
-    
+
             $mail->send();
             return true;
         } catch (Exception $e) {
@@ -63,7 +64,8 @@ class Utils
         }
     }
 
-    public static function isPortInUse($port) {
+    public static function isPortInUse($port)
+    {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $output = shell_exec("netstat -aon | findstr :{$port}");
             if ($output) {
@@ -79,56 +81,63 @@ class Utils
         return false;
     }
 
-    public static function displayMessage($message, $type = 'info') {
+    public static function displayMessage($message, $type = 'info')
+    {
         $colors = [
-            'info' => "\033[34m",   
+            'info' => "\033[34m",
             'success' => "\033[32m",
-            'error' => "\033[31m",   
-            'reset' => "\033[0m"   
+            'error' => "\033[31m",
+            'reset' => "\033[0m"
         ];
 
         echo $colors[$type] . $message . $colors['reset'] . "\n";
     }
 
-    public static function jsonResponse($data, $status = 200) {
+    public static function jsonResponse($data, $status = 200)
+    {
         header('Content-Type: application/json');
         http_response_code($status);
         echo json_encode($data);
         exit;
     }
 
-    public static function errorResponse($message, $code = 400) {
+    public static function errorResponse($message, $code = 400)
+    {
         self::jsonResponse(['error' => $message], $code);
     }
 
-    public static function validateParams($request, $requiredParams) {
+    public static function validateParams($request, $requiredParams)
+    {
         $missing = [];
         foreach ($requiredParams as $param) {
             if (!isset($request[$param])) {
                 $missing[] = $param;
             }
         }
-    
+
         if (!empty($missing)) {
             self::errorResponse("Parâmetros ausentes: " . implode(', ', $missing), 400);
-            exit; 
+            exit;
         }
-    
+
         return array_intersect_key($request, array_flip($requiredParams));
     }
 
-    public static function debug_log($message) {
-        $logFile = __DIR__ . '../debug.log';
-        $date = date('Y-m-d H:i:s'); 
-        $logMessage = "[$date] $message\n"; 
+    public static function debug_log($message)
+    {
+        $logFile = __DIR__ . '/../logs/debug.log';
+        $date = date('Y-m-d H:i:s');
+        $logMessage = "[$date] $message\n";
         file_put_contents($logFile, $logMessage, FILE_APPEND);
     }
 
-    public static function validatePassword($password) {
+    public static function validatePassword($password)
+    {
         return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
     }
 
-    public static function getToken() {
+    public static function getToken()
+    {
         return $_COOKIE['token'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? null;
     }
 }

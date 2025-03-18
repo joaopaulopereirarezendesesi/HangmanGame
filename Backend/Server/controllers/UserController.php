@@ -1,8 +1,13 @@
 <?php
 
+namespace controllers;
+
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../tools/helpers.php';
-require_once __DIR__ . '/../core/JwtHandler.php';
+
+use models\UserModel;
+use tools\Utils;
+use core\JwtHandler;
+use Exception;
 
 class UserController
 {
@@ -10,62 +15,60 @@ class UserController
 
     public function __construct()
     {
-        $this->userModel = new \models\UserModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
     {
         $users = $this->userModel->getAllUsers();
-        \tools\Utils::jsonResponse($users, 200);
+        Utils::jsonResponse($users, 200);
     }
 
     public function show($id)
     {
         $user = $this->userModel->getUserById($id);
         if ($user) {
-            \tools\Utils::jsonResponse($user, 200);
+            Utils::jsonResponse($user, 200);
         } else {
-            \tools\Utils::errorResponse("Usuário não encontrado", 404);
+            Utils::errorResponse("Usuário não encontrado", 404);
         }
     }
 
     public function create()
     {
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
-        $data = \tools\Utils::validateParams($_POST, $requiredParams);
-    
+        $data = Utils::validateParams($_POST, $requiredParams);
+
         if (!$this->validateEmail($data['email'])) {
-            \tools\Utils::errorResponse("Formato de e-mail inválido", 400);
+            Utils::errorResponse("Formato de e-mail inválido", 400);
             return;
         }
-    
-        if (!\tools\Utils::validatePassword($data['password'])) {
-            \tools\Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
+
+        if (!Utils::validatePassword($data['password'])) {
+            Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
             return;
         }
-    
+
         if ($data['password'] !== $data['confirm_password']) {
-            \tools\Utils::errorResponse("As senhas não coincidem", 400);
+            Utils::errorResponse("As senhas não coincidem", 400);
             return;
         }
-    
+
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
-        \tools\Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
-    
+        Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
+
         $this->login($data['email'], $data['password']);
     }
-    
-
 
     public function recoverPassword()
     {
         $requiredParams = ['id', 'oldPassword', 'newPassword', 'c_newPassword'];
-        $data = \tools\Utils::validateParams($_POST, $requiredParams);
+        $data = Utils::validateParams($_POST, $requiredParams);
 
         $password = $this->userModel->getPasswordbyId($data['id']);
 
         if ($password !== $data['oldPassword']) {
-            \tools\Utils::errorResponse("Sua senha antiga não corresponde a senha inputada", 400);
+            Utils::errorResponse("Sua senha antiga não corresponde à senha inputada", 400);
             return;
         }
     }
@@ -74,37 +77,38 @@ class UserController
     {
         if ($email === null || $password === null) {
             $requiredParams = ['email', 'password'];
-            $data = \tools\Utils::validateParams($_POST, $requiredParams);
+            $data = Utils::validateParams($_POST, $requiredParams);
             $email = strtolower(trim($data['email']));
             $password = $data['password'];
         } else {
             $email = strtolower(trim($email));
         }
-    
+
         $user = $this->userModel->getUserByEmail($email);
-    
+
         if ($user && password_verify($password, $user['PASSWORD'])) {
-    
-            $token = \core\JwtHandler::generateToken([
+
+            $token = JwtHandler::generateToken([
                 'user_id' => $user['ID_U'],
                 'email' => $user['EMAIL'],
                 'nickname' => $user['NICKNAME'],
                 'password' => $user['PASSWORD'],
             ]);
-    
+
             session_start();
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
             setcookie('token', $token, time() + 3600, '/', '', true, true);
+            
             setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
             setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
-    
-            \tools\Utils::jsonResponse([
+
+            Utils::jsonResponse([
                 'message' => 'Login bem-sucedido',
                 'user_id' => $user['ID_U']
             ], 200);
         } else {
-            \tools\Utils::errorResponse("Credenciais inválidas", 401);
+            Utils::errorResponse("Credenciais inválidas", 401);
         }
     }
 
@@ -118,7 +122,7 @@ class UserController
         setcookie('nickname', '', time() - 3600, '/');
         setcookie('token', '', time() - 3600, '/');
 
-        \tools\Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
+        Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
     }
 
     public function isLoggedIn()
@@ -149,19 +153,16 @@ class UserController
 
     public function getRoomOrganizer()
     {
-        // Obtém os dados da requisição JSON
         $input = json_decode(file_get_contents('php://input'), true);
 
-        // Verifica se o parâmetro id_o está presente no JSON
         if (!isset($input['id_o'])) {
             throw new Exception('ID do organizador não fornecido.');
         }
 
         $id_o = $input['id_o'];
 
-        // Chama o modelo para obter a sala com o ID do organizador
-        \tools\Utils::jsonResponse([
-        'rooms' => $this->userModel->getRoomOrganizer($id_o)
+        Utils::jsonResponse([
+            'rooms' => $this->userModel->getRoomOrganizer($id_o)
         ]);
     }
 }

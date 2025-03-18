@@ -13,7 +13,7 @@ class RoomModel
 
     public function __construct()
     {
-        $this->utils = new Utils(); 
+        $this->utils = new Utils();
     }
 
     public function getCurrentRoomTime()
@@ -24,21 +24,21 @@ class RoomModel
 
     public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
     {
-        try { 
+        try {
             $query = "INSERT INTO rooms (ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
                     VALUES (:id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
 
             $params = [
-             ':id_o' => $id_o,
+                ':id_o' => $id_o,
                 ':room_name' => $room_name,
                 ':private' => $private,
                 ':password' => $private ? password_hash($password, PASSWORD_ARGON2ID) : null,
                 ':player_capacity' => $player_capacity,
-               ':time_limit' => $time_limit,
-               ':points' => $points
+                ':time_limit' => $time_limit,
+                ':points' => $points
             ];
 
-            $this->utils->executeQuery($query, $params); 
+            $this->utils->executeQuery($query, $params);
 
             return $this->getRoomNameId($room_name);
         } catch (Exception $e) {
@@ -52,7 +52,7 @@ class RoomModel
             $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
             $params = [':roomName' => $roomName];
 
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
 
             return $result[0]['ID_R'] ?? null;
         } catch (Exception $e) {
@@ -66,7 +66,7 @@ class RoomModel
             $query = "SELECT * FROM rooms WHERE ID_R = :roomId";
             $params = [':roomId' => $roomId];
 
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
 
             return $result[0] ?? null;
         } catch (Exception $e) {
@@ -80,7 +80,7 @@ class RoomModel
             $query = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = :roomName";
             $params = [':roomName' => $roomName];
 
-            $result = $this->utils->executeQuery($query, $params, true); 
+            $result = $this->utils->executeQuery($query, $params, true);
 
             return $result[0]['COUNT(*)'] > 0;
         } catch (Exception $e) {
@@ -93,13 +93,11 @@ class RoomModel
         try {
             $query = "SELECT * FROM rooms";
 
-            $result = $this->utils->executeQuery($query, [], true); 
+            $result = $this->utils->executeQuery($query, [], true);
 
             return $result ?? null;
         } catch (Exception $e) {
             throw new Exception("Erro ao obter sala: " . $e->getMessage());
         }
     }
-
-   
 }

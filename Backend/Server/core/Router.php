@@ -15,12 +15,13 @@ class Router
         $action = $this->sanitizeActionName($url['action']);
         $param = $url['param'];
 
-        $controllerPath = realpath(__DIR__ . "/../controllers/{$controllerName}.php");
+        // Adicione o namespace completo ao controlador
+        $controllerNamespace = 'controllers\\';
+        $controllerClass = $controllerNamespace . $controllerName;
 
-        if ($this->isValidController($controllerPath)) {
-            require_once $controllerPath;
-
-            $controller = new $controllerName();
+        // Verifique se a classe existe e é válida
+        if (class_exists($controllerClass)) {
+            $controller = new $controllerClass();
 
             if ($this->isValidAction($controller, $action)) {
                 $this->callAction($controller, $action, $param);
@@ -29,8 +30,8 @@ class Router
                 $this->sendError('Método não encontrado', 404);
             }
         } else {
-            $this->logAttempt("Controlador inválido: {$controllerName}");
-            $this->sendError('Controlador não encontrado', 404);
+            $this->logAttempt("Classe inválida: {$controllerClass}");
+            $this->sendError('Classe não encontrada', 404);
         }
     }
 
@@ -39,8 +40,8 @@ class Router
         $url = isset($_GET['url']) ? explode('/', rtrim($_GET['url'], '/')) : [];
         return [
             'controller' => $url[0] ?? $this->defaultController,
-            'action'     => $url[1] ?? $this->defaultAction,
-            'param'      => $url[2] ?? null,
+            'action' => $url[1] ?? $this->defaultAction,
+            'param' => $url[2] ?? null,
         ];
     }
 
@@ -52,11 +53,6 @@ class Router
     private function sanitizeActionName($name): string
     {
         return preg_replace('/[^a-zA-Z0-9_]/', '', $name);
-    }
-
-    private function isValidController($path): bool
-    {
-        return $path && strpos($path, realpath(__DIR__ . '/../controllers')) === 0;
     }
 
     private function isValidAction($controller, string $action): bool

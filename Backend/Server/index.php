@@ -3,7 +3,7 @@
 require_once 'config/config.php';
 require_once 'core/Database.php';
 require_once 'core/Router.php';
-require_once 'tools/helpers.php';
+require_once 'tools/Utils.php';
 
 class App
 {
@@ -39,6 +39,16 @@ class App
         }
     }
 
+    private function handleOptionsRequest(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+            header("Access-Control-Allow-Headers: Content-Type, Authorization");
+            header("HTTP/1.1 204 No Content");
+            exit();
+        }
+    }
 
     private function validateConfig(): void
     {
@@ -51,18 +61,10 @@ class App
         }
     }
 
-    private function handleOptionsRequest(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            tools\Utils::jsonResponse(['status' => 'OK'], 200);
-        }
-    }
-
     private function initializeRouter(): void
     {
         try {
             \core\Database::connect();
-
             $router = new core\Router();
             $router->run();
         } catch (\Exception $e) {
@@ -76,6 +78,7 @@ class App
         tools\Utils::errorResponse("Ocorreu um erro interno no servidor. Tente novamente mais tarde.", 500);
     }
 }
+
 
 try {
     // $statusWS = tools\Utils::isPortInUse(8000);
