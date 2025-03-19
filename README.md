@@ -96,16 +96,17 @@ O projeto utiliza as seguintes bibliotecas:
    - Execute esse INSERT antes de todos:
    ```sql
    INSERT INTO `photos`(`MATTER`, `ADDRESS`) VALUES 
-   ('antropologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\antropologia.png'),
-   ('biologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\biologia.png'),
-   ('cienciapolitica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\cienciapolitica.png'),
-   ('filosofia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\filosofia.png'),
-   ('fisica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\fisica.png'),
-   ('geografia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\geografia.png'),
-   ('historia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\historia.png'),
-   ('matematica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\matematica.png'),
-   ('psicologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\psicologia.png'),
-   ('sociologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\sociologia.png')
+    ('antropologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\antropologia.png'),
+    ('biologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\biologia.png'),
+    ('cienciapolitica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\cienciapolitica.png'),
+    ('filosofia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\filosofia.png'),
+    ('fisica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\fisica.png'),
+    ('geografia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\geografia.png'),
+    ('historia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\historia.png'),
+    ('matematica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\matematica.png'),
+    ('psicologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\psicologia.png'),
+    ('sociologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\sociologia.png');
+
    ```
    **Para testes:**
    - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
