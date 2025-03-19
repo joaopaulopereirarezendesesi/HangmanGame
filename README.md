@@ -174,15 +174,3 @@ O projeto utiliza as seguintes bibliotecas:
 ## 📜 Licença
 
 🔖 Este projeto está licenciado sob a **GNU License**.
-
-INSERT INTO `photos`(`MATTER`, `ADDRESS`) VALUES 
-('antropologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\antropologia.png'),
-('biologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\biologia.png'),
-('cienciapolitica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\cienciapolitica.png'),
-('filosofia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\filosofia.png'),
-('fisica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\fisica.png'),
-('geografia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\geografia.png'),
-('historia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\historia.png'),
-('matematica','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\matematica.png'),
-('psicologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\psicologia.png'),
-('sociologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\sociologia.png')
