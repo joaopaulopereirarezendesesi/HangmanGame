@@ -30,7 +30,7 @@ class PlayedModel
     public function joinRoom($userId, $roomId)
     {
         try {
-            $query = "INSERT INTO played (ID_U, ID_R, SCORE, IS_THE_CHALLENGER) VALUES (:userId, :roomId, 0, 0)";
+            $query = "INSERT INTO played (ID_PLAYED, ID_U, ID_R, SCORE, IS_THE_CHALLENGER) VALUES (UUID(), :userId, :roomId, 0, 0)";
             $params = [':userId' => $userId, ':roomId' => $roomId];
             $this->utils->executeQuery($query, $params);
         } catch (Exception $e) {

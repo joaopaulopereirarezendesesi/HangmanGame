@@ -69,7 +69,7 @@ class WSModel
     public function insertFriendRequest($id_r, $id_d)
     {
         try {
-            $query = "INSERT INTO `friend_requests` (`sender_id`, `receiver_id`) VALUES (:id_r, :id_d)";
+            $query = "INSERT INTO `friend_requests` (UUDI(), `sender_id`, `receiver_id`) VALUES (:id_r, :id_d)";
             $params = [
                 ':id_r' => $id_r,
                 ':id_d' => $id_d

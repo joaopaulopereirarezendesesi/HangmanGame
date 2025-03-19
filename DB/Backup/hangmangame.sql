@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 19/03/2025 às 01:17
+-- Tempo de geração: 20/03/2025 às 00:04
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `attempts` (
-  `ID_T` bigint(20) UNSIGNED NOT NULL,
-  `ID_ROUND` bigint(20) UNSIGNED NOT NULL,
+  `ID_T` char(36) NOT NULL,
+  `ID_ROUND` char(36) NOT NULL,
   `GUESS` varchar(255) NOT NULL,
-  `IS_CORRECT` tinyint(1) DEFAULT 0
+  `IS_CORRECT` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -41,8 +41,8 @@ CREATE TABLE `attempts` (
 --
 
 CREATE TABLE `friends` (
-  `ID_U` bigint(20) UNSIGNED NOT NULL,
-  `ID_A` bigint(20) UNSIGNED NOT NULL
+  `ID_U` char(36) NOT NULL,
+  `ID_A` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -52,20 +52,9 @@ CREATE TABLE `friends` (
 --
 
 CREATE TABLE `friend_requests` (
-  `id` bigint(11) NOT NULL,
-  `sender_id` bigint(20) UNSIGNED NOT NULL,
-  `receiver_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `photos`
---
-
-CREATE TABLE `photos` (
-  `MATTER` varchar(255) NOT NULL,
-  `ADDRESS` varchar(255) NOT NULL
+  `ID` char(36) NOT NULL,
+  `SENDER_ID` char(36) NOT NULL,
+  `RECEIVER_ID` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -75,32 +64,12 @@ CREATE TABLE `photos` (
 --
 
 CREATE TABLE `played` (
-  `ID_PLAYED` bigint(20) UNSIGNED NOT NULL,
-  `ID_U` bigint(20) UNSIGNED NOT NULL,
-  `ID_R` bigint(20) UNSIGNED NOT NULL,
+  `ID_PLAYED` char(36) NOT NULL,
+  `ID_U` char(36) NOT NULL,
+  `ID_R` char(36) NOT NULL,
   `SCORE` int(11) DEFAULT 0,
-  `IS_THE_CHALLENGER` tinyint(1) DEFAULT 0
+  `IS_THE_CHALLENGER` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-
---
--- Acionadores `played`
---
-DELIMITER $$
-CREATE TRIGGER `EmptyRoomTrigger` AFTER DELETE ON `played` FOR EACH ROW BEGIN
-    DECLARE player_count INT;
-
-    SELECT COUNT(*) INTO player_count
-    FROM played
-    WHERE ID_R = OLD.ID_R;
-
-    IF player_count = 0 THEN
-        DELETE FROM rooms WHERE ID_R = OLD.ID_R;
-    END IF;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -109,11 +78,11 @@ DELIMITER ;
 --
 
 CREATE TABLE `ranking` (
-  `ID_U` bigint(20) UNSIGNED NOT NULL,
-  `POSITION` int(11) DEFAULT NULL,
-  `AMOUNT_OF_WINS` int(11) DEFAULT 0,
-  `NUMBER_OF_GAMES` int(11) DEFAULT 0,
-  `POINT_AMOUNT` int(11) DEFAULT 0
+  `ID_U` char(36) NOT NULL,
+  `POSITION` int(11) NOT NULL,
+  `AMOUNT_OF_WINS` int(11) NOT NULL DEFAULT 0,
+  `NUMBER_OF_GAMES` int(11) NOT NULL DEFAULT 0,
+  `POINT_AMOUNT` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -123,14 +92,14 @@ CREATE TABLE `ranking` (
 --
 
 CREATE TABLE `rooms` (
-  `ID_R` bigint(20) UNSIGNED NOT NULL,
+  `ID_R` char(36) NOT NULL,
   `ROOM_NAME` varchar(100) NOT NULL,
-  `ID_O` bigint(20) UNSIGNED NOT NULL,
-  `PRIVATE` tinyint(1) DEFAULT 0,
+  `ID_O` char(36) NOT NULL,
+  `PRIVATE` tinyint(1) NOT NULL DEFAULT 0,
   `PASSWORD` varchar(50) DEFAULT NULL,
-  `PLAYER_CAPACITY` int(11) DEFAULT 10,
-  `TIME_LIMIT` int(11) DEFAULT 5,
-  `POINTS` int(11) DEFAULT NULL
+  `PLAYER_CAPACITY` int(11) NOT NULL DEFAULT 10,
+  `TIME_LIMIT` int(11) NOT NULL DEFAULT 5,
+  `POINTS` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -140,9 +109,9 @@ CREATE TABLE `rooms` (
 --
 
 CREATE TABLE `rounds` (
-  `ID_ROUND` bigint(20) UNSIGNED NOT NULL,
-  `ID_R` bigint(20) UNSIGNED NOT NULL,
-  `PLAYER_OF_THE_TIME` bigint(20) UNSIGNED NOT NULL
+  `ID_RD` char(36) NOT NULL,
+  `ID_R` char(36) NOT NULL,
+  `PLAYER_OF_THE_TIME` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -152,12 +121,12 @@ CREATE TABLE `rounds` (
 --
 
 CREATE TABLE `users` (
-  `ID_U` bigint(20) UNSIGNED NOT NULL,
+  `ID_U` char(36) NOT NULL,
   `NICKNAME` varchar(50) NOT NULL,
-  `EMAIL` varchar(100) DEFAULT NULL,
-  `PASSWORD` varchar(255) DEFAULT NULL,
-  `ONLINE` tinyint(1) NOT NULL,
-  `PHOTO` varchar(255) NOT NULL
+  `EMAIL` varchar(100) NOT NULL,
+  `PASSWORD` varchar(255) NOT NULL,
+  `ONLINE` enum('offline','online','away') NOT NULL DEFAULT 'offline',
+  `PHOTO` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -167,13 +136,15 @@ CREATE TABLE `users` (
 --
 
 CREATE TABLE `wordsmatter` (
-  `id` int(11) NOT NULL,
-  `matter` varchar(255) NOT NULL,
-  `word` varchar(255) NOT NULL,
-  `definition` text NOT NULL
+  `ID_W` char(36) NOT NULL,
+  `MATTER` varchar(255) NOT NULL,
+  `WORD` varchar(255) NOT NULL,
+  `DEFINITION` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+--
+-- Índices para tabelas despejadas
+--
 
 --
 -- Índices de tabela `attempts`
@@ -193,9 +164,9 @@ ALTER TABLE `friends`
 -- Índices de tabela `friend_requests`
 --
 ALTER TABLE `friend_requests`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_friend_requests_sender` (`sender_id`),
-  ADD KEY `fk_friend_requests_receiver` (`receiver_id`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `fk_friend_requests_sender` (`SENDER_ID`),
+  ADD KEY `fk_friend_requests_receiver` (`RECEIVER_ID`);
 
 --
 -- Índices de tabela `played`
@@ -222,7 +193,7 @@ ALTER TABLE `rooms`
 -- Índices de tabela `rounds`
 --
 ALTER TABLE `rounds`
-  ADD PRIMARY KEY (`ID_ROUND`),
+  ADD PRIMARY KEY (`ID_RD`),
   ADD KEY `ID_R` (`ID_R`),
   ADD KEY `PLAYER_OF_THE_TIME` (`PLAYER_OF_THE_TIME`);
 
@@ -237,53 +208,7 @@ ALTER TABLE `users`
 -- Índices de tabela `wordsmatter`
 --
 ALTER TABLE `wordsmatter`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT para tabelas despejadas
---
-
---
--- AUTO_INCREMENT de tabela `attempts`
---
-ALTER TABLE `attempts`
-  MODIFY `ID_T` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `friend_requests`
---
-ALTER TABLE `friend_requests`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `played`
---
-ALTER TABLE `played`
-  MODIFY `ID_PLAYED` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
-
---
--- AUTO_INCREMENT de tabela `rooms`
---
-ALTER TABLE `rooms`
-  MODIFY `ID_R` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- AUTO_INCREMENT de tabela `rounds`
---
-ALTER TABLE `rounds`
-  MODIFY `ID_ROUND` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `users`
---
-ALTER TABLE `users`
-  MODIFY `ID_U` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
-
---
--- AUTO_INCREMENT de tabela `wordsmatter`
---
-ALTER TABLE `wordsmatter`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  ADD PRIMARY KEY (`ID_W`);
 
 --
 -- Restrições para tabelas despejadas
@@ -293,7 +218,7 @@ ALTER TABLE `wordsmatter`
 -- Restrições para tabelas `attempts`
 --
 ALTER TABLE `attempts`
-  ADD CONSTRAINT `fk_attempts_round` FOREIGN KEY (`ID_ROUND`) REFERENCES `rounds` (`ID_ROUND`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_attempts_round` FOREIGN KEY (`ID_ROUND`) REFERENCES `rounds` (`ID_RD`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `friends`
@@ -306,8 +231,8 @@ ALTER TABLE `friends`
 -- Restrições para tabelas `friend_requests`
 --
 ALTER TABLE `friend_requests`
-  ADD CONSTRAINT `fk_friend_requests_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`ID_U`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_friend_requests_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`ID_U`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_friend_requests_receiver` FOREIGN KEY (`RECEIVER_ID`) REFERENCES `users` (`ID_U`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_friend_requests_sender` FOREIGN KEY (`SENDER_ID`) REFERENCES `users` (`ID_U`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `played`

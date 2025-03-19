@@ -53,7 +53,7 @@ class UserModel
                 }
             }
 
-            $query = "INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (:nickname, :email, :password)";
+            $query = "INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (UUID(), :nickname, :email, :password)";
             $params = [
                 ':nickname' => $nickname,
                 ':email' => $email,
