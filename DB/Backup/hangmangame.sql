@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 05/03/2025 às 15:52
+-- Tempo de geração: 19/03/2025 às 01:17
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -60,6 +60,17 @@ CREATE TABLE `friend_requests` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `photos`
+--
+
+CREATE TABLE `photos` (
+  `MATTER` varchar(255) NOT NULL,
+  `ADDRESS` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `played`
 --
 
@@ -70,6 +81,8 @@ CREATE TABLE `played` (
   `SCORE` int(11) DEFAULT 0,
   `IS_THE_CHALLENGER` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 --
 -- Acionadores `played`
@@ -143,24 +156,24 @@ CREATE TABLE `users` (
   `NICKNAME` varchar(50) NOT NULL,
   `EMAIL` varchar(100) DEFAULT NULL,
   `PASSWORD` varchar(255) DEFAULT NULL,
-  `ONLINE` tinyint(1) NOT NULL
+  `ONLINE` tinyint(1) NOT NULL,
+  `PHOTO` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Estrutura para tabela `wordsmatter`
 --
 
 CREATE TABLE `wordsmatter` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `matter` VARCHAR(255) NOT NULL,
-  `word` VARCHAR(255) NOT NULL,
-  `definition` TEXT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `id` int(11) NOT NULL,
+  `matter` varchar(255) NOT NULL,
+  `word` varchar(255) NOT NULL,
+  `definition` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
---
--- Índices para tabelas despejadas
---
+-- --------------------------------------------------------
 
 --
 -- Índices de tabela `attempts`
@@ -221,6 +234,12 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `EMAIL` (`EMAIL`);
 
 --
+-- Índices de tabela `wordsmatter`
+--
+ALTER TABLE `wordsmatter`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT para tabelas despejadas
 --
 
@@ -240,13 +259,13 @@ ALTER TABLE `friend_requests`
 -- AUTO_INCREMENT de tabela `played`
 --
 ALTER TABLE `played`
-  MODIFY `ID_PLAYED` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_PLAYED` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de tabela `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `ID_R` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_R` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de tabela `rounds`
@@ -258,7 +277,13 @@ ALTER TABLE `rounds`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID_U` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_U` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+
+--
+-- AUTO_INCREMENT de tabela `wordsmatter`
+--
+ALTER TABLE `wordsmatter`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- Restrições para tabelas despejadas
