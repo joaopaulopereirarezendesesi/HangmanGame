@@ -92,6 +92,7 @@ O projeto utiliza as seguintes bibliotecas:
 
 8. **Configure o banco de dados:**
    - Inicie os serviços do MySQL e Apache no XAMPP.
+   - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
    - Execute esse INSERT antes de todos:
    ```sql
    INSERT INTO `photos`(`MATTER`, `ADDRESS`) VALUES 
@@ -106,7 +107,6 @@ O projeto utiliza as seguintes bibliotecas:
    ('psicologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\psicologia.png'),
    ('sociologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\sociologia.png')
    ```
-   - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
    - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
 
 9. **Instale as dependências do backend:**
