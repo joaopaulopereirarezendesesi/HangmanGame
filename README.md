@@ -107,6 +107,7 @@ O projeto utiliza as seguintes bibliotecas:
    ('psicologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\psicologia.png'),
    ('sociologia','<Camnho até a pasta do projeto>\HangmanGame\Backend\Server\assets\photos\sociologia.png')
    ```
+   **Para testes:**
    - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
 
 9. **Instale as dependências do backend:**
