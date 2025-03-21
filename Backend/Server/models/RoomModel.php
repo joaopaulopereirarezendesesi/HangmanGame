@@ -24,9 +24,6 @@ class RoomModel
 
     public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
     {
-
-        Utils::debug_log($id_o);
-
         try {
             $query = "INSERT INTO rooms (ID_R, ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
                     VALUES (UUID(), :id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
