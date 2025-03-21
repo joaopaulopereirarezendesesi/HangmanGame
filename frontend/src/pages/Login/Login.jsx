@@ -78,16 +78,22 @@ function Login() {
       return;
     }
 
+    console.log(email);
+    console.log(nickname);
+    console.log(password);
+    console.log(confirmPassword);
+
     try {
       const response = await axios.post(
-        "http://localhost:4000/?url=User/create",
-        new URLSearchParams({
-          email,
-          nickname,
-          password,
-        }),
+        "http://localhost:80/?url=User/create",
         {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          email: email,
+          nickname: nickname,
+          password: password,
+          confirm_password: confirmPassword,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
@@ -100,7 +106,7 @@ function Login() {
         console.log(email, password);
         // Realizando o login após o cadastro
         const loginResponse = await axios.post(
-          "http://localhost:4000/?url=User/login",
+          "http://localhost:80/?url=User/login",
           new URLSearchParams({
             email,
             password,

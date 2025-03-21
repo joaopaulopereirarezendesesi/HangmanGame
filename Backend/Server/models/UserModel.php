@@ -39,6 +39,7 @@ class UserModel
 
     public function createUser($nickname, $email, $password)
     {
+
         try {
             $query = "SELECT * FROM users WHERE email = :email OR NICKNAME = :nickname";
             $params = [':email' => $email, ':nickname' => $nickname];
@@ -53,7 +54,13 @@ class UserModel
                 }
             }
 
-            $query = "INSERT INTO users (NICKNAME, EMAIL, PASSWORD) VALUES (UUID(), :nickname, :email, :password)";
+            Utils::debug_log(json_encode([
+                "nick" => $nickname,
+                "email" => $email,
+                "password" => $password
+            ]));
+
+            $query = "INSERT INTO users (ID_U, NICKNAME, EMAIL, PASSWORD, ONLINE) VALUES (UUID(), :nickname, :email, :password, 1)";
             $params = [
                 ':nickname' => $nickname,
                 ':email' => $email,

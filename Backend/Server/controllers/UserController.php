@@ -36,27 +36,43 @@ class UserController
 
     public function create()
     {
+        $json = file_get_contents("php://input");
+        if (empty($json)) {
+            Utils::debug_log("Nenhum dado JSON recebido. Tentando $_POST...");
+            $data = $_POST;
+        } else {
+            $data = json_decode($json, true);
+        }
+
+        if (!$data) {
+            Utils::debug_log("F, estou no !data");
+            Utils::errorResponse("Erro ao processar os dados. Envie como JSON.", 400);
+            return;
+        }
+
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
-        $data = Utils::validateParams($_POST, $requiredParams);
+        $data = Utils::validateParams($data, $requiredParams);
 
         if (!$this->validateEmail($data['email'])) {
+            Utils::debug_log("F, estou no validaemail");
             Utils::errorResponse("Formato de e-mail inválido", 400);
             return;
         }
 
         if (!Utils::validatePassword($data['password'])) {
+            Utils::debug_log("F, estou no password");
             Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
             return;
         }
 
         if ($data['password'] !== $data['confirm_password']) {
+            Utils::debug_log("F, estou no conecidencia de senhas");
             Utils::errorResponse("As senhas não coincidem", 400);
             return;
         }
 
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
         Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
-
         $this->login($data['email'], $data['password']);
     }
 
@@ -99,7 +115,7 @@ class UserController
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
             setcookie('token', $token, time() + 3600, '/', '', true, true);
-            
+
             setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
             setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
 
