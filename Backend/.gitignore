@@ -1,6 +1,7 @@
 Server/vendor
 Server/composer.lock
 Server/.env
+Server/logs/debug.log/*
 WS/composer.lock
 WS/vendor
 WS/.env
