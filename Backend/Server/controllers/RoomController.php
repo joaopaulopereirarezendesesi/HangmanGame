@@ -8,7 +8,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use models\RoomModel;   // Importa o modelo de salas
 use models\PlayedModel; // Importa o modelo de jogadores em salas
 use tools\Utils;        // Importa as funções auxiliares da classe Utils
-use core\JwtHandler;    // Importa o manipulador de tokens JWT
 use Exception;          // Importa a classe Exception para captura de erros
 
 class RoomController
@@ -24,39 +23,23 @@ class RoomController
         $this->playedModel = new PlayedModel(); // Instancia o modelo de jogadores em salas
     }
 
-    // Método para obter o ID do usuário a partir do token JWT
-    private function getUserIdFromToken()
-    {
-        $token = Utils::getToken(); // Obtém o token enviado na requisição
-        if (!$token) {
-            Utils::errorResponse('Token não encontrado.', 401); // Responde com erro se o token não estiver presente
-            return null;
-        }
-
-        // Valida e decodifica o token JWT
-        $decoded = JwtHandler::validateToken($token);
-        if (!$decoded)
-            return null;
-
-        return $decoded['user_id']; // Retorna o ID do usuário decodificado
-    }
-
     // Método para criar uma sala
     public function createRoom()
     {
         // Obtém o ID do organizador da sala a partir do token
-        $id_o = $this->getUserIdFromToken();
-        if (!$id_o)
+        $id = Utils::getUserIdFromToken();
+        if (!$id)
             return; // Retorna se não for possível obter o ID do organizador
 
         // Valida os parâmetros recebidos via POST
-        $data = Utils::validateParams($_POST, ['id']);
-        if (!is_array($data) || !isset($data['id'])) {
+        $data = $_POST;
+
+        if (!is_array($data)) {
             Utils::errorResponse('ID do usuário não encontrado ou inválido.', 400);
             return;
         }
 
-        $id_o = (string) $data['id']; // Define o ID do organizador
+        $id_o = (string) $id; // Define o ID do organizador
         $points = isset($_POST['points']) ? (int) $_POST['points'] : 2000; // Define os pontos, padrão 2000
         $room_name = $_POST['room_name'] ?? $this->generateRoomName(); // Define o nome da sala ou gera um
         $private = filter_var($_POST['private'] ?? false, FILTER_VALIDATE_BOOLEAN); // Verifica se a sala é privada
@@ -84,17 +67,6 @@ class RoomController
             return;
         }
 
-        // Log de debug
-        Utils::debug_log(json_encode([
-            'id_o' => $id_o,
-            'points' => $points,
-            'room_name' => $room_name,
-            'private' => $private,
-            'password' => $password ?? 'N/A',
-            'player_capacity' => $player_capacity ?? 'N/A',
-            'time_limit' => $time_limit ?? 'N/A'
-        ], JSON_PRETTY_PRINT));
-
         // Cria a sala usando o modelo
         $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
         $roomId = $result;
@@ -109,9 +81,6 @@ class RoomController
             'tampodasala' => $time_limit,
             'pontos' => $points
         ]);
-
-        // Tenta fazer o organizador entrar na sala
-        $this->joinRoom($roomId, $id_o, $password);
     }
 
     // Método para gerar o nome da sala baseado no horário atual
@@ -122,33 +91,36 @@ class RoomController
     }
 
     // Método para um usuário entrar em uma sala
-    public function joinRoom($roomId, $userId, $password = null)
+    public function joinRoom()
     {
-        $JWT = $this->getUserIdFromToken();
-        if (!$JWT)
+        $id = Utils::getUserIdFromToken();
+        if (!$id)
             return;
 
+        $data = $_POST;
+
         // Obtém os dados da sala a partir do ID
-        $room = $this->roomModel->getRoomById($roomId);
+        $room = $this->roomModel->getRoomById($data['roomid']);
+
         if (!$room) {
             Utils::errorResponse('Sala não encontrada.');
             return;
         }
 
         // Verifica se a sala é privada e valida a senha
-        if ($room['PRIVATE'] && !$this->validateRoomPassword($room['PASSWORD'], $password)) {
+        if ($room['PRIVATE'] && !$this->validateRoomPassword($room['PASSWORD'], $data['password'])) {
             Utils::errorResponse('Senha inválida.');
             return;
         }
 
         // Verifica se a capacidade da sala foi atingida
-        if ($this->playedModel->getPlayersCountInRoom($roomId) >= $room['PLAYER_CAPACITY']) {
+        if ($this->playedModel->getPlayersCountInRoom($data['roomid']) >= $room['PLAYER_CAPACITY']) {
             Utils::errorResponse('Sala cheia.');
             return;
         }
 
         // Adiciona o jogador à sala
-        $this->playedModel->joinRoom($userId, $roomId);
+        $this->playedModel->joinRoom($id, $data['roomId']);
 
         // Responde com sucesso
         Utils::jsonResponse(['message' => 'Entrou na sala com sucesso.']);
@@ -157,6 +129,10 @@ class RoomController
     // Método para remover um jogador de uma sala
     public function removePlayerFromRoom($roomId, $userId)
     {
+        $JWT = Utils::getUserIdFromToken();
+        if (!$JWT)
+            return;
+
         $room = $this->roomModel->getRoomById($roomId);
         if (!$room) {
             Utils::errorResponse('Sala não encontrada.');
@@ -180,6 +156,10 @@ class RoomController
     public function getRooms()
     {
         try {
+            $JWT = Utils::getUserIdFromToken();
+            if (!$JWT)
+                return;
+
             // Obtém todas as salas
             $getrooms = $this->roomModel->getRooms();
             if ($getrooms) {

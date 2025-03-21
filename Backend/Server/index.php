@@ -10,14 +10,11 @@ class App
 {
     public function __construct()
     {
-        // Configura permissões de CORS (Cross-Origin Resource Sharing)
-        $this->configureCORS();
-
         // Valida se todas as configurações obrigatórias estão definidas
         $this->validateConfig();
 
-        // Trata requisições do tipo OPTIONS para CORS
-        $this->handleOptionsRequest();
+        // Configura permissões de CORS (Cross-Origin Resource Sharing)
+        $this->configureCORS();
 
         // Inicializa o roteador da aplicação
         $this->initializeRouter();
@@ -32,8 +29,8 @@ class App
 
         // Verifica se a origem da requisição está na lista de permitidos
         if (in_array($origin, $allowedOrigins)) {
-            header("Access-Control-Allow-Origin: $origin");
-            header("Access-Control-Allow-Credentials: true");
+            header("Access-Control-Allow-Origin: $origin");  // Permite a origem exata
+            header("Access-Control-Allow-Credentials: true");  // Permite o envio de cookies/autenticação
         } else {
             // Caso a origem não seja permitida, retorna um erro 403 (Forbidden)
             header("HTTP/1.1 403 Forbidden");
@@ -46,21 +43,19 @@ class App
 
         // Trata requisições OPTIONS
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            $this->handleOptionsRequest();
-            exit();
+            $this->handleOptionsRequest($origin);
+            exit();  // Interrompe a execução para que o código abaixo não seja executado
         }
     }
 
-    private function handleOptionsRequest(): void
+    private function handleOptionsRequest(string $origin): void
     {
         // Caso a requisição seja do tipo OPTIONS, define os cabeçalhos e encerra
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-            header("Access-Control-Allow-Headers: Content-Type, Authorization");
-            header("HTTP/1.1 204 No Content");
-            exit();
-        }
+        header("Access-Control-Allow-Origin: $origin");  // Deixa a origem exata para OPTIONS
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type, Authorization");
+        header("HTTP/1.1 204 No Content");
+        exit();  // Interrompe a execução
     }
 
     private function validateConfig(): void
@@ -96,6 +91,10 @@ class App
     {
         // Exibe mensagem de erro e retorna resposta de erro ao cliente
         tools\Utils::displayMessage("Erro fatal: " . $e->getMessage(), 'error');
+
+        // Log do erro, se necessário, para fins de depuração (verifique se você tem um sistema de log)
+        // error_log("Erro no arquivo " . $e->getFile() . " na linha " . $e->getLine());
+
         tools\Utils::errorResponse("Ocorreu um erro interno no servidor. Tente novamente mais tarde.", 500);
     }
 }

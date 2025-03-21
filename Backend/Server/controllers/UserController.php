@@ -31,6 +31,7 @@ class UserController
     public function show($id)
     {
         $user = $this->userModel->getUserById($id);  // Obtém o usuário pelo ID
+
         if ($user) {
             Utils::jsonResponse($user, 200);  // Retorna o usuário como resposta JSON
         } else {
@@ -41,18 +42,12 @@ class UserController
     // Método para criar um novo usuário
     public function create()
     {
-        // Obtém os dados da requisição, seja em formato JSON ou via $_POST
-        $json = file_get_contents("php://input");
-        if (empty($json)) {
-            Utils::debug_log("Nenhum dado JSON recebido. Tentando $_POST...");
-            $data = $_POST;  // Caso os dados não sejam em JSON, tenta obter via $_POST
-        } else {
-            $data = json_decode($json, true);  // Converte os dados JSON em um array associativo
-        }
+        // Obtém os dados da requisição via $_POST
+        $data = $_POST;
 
         // Verifica se os dados foram corretamente recebidos
-        if (!$data) {
-            Utils::errorResponse("Erro ao processar os dados. Envie como JSON.", 400);
+        if (empty($data)) {
+            Utils::errorResponse("Nenhum dado recebido.", 400);
             return;
         }
 
@@ -89,13 +84,7 @@ class UserController
     // Método para recuperar a senha
     public function recoverPassword()
     {
-        $json = file_get_contents("php://input");
-        if (empty($json)) {
-            Utils::debug_log("Nenhum dado JSON recebido. Tentando $_POST...");
-            $data = $_POST;  // Tenta obter os dados via $_POST caso não seja JSON
-        } else {
-            $data = json_decode($json, true);  // Converte os dados JSON em um array associativo
-        }
+        $data = $_POST;  // Tenta obter os dados via $_POST
 
         // Valida os parâmetros recebidos
         $data = Utils::validateParams($_POST, $data);
@@ -171,7 +160,7 @@ class UserController
     }
 
     // Função para validar o formato do e-mail
-    function validateEmail($email)
+    public function validateEmail($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);  // Retorna verdadeiro se o e-mail for válido
     }
@@ -179,13 +168,17 @@ class UserController
     // Método para obter as salas que um usuário organiza
     public function getRoomOrganizer()
     {
-        $input = json_decode(file_get_contents('php://input'), true);  // Obtém os dados de entrada JSON
+        $id = Utils::getUserIdFromToken();
+        if (!$id)
+            return;
 
-        if (!isset($input['id_o'])) {
-            throw new Exception('ID do organizador não fornecido.');  // Lança um erro caso o ID não seja fornecido
+        Utils::debug_log($id);
+
+        if (!$id) {
+            throw new Exception('Token não fornecido.');  // Lança um erro caso o ID não seja fornecido
         }
 
-        $id_o = $input['id_o'];
+        $id_o = $id;
 
         // Retorna as salas organizadas pelo usuário
         Utils::jsonResponse([

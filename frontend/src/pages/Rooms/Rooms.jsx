@@ -50,11 +50,10 @@ function Rooms() {
 
   const fetchOrganizeRoom = async (id_o, roomID) => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         "http://localhost:80/?url=User/getRoomOrganizer",
-        { id_o },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
         }
       );
@@ -75,11 +74,11 @@ function Rooms() {
   const fetchFriends = async () => {
     try {
       console.log(typeof userId);
-      const response = await axios.post(
+
+      const response = await axios.get(
         "http://localhost:80/?url=Friends/getFriendsById",
-        { id: userId },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
         }
       );

@@ -26,13 +26,17 @@ class FriendsController
     public function getFriendsById()
     {
         try {
+            $id = Utils::getUserIdFromToken();
+            if (!$id)
+                return;
+
             // Lê o corpo da requisição e decodifica o JSON em um array associativo
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = $_POST;
 
             // Verifica se o ID foi fornecido no corpo da requisição
-            if (isset($data['id'])) {
+            if (isset($id)) {
                 // Chama o método getFriendsById do modelo para obter os amigos do usuário
-                $friends = $this->friendsModel->getFriendsById((string)$data['id']);  // Converte o ID para string antes de passar para o modelo
+                $friends = $this->friendsModel->getFriendsById((string)$id);  // Converte o ID para string antes de passar para o modelo
                 // Retorna a resposta JSON com a lista de amigos
                 Utils::jsonResponse([
                     'friends' => $friends

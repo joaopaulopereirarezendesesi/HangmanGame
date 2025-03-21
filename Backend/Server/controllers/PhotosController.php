@@ -23,6 +23,10 @@ class PhotosController
     // Método que tira uma foto com base em um assunto específico
     public function takePhotoWhithByMatter()
     {
+        $JWT = Utils::getUserIdFromToken();
+        if (!$JWT)
+            return;
+
         // Chama o método do modelo para tirar uma foto, passando o 'matter' (assunto) do POST
         $photo = $this->photoModel->takePhotoWhithByMatter($_POST['matter']);
 

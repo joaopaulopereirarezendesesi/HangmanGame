@@ -10,6 +10,7 @@ use PDOException;
 use Exception;
 use core\Database;
 use PHPMailer\PHPMailer\PHPMailer;
+use core\JwtHandler;
 
 class Utils
 {
@@ -19,6 +20,37 @@ class Utils
     {
         // Conecta ao banco de dados ao instanciar a classe
         $this->db = Database::connect();
+    }
+
+    /**
+     * Obtém o ID do usuário a partir do token JWT enviado na requisição.
+     * 
+     * Este método valida e decodifica o token JWT, e retorna o ID do usuário
+     * que está embutido dentro do token. Caso o token não seja encontrado ou
+     * não seja válido, o método retorna null.
+     * 
+     * @return mixed Retorna o ID do usuário decodificado ou null caso o token
+     *               não seja encontrado ou seja inválido.
+     * @throws Exception Lança uma exceção caso o token não seja válido ou
+     *                   ocorra algum erro ao decodificá-lo.
+     */
+
+    public static function getUserIdFromToken()
+    {
+        $token = self::getToken();  // Obtém o token enviado na requisição
+        self::debug_log($token);
+        if (!$token) {
+            self::errorResponse('Token não encontrado.', 401);  // Responde com erro se o token não estiver presente
+            return null;
+        }
+
+        // Valida e decodifica o token JWT
+        $decoded = JwtHandler::validateToken($token);
+        if (!$decoded) {
+            return null;
+        }
+
+        return $decoded['user_id'];  // Retorna o ID do usuário decodificado
     }
 
     /**
@@ -88,23 +120,6 @@ class Utils
             return true;
         } catch (Exception $e) {
             throw new Exception("Erro ao enviar email: " . $mail->ErrorInfo);
-        }
-    }
-
-    /**
-     * Verifica se uma porta está em uso no sistema operacional.
-     * 
-     * @param int $port Número da porta a ser verificada
-     * @return bool Retorna true se a porta estiver em uso
-     */
-    public static function isPortInUse($port)
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $output = shell_exec("netstat -aon | findstr :{$port}");
-            return !empty($output);
-        } else {
-            $output = shell_exec("lsof -ti :{$port}");
-            return !empty($output);
         }
     }
 

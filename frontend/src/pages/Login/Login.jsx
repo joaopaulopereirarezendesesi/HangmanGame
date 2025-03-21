@@ -78,11 +78,6 @@ function Login() {
       return;
     }
 
-    console.log(email);
-    console.log(nickname);
-    console.log(password);
-    console.log(confirmPassword);
-
     try {
       const response = await axios.post(
         "http://localhost:80/?url=User/create",
@@ -93,7 +88,7 @@ function Login() {
           confirm_password: confirmPassword,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
         }
       );
