@@ -49,7 +49,7 @@ class RoomController
             return;
         }
 
-        $id_o = (int) $data['id'];
+        $id_o = (string) $data['id'];
         $points = isset($_POST['points']) ? (int) $_POST['points'] : 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
         $private = filter_var($_POST['private'] ?? false, FILTER_VALIDATE_BOOLEAN);
