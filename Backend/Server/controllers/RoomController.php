@@ -8,6 +8,7 @@ use models\RoomModel;
 use models\PlayedModel;
 use tools\Utils;
 use core\JwtHandler;
+use Exception;
 
 class RoomController
 {
@@ -159,17 +160,18 @@ class RoomController
         try {
             $getrooms = $this->roomModel->getRooms();
             if ($getrooms) {
-                Utils::jsonResponse(["rooms" => $getrooms], 200); 
+                Utils::jsonResponse(["rooms" => $getrooms], 200);
             } else {
-                Utils::jsonResponse(["message" => "Nenhuma sala encontrada"], 404); 
+                Utils::jsonResponse(["message" => "Nenhuma sala encontrada"], 404);
             }
         } catch (Exception $e) {
             Utils::jsonResponse(["error" => $e->getMessage()], 500);
         }
     }
-    
 
-    public function countPlayers() {
+
+    public function countPlayers()
+    {
         $countPlayers = $this->playedModel->countPlayersInRoom((int)$_POST["id"]);
         Utils::jsonResponse(["players" => $countPlayers], 200);
     }

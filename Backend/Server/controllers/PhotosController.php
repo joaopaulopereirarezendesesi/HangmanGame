@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use models\PhotoModel;
 use tools\Utils;
+use Exception;
 use core\JwtHandler;
 
 class PhotosController
