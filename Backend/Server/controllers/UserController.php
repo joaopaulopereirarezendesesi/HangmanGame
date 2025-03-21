@@ -75,8 +75,15 @@ class UserController
 
     public function recoverPassword()
     {
-        $requiredParams = ['id', 'oldPassword', 'newPassword', 'c_newPassword'];
-        $data = Utils::validateParams($_POST, $requiredParams);
+        $json = file_get_contents("php://input");
+        if (empty($json)) {
+            Utils::debug_log("Nenhum dado JSON recebido. Tentando $_POST...");
+            $data = $_POST;
+        } else {
+            $data = json_decode($json, true);
+        }
+
+        $data = Utils::validateParams($_POST, $data);
 
         $password = $this->userModel->getPasswordbyId($data['id']);
 
@@ -136,27 +143,6 @@ class UserController
         setcookie('token', '', time() - 3600, '/');
 
         Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
-    }
-
-    public function isLoggedIn()
-    {
-        session_start();
-
-        if (isset($_SESSION['user_id'])) {
-            return true;
-        }
-
-        if (isset($_COOKIE['user_id']) && isset($_COOKIE['nickname'])) {
-            $user = $this->userModel->getUserById($_COOKIE['user_id']);
-
-            if ($user && $user['NICKNAME'] === $_COOKIE['nickname']) {
-                $_SESSION['user_id'] = $user['ID_U'];
-                $_SESSION['nickname'] = $user['NICKNAME'];
-                return true;
-            }
-        }
-
-        return false;
     }
 
     function validateEmail($email)
