@@ -45,7 +45,6 @@ class UserController
         }
 
         if (!$data) {
-            Utils::debug_log("F, estou no !data");
             Utils::errorResponse("Erro ao processar os dados. Envie como JSON.", 400);
             return;
         }
@@ -54,25 +53,23 @@ class UserController
         $data = Utils::validateParams($data, $requiredParams);
 
         if (!$this->validateEmail($data['email'])) {
-            Utils::debug_log("F, estou no validaemail");
             Utils::errorResponse("Formato de e-mail inválido", 400);
             return;
         }
 
         if (!Utils::validatePassword($data['password'])) {
-            Utils::debug_log("F, estou no password");
             Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
             return;
         }
 
         if ($data['password'] !== $data['confirm_password']) {
-            Utils::debug_log("F, estou no conecidencia de senhas");
             Utils::errorResponse("As senhas não coincidem", 400);
             return;
         }
 
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
         Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
+
         $this->login($data['email'], $data['password']);
     }
 
