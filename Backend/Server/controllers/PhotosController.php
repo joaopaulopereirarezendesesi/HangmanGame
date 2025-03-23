@@ -38,6 +38,7 @@ class PhotosController
      */
     public function takePhotoWhithByMatter()
     {
+        // Verifica o token e obtém o ID do usuário a partir do token JWT
         $JWT = Utils::getUserIdFromToken();
         if (!$JWT)
             return;

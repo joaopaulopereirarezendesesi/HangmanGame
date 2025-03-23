@@ -32,76 +32,83 @@ class UserController
     }
 
     /**
-     * Lista todos os usuários.
+     * Lista todos os usuários registrados no sistema.
      */
     public function index()
     {
-        $users = $this->userModel->getAllUsers();
-        Utils::jsonResponse($users, 200);
+        $users = $this->userModel->getAllUsers(); // Obtém todos os usuários
+        Utils::jsonResponse($users, 200); // Retorna os usuários como resposta JSON
     }
 
     /**
-     * Exibe um usuário específico com base no ID.
+     * Exibe um usuário específico com base no ID fornecido.
      *
      * @param int $id ID do usuário.
      */
     public function show($id)
     {
-        $user = $this->userModel->getUserById($id);
+        $user = $this->userModel->getUserById($id); // Obtém o usuário pelo ID
         
         if ($user) {
-            Utils::jsonResponse($user, 200);
+            Utils::jsonResponse($user, 200); // Retorna o usuário encontrado
         } else {
-            Utils::errorResponse("Usuário não encontrado", 404);
+            Utils::errorResponse("Usuário não encontrado", 404); // Retorna erro se não encontrar
         }
     }
 
     /**
-     * Cria um novo usuário.
+     * Cria um novo usuário com os dados fornecidos.
      */
     public function create()
     {
-        $data = $_POST;
+        $data = $_POST; // Obtém os dados enviados na requisição
 
         if (empty($data)) {
             Utils::jsonResponse(['error' => "Nenhum dado recebido."], 400);
             return;
         }
 
+        // Parâmetros obrigatórios para criar um usuário
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
         $data = Utils::validateParams($data, $requiredParams);
 
+        // Valida formato do e-mail
         if (!$this->validateEmail($data['email'])) {
             Utils::jsonResponse(['error' => "Formato de e-mail inválido"], 400);
             return;
         }
 
+        // Valida a força da senha
         if (!Utils::validatePassword($data['password'])) {
             Utils::jsonResponse(['error' => "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial."], 400);
             return;
         }
 
+        // Verifica se as senhas coincidem
         if ($data['password'] !== $data['confirm_password']) {
             Utils::jsonResponse(['error' => "As senhas não coincidem"], 400);
             return;
         }
 
+        // Cria o usuário no banco de dados
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
         Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
 
+        // Realiza login automaticamente após criação
         $this->login($data['email'], $data['password']);
     }
 
     /**
-     * Recupera a senha do usuário.
+     * Recupera a senha do usuário com base nos dados fornecidos.
      */
     public function recoverPassword()
     {
         $data = $_POST;
         $data = Utils::validateParams($_POST, $data);
         
-        $password = $this->userModel->getPasswordbyId($data['id']);
+        $password = $this->userModel->getPasswordbyId($data['id']); // Obtém a senha do usuário pelo ID
         
+        // Verifica se a senha antiga corresponde à senha cadastrada
         if ($password !== $data['oldPassword']) {
             Utils::errorResponse("Sua senha antiga não corresponde à senha inputada", 400);
             return;
@@ -109,7 +116,7 @@ class UserController
     }
 
     /**
-     * Realiza o login do usuário.
+     * Realiza o login do usuário com base nas credenciais fornecidas.
      *
      * @param string|null $email Email do usuário.
      * @param string|null $password Senha do usuário.
@@ -128,12 +135,14 @@ class UserController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['PASSWORD'])) {
+            // Gera um token JWT para autenticação
             $token = JwtHandler::generateToken([
                 'user_id' => $user['ID_U'],
                 'email' => $user['EMAIL'],
                 'nickname' => $user['NICKNAME'],
             ]);
 
+            // Inicia a sessão e define cookies de autenticação
             session_start();
             $_SESSION['user_id'] = $user['ID_U'];
             $_SESSION['nickname'] = $user['NICKNAME'];
@@ -151,7 +160,7 @@ class UserController
     }
 
     /**
-     * Realiza o logout do usuário.
+     * Realiza o logout do usuário, destruindo a sessão e removendo cookies.
      */
     public function logout()
     {
@@ -167,7 +176,7 @@ class UserController
     }
 
     /**
-     * Valida o formato do e-mail.
+     * Valida o formato do e-mail fornecido.
      *
      * @param string $email Email a ser validado.
      * @return bool Retorna true se o e-mail for válido.
@@ -178,11 +187,11 @@ class UserController
     }
 
     /**
-     * Obtém as salas que um usuário organiza.
+     * Obtém as salas que um usuário organiza com base no seu ID.
      */
     public function getRoomOrganizer()
     {
-        $id = Utils::getUserIdFromToken();
+        $id = Utils::getUserIdFromToken(); // Obtém o ID do usuário a partir do token
         if (!$id)
             return;
 
