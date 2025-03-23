@@ -9,18 +9,33 @@ use tools\Utils;        // Importa a classe Utils para funções auxiliares, com
 use Exception;          // Importa a classe Exception para captura de erros
 use core\JwtHandler;    // (não utilizado neste código, mas provavelmente será utilizado em outras partes)
 
+/**
+ * Classe PhotosController
+ *
+ * Responsável por gerenciar as operações relacionadas a fotos.
+ */
 class PhotosController
 {
-    // Instância do modelo de fotos
+    /** @var PhotoModel Instância do modelo de fotos */
     private $photoModel;
 
-    // Construtor da classe, inicializa o modelo de fotos
+    /**
+     * Construtor da classe PhotosController.
+     *
+     * Inicializa o modelo de fotos.
+     */
     public function __construct()
     {
         $this->photoModel = new PhotoModel(); // Cria uma nova instância de PhotoModel
     }
 
-    // Método que tira uma foto com base em um assunto específico
+    /**
+     * Tira uma foto com base em um assunto específico.
+     *
+     * Obtém o ID do usuário a partir do token JWT e processa a captura da foto com base no parâmetro 'matter'.
+     *
+     * @return void
+     */
     public function takePhotoWhithByMatter()
     {
         $JWT = Utils::getUserIdFromToken();

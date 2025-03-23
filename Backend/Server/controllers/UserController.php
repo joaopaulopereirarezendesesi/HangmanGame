@@ -10,162 +10,176 @@ use tools\Utils;       // Importa as funções auxiliares da classe Utils
 use core\JwtHandler;   // Importa o manipulador de tokens JWT
 use Exception;         // Importa a classe Exception para capturar erros
 
+/**
+ * Classe UserController
+ *
+ * Responsável pelo controle de usuários, incluindo operações de criação,
+ * autenticação, recuperação de senha e gerenciamento de sessões.
+ */
 class UserController
 {
-    private $userModel; // Declara a variável de modelo de usuário
+    /** @var UserModel Instância do modelo de usuário */
+    private $userModel;
 
-    // Construtor da classe, inicializa o modelo de usuários
+    /**
+     * Construtor da classe UserController.
+     *
+     * Inicializa o modelo de usuários.
+     */
     public function __construct()
     {
-        $this->userModel = new UserModel(); // Instancia o modelo de usuários
+        $this->userModel = new UserModel();
     }
 
-    // Método para listar todos os usuários
+    /**
+     * Lista todos os usuários.
+     */
     public function index()
     {
-        $users = $this->userModel->getAllUsers();  // Obtém todos os usuários
-        Utils::jsonResponse($users, 200);  // Retorna a lista de usuários como resposta JSON
+        $users = $this->userModel->getAllUsers();
+        Utils::jsonResponse($users, 200);
     }
 
-    // Método para exibir um usuário específico com base no ID
+    /**
+     * Exibe um usuário específico com base no ID.
+     *
+     * @param int $id ID do usuário.
+     */
     public function show($id)
     {
-        $user = $this->userModel->getUserById($id);  // Obtém o usuário pelo ID
-
+        $user = $this->userModel->getUserById($id);
+        
         if ($user) {
-            Utils::jsonResponse($user, 200);  // Retorna o usuário como resposta JSON
+            Utils::jsonResponse($user, 200);
         } else {
-            Utils::errorResponse("Usuário não encontrado", 404);  // Responde com erro caso o usuário não seja encontrado
+            Utils::errorResponse("Usuário não encontrado", 404);
         }
     }
 
-    // Método para criar um novo usuário
+    /**
+     * Cria um novo usuário.
+     */
     public function create()
     {
-        // Obtém os dados da requisição via $_POST
         $data = $_POST;
 
-        // Verifica se os dados foram corretamente recebidos
         if (empty($data)) {
-            Utils::errorResponse("Nenhum dado recebido.", 400);
+            Utils::jsonResponse(['error' => "Nenhum dado recebido."], 400);
             return;
         }
 
-        // Valida os parâmetros obrigatórios
         $requiredParams = ['nickname', 'email', 'password', 'confirm_password'];
         $data = Utils::validateParams($data, $requiredParams);
 
-        // Valida o formato do e-mail
         if (!$this->validateEmail($data['email'])) {
-            Utils::errorResponse("Formato de e-mail inválido", 400);
+            Utils::jsonResponse(['error' => "Formato de e-mail inválido"], 400);
             return;
         }
 
-        // Valida a senha
         if (!Utils::validatePassword($data['password'])) {
-            Utils::errorResponse("A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.", 400);
+            Utils::jsonResponse(['error' => "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial."], 400);
             return;
         }
 
-        // Verifica se as senhas são iguais
         if ($data['password'] !== $data['confirm_password']) {
-            Utils::errorResponse("As senhas não coincidem", 400);
+            Utils::jsonResponse(['error' => "As senhas não coincidem"], 400);
             return;
         }
 
-        // Cria o usuário no banco de dados
         $this->userModel->createUser($data['nickname'], $data['email'], $data['password']);
-        Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);  // Responde com sucesso
+        Utils::jsonResponse(['message' => 'Usuário criado com sucesso!'], 201);
 
-        // Realiza o login automaticamente após a criação do usuário
         $this->login($data['email'], $data['password']);
     }
 
-    // Método para recuperar a senha
+    /**
+     * Recupera a senha do usuário.
+     */
     public function recoverPassword()
     {
-        $data = $_POST;  // Tenta obter os dados via $_POST
-
-        // Valida os parâmetros recebidos
+        $data = $_POST;
         $data = Utils::validateParams($_POST, $data);
-
-        // Obtém a senha atual do usuário a partir do banco de dados
+        
         $password = $this->userModel->getPasswordbyId($data['id']);
-
-        // Verifica se a senha antiga fornecida é correta
+        
         if ($password !== $data['oldPassword']) {
             Utils::errorResponse("Sua senha antiga não corresponde à senha inputada", 400);
             return;
         }
     }
 
-    // Método para realizar o login
+    /**
+     * Realiza o login do usuário.
+     *
+     * @param string|null $email Email do usuário.
+     * @param string|null $password Senha do usuário.
+     */
     public function login($email = null, $password = null)
     {
         if ($email === null || $password === null) {
             $requiredParams = ['email', 'password'];
-            $data = Utils::validateParams($_POST, $requiredParams);  // Valida os parâmetros recebidos via POST
-            $email = strtolower(trim($data['email']));  // Converte o e-mail para minúsculo
+            $data = Utils::validateParams($_POST, $requiredParams);
+            $email = strtolower(trim($data['email']));
             $password = $data['password'];
         } else {
-            $email = strtolower(trim($email));  // Converte o e-mail para minúsculo
+            $email = strtolower(trim($email));
         }
 
-        // Verifica as credenciais do usuário no banco de dados
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['PASSWORD'])) {
-            // Gera um token JWT válido para o usuário
             $token = JwtHandler::generateToken([
                 'user_id' => $user['ID_U'],
                 'email' => $user['EMAIL'],
                 'nickname' => $user['NICKNAME'],
-                'password' => $user['PASSWORD'],
             ]);
 
-            session_start();  // Inicia uma nova sessão
-            $_SESSION['user_id'] = $user['ID_U'];  // Armazena o ID do usuário na sessão
-            $_SESSION['nickname'] = $user['NICKNAME'];  // Armazena o nickname na sessão
-            setcookie('token', $token, time() + 3600, '/', '', true, true);  // Define o cookie de token
-
-            // Define os cookies de ID e nickname para persistência
+            session_start();
+            $_SESSION['user_id'] = $user['ID_U'];
+            $_SESSION['nickname'] = $user['NICKNAME'];
+            setcookie('token', $token, time() + 3600, '/', '', true, true);
             setcookie('user_id', $user['ID_U'], time() + (86400 * 30), '/', '', true, false);
             setcookie('nickname', $user['NICKNAME'], time() + (86400 * 30), '/', '', true, false);
 
-            // Responde com sucesso e o ID do usuário
             Utils::jsonResponse([
                 'message' => 'Login bem-sucedido',
                 'user_id' => $user['ID_U']
             ], 200);
         } else {
-            // Responde com erro se as credenciais forem inválidas
-            Utils::errorResponse("Credenciais inválidas", 401);
+            Utils::jsonResponse(['message' => 'Credenciais inválidas'], 400);
         }
     }
 
-    // Método para realizar o logout
+    /**
+     * Realiza o logout do usuário.
+     */
     public function logout()
     {
         session_start();
-        session_unset();  // Limpa os dados da sessão
-        session_destroy();  // Destrói a sessão
+        session_unset();
+        session_destroy();
 
-        // Remove os cookies de sessão e token
         setcookie('user_id', '', time() - 3600, '/');
         setcookie('nickname', '', time() - 3600, '/');
         setcookie('token', '', time() - 3600, '/');
 
-        // Responde com sucesso no logout
         Utils::jsonResponse(['message' => 'Logout bem-sucedido'], 200);
     }
 
-    // Função para validar o formato do e-mail
+    /**
+     * Valida o formato do e-mail.
+     *
+     * @param string $email Email a ser validado.
+     * @return bool Retorna true se o e-mail for válido.
+     */
     public function validateEmail($email)
     {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);  // Retorna verdadeiro se o e-mail for válido
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    // Método para obter as salas que um usuário organiza
+    /**
+     * Obtém as salas que um usuário organiza.
+     */
     public function getRoomOrganizer()
     {
         $id = Utils::getUserIdFromToken();
@@ -175,12 +189,11 @@ class UserController
         Utils::debug_log($id);
 
         if (!$id) {
-            throw new Exception('Token não fornecido.');  // Lança um erro caso o ID não seja fornecido
+            throw new Exception('Token não fornecido.');
         }
 
         $id_o = $id;
 
-        // Retorna as salas organizadas pelo usuário
         Utils::jsonResponse([
             'rooms' => $this->userModel->getRoomOrganizer($id_o)
         ]);

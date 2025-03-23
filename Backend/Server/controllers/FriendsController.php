@@ -26,12 +26,10 @@ class FriendsController
     public function getFriendsById()
     {
         try {
+            // Verofoca o token e obtém o ID do usuário a partir do token JWT
             $id = Utils::getUserIdFromToken();
             if (!$id)
                 return;
-
-            // Lê o corpo da requisição e decodifica o JSON em um array associativo
-            $data = $_POST;
 
             // Verifica se o ID foi fornecido no corpo da requisição
             if (isset($id)) {
