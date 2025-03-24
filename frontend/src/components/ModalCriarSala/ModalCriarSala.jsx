@@ -4,14 +4,14 @@ import styles from "./ModalCriarSala.module.css";
 import axios from "axios";
 import RoomStatus from "../RoomStatus/RoomStatus";
 
-const ModalCriarSala = ({ setIsModalOpen }) => {
+const ModalCriarSala = ({ setIsModalOpen,  fetchRooms }) => {
   const [roomName, setRoomName] = useState("");
   const [privateRoom, setPrivateRoom] = useState(false);
   const [password, setPassword] = useState("");
   const [capacity, setCapacity] = useState(2);
   const [time, setTime] = useState("1000");
   const [points, setPoints] = useState("1000");
-  const [modality, setModality] = useState("Livre");
+  const [modality, setModality] = useState("livre");
 
   const handleSave = async () => {
     try {
@@ -36,7 +36,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
       formData.append("player_capacity", String(capacity));
       formData.append("time_limit", String(time));
       formData.append("points", String(points));
-      formData.append("modality", modality);
+      formData.append("modality", String(modality));
 
       const response = await axios.post(
         "http://localhost:80/?url=Room/createRoom",
@@ -47,16 +47,17 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
         }
       );
 
+      fetchRooms(); 
+
       console.log(response.data);
 
-      console.log("SALA CRIADA!");
       setRoomName("");
       setPrivateRoom(false);
       setPassword("");
       setCapacity(2);
       setPoints("1000");
       setTime("1000");
-      setModality("Livre");
+      setModality("livre");
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -147,16 +148,16 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
             value={modality}
             onChange={(e) => setModality(e.target.value)}
           >
-            <option value="Livre">Livre</option>
-            <option value="Antropologia">Antropologia</option>
-            <option value="Biologia">Biologia</option>
-            <option value="CienciaPolitica">Ciência Política</option>
-            <option value="Filosofia">Filosofia</option>
-            <option value="Fisica">Física</option>
-            <option value="Historia">História</option>
-            <option value="Matematica">Matemática</option>
-            <option value="Psicologia">Psicologia</option>
-            <option value="Sociologia">Sociologia</option>
+            <option value="livre">Livre</option>
+            <option value="antropologia">Antropologia</option>
+            <option value="biologia">Biologia</option>
+            <option value="cienciaPolitica">Ciência Política</option>
+            <option value="filosofia">Filosofia</option>
+            <option value="fisica">Física</option>
+            <option value="historia">História</option>
+            <option value="matematica">Matemática</option>
+            <option value="psicologia">Psicologia</option>
+            <option value="sociologia">Sociologia</option>
           </select>
         </label>
 

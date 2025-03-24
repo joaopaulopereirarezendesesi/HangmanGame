@@ -24,10 +24,12 @@ class PhotoModel
      * @return array Lista de fotos relacionadas à matéria
      * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
      */
-    public function takePhotoWhithByMatter($matter)
+    public function takePhotoWithMatter($matter)
     {
         try {
             $query = "SELECT * FROM photos WHERE MATTER = :matter";
+
+            $params = [':matter' => $matter];
 
             $result = $this->utils->executeQuery($query, $params, true);
 
