@@ -154,17 +154,6 @@ class Utils
     }
 
     /**
-     * Retorna uma resposta de erro no formato JSON.
-     *
-     * @param string $message Mensagem de erro
-     * @param int    $code    Código de status HTTP (padrão: 400)
-     */
-    public static function errorResponse($message, $code = 400)
-    {
-        self::jsonResponse(['error' => $message], $code);
-    }
-
-    /**
      * Valida se todos os parâmetros obrigatórios estão presentes na requisição.
      *
      * @param array $request        Dados da requisição
@@ -192,13 +181,20 @@ class Utils
      *
      * @param string $message Mensagem a ser registrada
      */
-    public static function debug_log($message)
+    public static function debug_log($message, $path = "debug")
     {
-        $logFile = __DIR__ . '/../logs/debug.log';
+        $logFile = __DIR__ . '/../logs/'. $path . '.log';
         $date = date('Y-m-d H:i:s');
+        
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+        
         $logMessage = "[$date] $message\n";
+        
         file_put_contents($logFile, $logMessage, FILE_APPEND);
     }
+    
 
     /**
      * Valida se uma senha atende aos critérios de segurança.
