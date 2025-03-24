@@ -1,52 +1,55 @@
 <?php
 
-namespace core; // Define o namespace como "core", indicando que a classe JwtHandler faz parte do núcleo do sistema
+namespace core;
 
-// Inclui o arquivo de configuração, onde provavelmente a chave secreta do JWT (JWT_SECRET) está definida
 require_once __DIR__ . '/../config/config.php';
 
-// Importa as classes necessárias para trabalhar com JWT usando a biblioteca Firebase JWT
-use Firebase\JWT\JWT; // Classe principal para criar e decodificar JWT
-use Firebase\JWT\Key;  // Classe usada para definir a chave de assinatura do JWT
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
+/**
+ * Classe responsável por gerar e validar tokens JWT.
+ */
 class JwtHandler
 {
-    // Define a chave secreta para a assinatura dos tokens JWT, que é carregada das configurações (JWT_SECRET)
+    /**
+     * @var string A chave secreta usada para assinar os tokens JWT.
+     */
     private static string $secret = JWT_SECRET;
-    // Define o algoritmo de assinatura utilizado, que é o HS256 (HMAC com SHA-256)
+
+    /**
+     * @var string O algoritmo de assinatura utilizado, que é HS256 (HMAC com SHA-256).
+     */
     private static string $alg = "HS256";
 
     /**
      * Gera um novo token JWT.
      *
-     * @param array $payload Dados a serem incluídos no token (por exemplo, informações do usuário)
-     * @param int $expTime Tempo de expiração do token em segundos (padrão: 3600 segundos = 1 hora)
-     * @return string O token JWT gerado
+     * @param array $payload Dados a serem incluídos no token (por exemplo, informações do usuário).
+     * @param int $expTime Tempo de expiração do token em segundos. O padrão é 3600 segundos (1 hora).
+     * @return string O token JWT gerado.
      */
     public static function generateToken(array $payload, int $expTime = 3600): string
     {
-        $issuedAt = time(); // Registra o momento de emissão do token
-        $payload['iat'] = $issuedAt; // Adiciona a data de emissão ao payload
-        $payload['exp'] = $issuedAt + $expTime; // Adiciona a data de expiração ao payload
+        $issuedAt = time();
+        $payload['iat'] = $issuedAt;
+        $payload['exp'] = $issuedAt + $expTime;
 
-        // Codifica o payload em um token JWT usando a chave secreta e o algoritmo HS256
         return JWT::encode($payload, self::$secret, self::$alg);
     }
 
     /**
      * Valida e decodifica um token JWT.
      *
-     * @param string $token O token JWT a ser validado
-     * @return array|null Retorna os dados decodificados se o token for válido, ou null caso contrário
+     * @param string $token O token JWT a ser validado.
+     * @return array|null Retorna os dados decodificados do token se válido, ou null caso contrário.
      */
     public static function validateToken(string $token): ?array
     {
         try {
-            // Decodifica o token usando a chave secreta e o algoritmo
             $decoded = JWT::decode($token, new Key(self::$secret, self::$alg));
-            return (array) $decoded; // Retorna o payload do token decodificado
+            return (array) $decoded;
         } catch (\Exception $e) {
-            // Em caso de erro (token inválido ou expirado), retorna null
             return null;
         }
     }

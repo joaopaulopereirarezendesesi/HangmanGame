@@ -2,7 +2,6 @@
 
 namespace tools;
 
-// Carrega as dependências do Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use PDO;
@@ -18,44 +17,42 @@ class Utils
 
     public function __construct()
     {
-        // Conecta ao banco de dados ao instanciar a classe
         $this->db = Database::connect();
     }
 
     /**
      * Obtém o ID do usuário a partir do token JWT enviado na requisição.
-     * 
+     *
      * Este método valida e decodifica o token JWT, e retorna o ID do usuário
-     * que está embutido dentro do token. Caso o token não seja encontrado ou
+     * embutido dentro do token. Caso o token não seja encontrado ou
      * não seja válido, o método retorna null.
-     * 
+     *
      * @return mixed Retorna o ID do usuário decodificado ou null caso o token
      *               não seja encontrado ou seja inválido.
      * @throws Exception Lança uma exceção caso o token não seja válido ou
      *                   ocorra algum erro ao decodificá-lo.
      */
-
     public static function getUserIdFromToken()
     {
-        $token = self::getToken();  // Obtém o token enviado na requisição
+        $token = self::getToken();  
         self::debug_log($token);
+
         if (!$token) {
-            self::errorResponse('Token não encontrado.', 401);  // Responde com erro se o token não estiver presente
+            self::errorResponse('Token não encontrado.', 401);  
             return null;
         }
 
-        // Valida e decodifica o token JWT
         $decoded = JwtHandler::validateToken($token);
         if (!$decoded) {
             return null;
         }
 
-        return $decoded['user_id'];  // Retorna o ID do usuário decodificado
+        return $decoded['user_id'];  
     }
 
     /**
      * Executa uma consulta SQL parametrizada.
-     * 
+     *
      * @param string $query  Consulta SQL
      * @param array  $params Parâmetros a serem vinculados à consulta
      * @param bool   $fetch  Se verdadeiro, retorna os resultados da consulta
@@ -80,7 +77,7 @@ class Utils
 
     /**
      * Envia um e-mail com uma imagem embutida no corpo da mensagem.
-     * 
+     *
      * @param string $to        Destinatário
      * @param string $subject   Assunto do e-mail
      * @param string $body      Corpo do e-mail
@@ -95,25 +92,21 @@ class Utils
         $mail = new PHPMailer(true);
 
         try {
-            // Configuração do servidor SMTP
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'hangmangame.com@gmail.com';
-            $mail->Password = 'HangMangame123';  // ⚠️ Credenciais expostas! Melhor armazená-las em variáveis de ambiente.
+            $mail->Password = 'HangMangame123'; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            // Configuração do remetente e destinatário
             $mail->setFrom($from, $fromName);
             $mail->addAddress($to);
 
-            // Configuração do e-mail
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = $body;
 
-            // Adiciona uma imagem embutida ao e-mail
             $mail->addEmbeddedImage($imagePath, 'image1');
 
             $mail->send();
@@ -123,9 +116,14 @@ class Utils
         }
     }
 
+    private static function validateRoomPassword(string $hashedPassword, ?string $password): bool
+    {
+        return !empty($password) && password_verify($password, $hashedPassword);
+    }
+
     /**
      * Exibe mensagens no console, formatando-as com cores.
-     * 
+     *
      * @param string $message Mensagem a ser exibida
      * @param string $type    Tipo da mensagem (info, success, error)
      */
@@ -143,7 +141,7 @@ class Utils
 
     /**
      * Retorna uma resposta JSON e encerra a execução do script.
-     * 
+     *
      * @param mixed $data   Dados a serem enviados no JSON
      * @param int   $status Código de status HTTP (padrão: 200)
      */
@@ -157,7 +155,7 @@ class Utils
 
     /**
      * Retorna uma resposta de erro no formato JSON.
-     * 
+     *
      * @param string $message Mensagem de erro
      * @param int    $code    Código de status HTTP (padrão: 400)
      */
@@ -168,7 +166,7 @@ class Utils
 
     /**
      * Valida se todos os parâmetros obrigatórios estão presentes na requisição.
-     * 
+     *
      * @param array $request        Dados da requisição
      * @param array $requiredParams Lista de parâmetros obrigatórios
      * @return array Retorna os parâmetros validados
@@ -182,7 +180,6 @@ class Utils
             }
         }
 
-        // Se houver parâmetros ausentes, retorna erro e encerra a execução
         if (!empty($missing)) {
             self::errorResponse("Parâmetros ausentes: " . implode(', ', $missing), 400);
         }
@@ -192,7 +189,7 @@ class Utils
 
     /**
      * Registra mensagens de debug em um arquivo de log.
-     * 
+     *
      * @param string $message Mensagem a ser registrada
      */
     public static function debug_log($message)
@@ -207,7 +204,7 @@ class Utils
      * Valida se uma senha atende aos critérios de segurança.
      * - Mínimo de 8 caracteres
      * - Pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial
-     * 
+     *
      * @param string $password Senha a ser validada
      * @return bool Retorna true se a senha for válida
      */
@@ -218,7 +215,7 @@ class Utils
 
     /**
      * Obtém o token de autenticação da requisição (via cookie ou cabeçalho HTTP).
-     * 
+     *
      * @return string|null Retorna o token ou null se não encontrado
      */
     public static function getToken()
