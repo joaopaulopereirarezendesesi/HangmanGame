@@ -93,21 +93,6 @@ O projeto utiliza as seguintes bibliotecas:
 8. **Configure o banco de dados:**
    - Inicie os serviços do MySQL e Apache no XAMPP.
    - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
-   - Execute esse INSERT antes de todos:
-   ```sql
-   INSERT INTO `photos`(`ID_PH`, `MATTER`, `ADDRESS`) VALUES 
-    (UUID(),'antropologia','http://localhost:80/assets/photos/antropologia.png'),
-    (UUID(),'biologia','http://localhost:80/assets/photos/biologia.png'),
-    (UUID(),'cienciapolitica','http://localhost:80/assets/photos/cienciapolitica.png'),
-    (UUID(),'filosofia','http://localhost:80/assets/photos/filosofia.png'),
-    (UUID(),'fisica','http://localhost:80/assets/photos/fisica.png'),
-    (UUID(),'geografia','http://localhost:80/assets/photos/geografia.png'),
-    (UUID(),'historia','http://localhost:80/assets/photos/historia.png'),
-    (UUID(),'matematica','http://localhost:80/assets/photos/matematica.png'),
-    (UUID(),'psicologia','http://localhost:80/assets/photos/psicologia.png'),
-    (UUID(),'sociologia','http://localhost:80/assets/photos/sociologia.png');
-
-   ```
    **Para testes:**
    - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
 

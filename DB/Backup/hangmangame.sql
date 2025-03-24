@@ -1,10 +1,9 @@
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20/03/2025 às 00:04
+-- Tempo de geração: 24/03/2025 às 02:59
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -61,6 +60,35 @@ CREATE TABLE `friend_requests` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `photos`
+--
+
+CREATE TABLE `photos` (
+  `ID_PH` char(36) NOT NULL,
+  `MATTER` varchar(255) NOT NULL,
+  `ADDRESS` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `photos`
+--
+
+INSERT INTO `photos` (`ID_PH`, `MATTER`, `ADDRESS`) VALUES
+('5c72027d-0851-11f0-94e0-74563cdb9d1a', 'livre', 'http://localhost:80/assets/photos/livre.png'),
+('7a3a84da-0846-11f0-94e0-74563cdb9d1a', 'antropologia', 'http://localhost:80/assets/photos/antropologia.png'),
+('7a3a9632-0846-11f0-94e0-74563cdb9d1a', 'biologia', 'http://localhost:80/assets/photos/biologia.png'),
+('7a3a9697-0846-11f0-94e0-74563cdb9d1a', 'cienciapolitica', 'http://localhost:80/assets/photos/cienciapolitica.png'),
+('7a3a96c7-0846-11f0-94e0-74563cdb9d1a', 'filosofia', 'http://localhost:80/assets/photos/filosofia.png'),
+('7a3a96ea-0846-11f0-94e0-74563cdb9d1a', 'fisica', 'http://localhost:80/assets/photos/fisica.png'),
+('7a3a970f-0846-11f0-94e0-74563cdb9d1a', 'geografia', 'http://localhost:80/assets/photos/geografia.png'),
+('7a3a9745-0846-11f0-94e0-74563cdb9d1a', 'historia', 'http://localhost:80/assets/photos/historia.png'),
+('7a3a9777-0846-11f0-94e0-74563cdb9d1a', 'matematica', 'http://localhost:80/assets/photos/matematica.png'),
+('7a3a979c-0846-11f0-94e0-74563cdb9d1a', 'psicologia', 'http://localhost:80/assets/photos/psicologia.png'),
+('7a3a97c0-0846-11f0-94e0-74563cdb9d1a', 'sociologia', 'http://localhost:80/assets/photos/sociologia.png');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `played`
 --
 
@@ -100,7 +128,9 @@ CREATE TABLE `rooms` (
   `PASSWORD` varchar(50) DEFAULT NULL,
   `PLAYER_CAPACITY` int(11) NOT NULL DEFAULT 10,
   `TIME_LIMIT` int(11) NOT NULL DEFAULT 5,
-  `POINTS` int(11) NOT NULL
+  `POINTS` int(11) NOT NULL,
+  `MODALITY` varchar(255) NOT NULL,
+  `MODALITY_IMG` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -168,6 +198,12 @@ ALTER TABLE `friend_requests`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `fk_friend_requests_sender` (`SENDER_ID`),
   ADD KEY `fk_friend_requests_receiver` (`RECEIVER_ID`);
+
+--
+-- Índices de tabela `photos`
+--
+ALTER TABLE `photos`
+  ADD PRIMARY KEY (`ID_PH`);
 
 --
 -- Índices de tabela `played`
