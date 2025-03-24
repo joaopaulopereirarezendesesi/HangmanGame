@@ -8,6 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Importa os modelos e utilitários necessários
 use models\RoomModel;   // Modelo para manipulação de salas
 use models\PlayedModel; // Modelo para manipulação de jogadores nas salas
+use controllers\PhotosController; // Controlador para manipulação de fotos
 use tools\Utils;        // Classe de utilitários
 use Exception;          // Classe para manipulação de exceções
 
@@ -19,11 +20,15 @@ class RoomController
     /** @var PlayedModel Instância do modelo de jogadores em salas */
     private $playedModel;
 
+    /** @var PhotosController Instância do controlador de fotos */
+    private $photosController;
+
     /**
      * Construtor da classe, inicializa os modelos RoomModel e PlayedModel
      */
     public function __construct()
     {
+        $this->photosController = new PhotosController();
         $this->roomModel = new RoomModel();
         $this->playedModel = new PlayedModel();
     }
@@ -49,6 +54,12 @@ class RoomController
 
         // Define valores padrão para os parâmetros da sala
         $id_o = (string) $id;
+        $modality = $data['modality']; // Modality é um assunto específico;
+
+        $modality_img = $this->photosController->takePhotoWhithByMatter(strtolower($data['modality'])); // Modality é um assunto específico;
+
+        Utils::debug_log($modality);
+        
         $points = isset($_POST['points']) ? (int) $_POST['points'] : 2000;
         $room_name = $_POST['room_name'] ?? $this->generateRoomName();
         $private = filter_var($_POST['private'] ?? false, FILTER_VALIDATE_BOOLEAN);
@@ -77,7 +88,7 @@ class RoomController
         }
 
         // Cria a sala no banco de dados
-        $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points);
+        $result = $this->roomModel->createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points, $modality, $modality_img);
         
         // Retorna os detalhes da sala criada
         Utils::jsonResponse([

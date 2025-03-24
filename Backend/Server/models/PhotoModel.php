@@ -35,7 +35,7 @@ class PhotoModel
             $result = $this->utils->executeQuery($query, $params, true);
 
             // Retorna o resultado ou um array vazio caso não haja fotos
-            return $result ?? [];
+            return $result[0]['ADDRESS'] ?? [];
         } catch (Exception $e) {
             // Lança uma exceção com a mensagem de erro caso algo dê errado
             throw new Exception("Erro ao buscar fotos por matéria: " . $e->getMessage());

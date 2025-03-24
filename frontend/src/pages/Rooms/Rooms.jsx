@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from "./Rooms.module.css";
-
 import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
 import Cookies from "js-cookie";
-
 import img from "../../assets/persona.jpg";
-
 import ModalCriarSala from "../../components/ModalCriarSala/ModalCriarSala";
-
 import { FaArrowRight, FaUser } from "react-icons/fa";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import { GiCrown } from "react-icons/gi";
@@ -17,8 +12,8 @@ import { GiCrown } from "react-icons/gi";
 function Rooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
+  const [playersCount, setPlayersCount] = useState({});
   const nickname = Cookies.get("nickname");
-  const userId = parseInt(Cookies.get("user_id"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,10 +33,9 @@ function Rooms() {
 
       setRooms(response.data.rooms);
 
-      // Passa o ID_R e o ID_O para obter o nome do organizador de cada sala
-      console.log("SALAS: ", response.data.rooms);
       response.data.rooms.forEach((room) => {
         fetchOrganizeRoom(room.ID_O, room.ID_R);
+        countPlayers(room.ID_R);
       });
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -58,11 +52,10 @@ function Rooms() {
         }
       );
 
-      // Atualize o nome do organizador para a sala correspondente
       setRooms((prevRooms) =>
         prevRooms.map((room) =>
           room.ID_R === roomID
-            ? { ...room, organizerName: response.data.rooms.NICKNAME } // A resposta tem o nome do organizador
+            ? { ...room, organizerName: response.data.rooms.NICKNAME }
             : room
         )
       );
@@ -73,8 +66,6 @@ function Rooms() {
 
   const fetchFriends = async () => {
     try {
-      console.log(typeof userId);
-
       const response = await axios.get(
         "http://localhost:80/?url=Friends/getFriendsById",
         {
@@ -83,24 +74,44 @@ function Rooms() {
         }
       );
 
-      console.log("MEUS AMIGUXOS: ", response.data);
+      console.log("MEUS AMIGUXOS:", response.data);
     } catch (error) {
       console.error(
-        "Erro ao buscar amigos: ",
+        "Erro ao buscar amigos:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+  const countPlayers = async (roomID) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:80/?url=Room/countPlayers",
+        new URLSearchParams({ id: roomID }),
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          withCredentials: true,
+        }
+      );
+
+      setPlayersCount((prevCounts) => ({
+        ...prevCounts,
+        [roomID]: response.data.players,
+      }));
+    } catch (error) {
+      console.error(
+        "Erro ao buscar jogadores:",
         error.response ? error.response.data : error.message
       );
     }
   };
 
   const handleLogout = () => {
-    // Remove os dados de login
     Cookies.remove("token");
     Cookies.remove("user_id");
     Cookies.remove("nickname");
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
-
-    // Redireciona para a página de login
     navigate("/");
   };
 
@@ -129,7 +140,10 @@ function Rooms() {
             {rooms.map((room) => (
               <div key={room.ID_R} className={styles.games}>
                 <div>
-                  <img src={img} alt="Imagem de perfil do usuário" />
+                  <img
+                    src={room.MODALITY_IMG}
+                    alt="Imagem de perfil do usuário"
+                  />
                   <p className={styles.titleRoom}>{room.ROOM_NAME}</p>
                 </div>
                 <div className={styles.text}>
@@ -138,8 +152,11 @@ function Rooms() {
                     {room.organizerName}
                   </p>
                   <p>
-                    <FaUser className={styles.capacityRoom} /> 6/
-                    {room.PLAYER_CAPACITY}
+                    <FaUser className={styles.capacityRoom} />{" "}
+                    {playersCount[room.ID_R] !== undefined
+                      ? playersCount[room.ID_R]
+                      : "Carregando..."}
+                    /{room.PLAYER_CAPACITY}
                   </p>
                   <p>
                     <GrStatusGoodSmall
@@ -151,6 +168,7 @@ function Rooms() {
                     />
                     {room.PRIVATE === 1 ? "Privado" : "Aberto"}
                   </p>
+                  <p>🎮 {room.MODALITY}</p>
                 </div>
 
                 <button className={styles.btnGames}>
@@ -169,7 +187,6 @@ function Rooms() {
           </aside>
         </section>
       </section>
-
       {isModalOpen && <ModalCriarSala setIsModalOpen={setIsModalOpen} />}
     </main>
   );

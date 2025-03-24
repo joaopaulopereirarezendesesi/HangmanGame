@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
 import styles from "./ModalCriarSala.module.css";
 import axios from "axios";
 import RoomStatus from "../RoomStatus/RoomStatus";
 
 const ModalCriarSala = ({ setIsModalOpen }) => {
-  const [roomName, setRoomName] = useState(""); 
-  const [privateRoom, setPrivateRoom] = useState(false); 
-  const [password, setPassword] = useState(""); 
-  const [capacity, setCapacity] = useState(2); 
-  const [time, setTime] = useState("1000"); 
-  const [points, setPoints] = useState("1000"); 
+  const [roomName, setRoomName] = useState("");
+  const [privateRoom, setPrivateRoom] = useState(false);
+  const [password, setPassword] = useState("");
+  const [capacity, setCapacity] = useState(2);
+  const [time, setTime] = useState("1000");
+  const [points, setPoints] = useState("1000");
+  const [modality, setModality] = useState("Livre");
 
   const handleSave = async () => {
     try {
@@ -19,11 +20,12 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
       console.log("Enviando:", {
         id: userId,
         room_name: roomName,
-        private: privateRoom ? "1" : "0", 
-        password: privateRoom ? password : "", 
+        private: privateRoom ? "1" : "0",
+        password: privateRoom ? password : "",
         player_capacity: capacity,
         time_limit: time,
         points: points,
+        modality: modality
       });
 
       const formData = new URLSearchParams();
@@ -34,6 +36,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
       formData.append("player_capacity", String(capacity));
       formData.append("time_limit", String(time));
       formData.append("points", String(points));
+      formData.append("modality", modality);
 
       const response = await axios.post(
         "http://localhost:80/?url=Room/createRoom",
@@ -44,7 +47,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
         }
       );
 
-      console.log(response.data); 
+      console.log(response.data);
 
       console.log("SALA CRIADA!");
       setRoomName("");
@@ -53,6 +56,7 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
       setCapacity(2);
       setPoints("1000");
       setTime("1000");
+      setModality("Livre");
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -135,18 +139,32 @@ const ModalCriarSala = ({ setIsModalOpen }) => {
           </select>
         </label>
 
+        <label htmlFor="modality">
+          Modalidade:
+          <select
+            name="modality"
+            id="modality"
+            value={modality}
+            onChange={(e) => setModality(e.target.value)}
+          >
+            <option value="Livre">Livre</option>
+            <option value="Antropologia">Antropologia</option>
+            <option value="Biologia">Biologia</option>
+            <option value="CienciaPolitica">Ciência Política</option>
+            <option value="Filosofia">Filosofia</option>
+            <option value="Fisica">Física</option>
+            <option value="Historia">História</option>
+            <option value="Matematica">Matemática</option>
+            <option value="Psicologia">Psicologia</option>
+            <option value="Sociologia">Sociologia</option>
+          </select>
+        </label>
+
         <button onClick={handleSave}>Salvar</button>
         <button onClick={() => setIsModalOpen(false)}>Close</button>
       </div>
     </div>
   );
 };
-
-// Nome da sala
-// Private/Public
-// Password
-// Capacidade players
-// Tempo Chat
-// Pontos para vitoria
 
 export default ModalCriarSala;

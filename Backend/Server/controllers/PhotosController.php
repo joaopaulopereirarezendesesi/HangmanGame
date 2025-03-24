@@ -36,17 +36,12 @@ class PhotosController
      *
      * @return void
      */
-    public function takePhotoWhithByMatter()
+    public function takePhotoWhithByMatter($matter)
     {
-        // Verifica o token e obtém o ID do usuário a partir do token JWT
-        $JWT = Utils::getUserIdFromToken();
-        if (!$JWT)
-            return;
-
         // Chama o método do modelo para tirar uma foto, passando o 'matter' (assunto) do POST
-        $photo = $this->photoModel->takePhotoWhithByMatter($_POST['matter']);
+        $photo = $this->photoModel->takePhotoWhithByMatter($matter);
 
         // Retorna uma resposta JSON com o resultado, status 201 (Criado)
-        Utils::jsonResponse(['message' => $photo], 201);
+        return $photo;
     }
 }

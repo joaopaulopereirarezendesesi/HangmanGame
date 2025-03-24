@@ -95,17 +95,17 @@ O projeto utiliza as seguintes bibliotecas:
    - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
    - Execute esse INSERT antes de todos:
    ```sql
-   INSERT INTO `photos`(`MATTER`, `ADDRESS`) VALUES 
-    ('antropologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\antropologia.png'),
-    ('biologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\biologia.png'),
-    ('cienciapolitica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\cienciapolitica.png'),
-    ('filosofia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\filosofia.png'),
-    ('fisica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\fisica.png'),
-    ('geografia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\geografia.png'),
-    ('historia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\historia.png'),
-    ('matematica','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\matematica.png'),
-    ('psicologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\psicologia.png'),
-    ('sociologia','C:\\Caminho\\até\\a\\pasta\\do\\projeto\\HangmanGame\\Backend\\Server\\assets\\photos\\sociologia.png');
+   INSERT INTO `photos`(`ID_PH`, `MATTER`, `ADDRESS`) VALUES 
+    (UUID(),'antropologia','http://localhost:80/assets/photos/antropologia.png'),
+    (UUID(),'biologia','http://localhost:80/assets/photos/biologia.png'),
+    (UUID(),'cienciapolitica','http://localhost:80/assets/photos/cienciapolitica.png'),
+    (UUID(),'filosofia','http://localhost:80/assets/photos/filosofia.png'),
+    (UUID(),'fisica','http://localhost:80/assets/photos/fisica.png'),
+    (UUID(),'geografia','http://localhost:80/assets/photos/geografia.png'),
+    (UUID(),'historia','http://localhost:80/assets/photos/historia.png'),
+    (UUID(),'matematica','http://localhost:80/assets/photos/matematica.png'),
+    (UUID(),'psicologia','http://localhost:80/assets/photos/psicologia.png'),
+    (UUID(),'sociologia','http://localhost:80/assets/photos/sociologia.png');
 
    ```
    **Para testes:**

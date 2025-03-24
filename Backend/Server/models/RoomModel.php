@@ -28,12 +28,12 @@ class RoomModel
     }
 
     // Método para criar uma nova sala no banco de dados
-    public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points)
+    public function createRoom($id_o, $room_name, $private, $password, $player_capacity, $time_limit, $points, $modality, $modality_img)
     {
         try {
             // Define a query SQL para inserir uma nova sala na tabela "rooms"
-            $query = "INSERT INTO rooms (ID_R, ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS) 
-                    VALUES (UUID(), :id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points)";
+            $query = "INSERT INTO rooms (ID_R, ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS, MODALITY, MODALITY_IMG) 
+                    VALUES (UUID(), :id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points, :modality, :modality_img)";
 
             // Parâmetros para substituir os valores na query SQL
             $params = [
@@ -43,7 +43,9 @@ class RoomModel
                 ':password' => $private ? password_hash($password, PASSWORD_ARGON2ID) : null, // Se a sala for privada, faz o hash da senha
                 ':player_capacity' => $player_capacity,
                 ':time_limit' => $time_limit,
-                ':points' => $points
+                ':points' => $points,
+                ':modality' => $modality,
+                ':modality_img' => $modality_img
             ];
 
             // Executa a query para inserir os dados da sala
