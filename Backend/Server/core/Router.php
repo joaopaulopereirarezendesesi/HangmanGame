@@ -120,7 +120,7 @@ class Router
         try {
             $param ? $controller->$action($param) : $controller->$action();
         } catch (\Exception $e) {
-            $this->sendError('Erro ao executar ação: ' . $e->getMessage(), 500);
+            Utils::jsonResponse('Erro ao executar ação: ' . $e->getMessage(), 500);
         }
     }
 }

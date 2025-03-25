@@ -31,6 +31,17 @@ class PhotosController
      */
     public function takePhotoWithMatter(string $matter): ?string
     {
-        return $this->photoModel->takePhotoWithMatter($matter);
+        try {
+            return $this->photoModel->takePhotoWithMatter($matter);
+        } catch (Exception $e) {
+            Utils::debug_log(
+                [
+                    "controllerErrorPhotos-takePhotoWithMatter" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 }

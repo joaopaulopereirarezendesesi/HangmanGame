@@ -26,18 +26,25 @@ class FriendsController
     public function getFriendsById(): void
     {
         try {
-            $id = Utils::getUserIdFromToken();
-            if (!$id) {
-                return;
+            $userId = Utils::getUserIdFromToken();
+            if (!$userId) {
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
             $friends = $this->friendsModel->getFriendsById(
-                filter_var($id, FILTER_SANITIZE_STRING)
+                strval($userId)
             );
 
-            Utils::jsonResponse(["friends" => $friends], 200);
+            Utils::jsonResponse(["friends" => $friends]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                ["controllerErrorFriends-getFriendsById" => $e->getMessage()],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 }

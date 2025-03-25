@@ -8,22 +8,24 @@ use models\UserModel;
 use tools\Utils;
 use core\JwtHandler;
 use Exception;
+use DateTime;
+use DateTimeZone;
 
 /**
- * Classe UserController
+ * Class UserController
  *
- * Responsável pelo controle de usuários, incluindo operações de criação,
- * autenticação, recuperação de senha e gerenciamento de sessões.
+ * Responsible for user management, including creation,
+ * authentication, password recovery, and session management.
  */
 class UserController
 {
-    /** @var UserModel Instância do modelo de usuário */
-    private $userModel;
+    /** @var UserModel User model instance */
+    private UserModel $userModel;
 
     /**
-     * Construtor da classe UserController.
+     * UserController constructor.
      *
-     * Inicializa o modelo de usuários.
+     * Initializes the user model.
      */
     public function __construct()
     {
@@ -31,18 +33,30 @@ class UserController
     }
 
     /**
-     * Lista todos os usuários registrados no sistema.
+     * Lists all registered users in the system.
      */
     public function index(): void
     {
-        $users = $this->userModel->getAllUsers();
-        Utils::jsonResponse($users, 200);
+        try {
+            $users = $this->userModel->getAllUsers();
+            Utils::jsonResponse($users);
+            exit();
+        } catch (Exception $e) {
+            Utils::debug_log(
+                [
+                    "controllerErrorUser-show" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 
     /**
-     * Exibe um usuário específico com base no ID fornecido.
+     * Displays a specific user based on the provided ID.
      *
-     * @param int $id ID do usuário.
+     * @param int $id User ID.
      */
     public function show($id): void
     {
@@ -50,17 +64,26 @@ class UserController
             $user = $this->userModel->getUserById($id);
 
             if ($user) {
-                Utils::jsonResponse($user, 200);
+                Utils::jsonResponse($user);
+                exit();
             } else {
-                Utils::errorResponse("Usuário não encontrado", 404);
+                Utils::errorResponse("User not found", 404);
+                exit();
             }
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorUser-show" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
     /**
-     * Cria um novo usuário com os dados fornecidos.
+     * Creates a new user with the provided data.
      */
     public function create(): void
     {
@@ -68,8 +91,8 @@ class UserController
             $data = $_POST;
 
             if (empty($data)) {
-                Utils::jsonResponse(["error" => "Nenhum dado recebido."], 400);
-                return;
+                Utils::jsonResponse(["error" => "No data received."], 400);
+                exit();
             }
 
             $requiredParams = [
@@ -81,51 +104,53 @@ class UserController
             $data = Utils::validateParams($data, $requiredParams);
 
             if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
-                Utils::jsonResponse(
-                    ["error" => "Formato de e-mail inválido"],
-                    400
-                );
-                return;
+                Utils::jsonResponse(["error" => "Invalid email format"], 400);
+                exit();
             }
 
             if (!Utils::validatePassword($data["password"])) {
                 Utils::jsonResponse(
                     [
                         "error" =>
-                            "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, uma minúscula, um número e um caractere especial.",
+                            "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
                     ],
                     400
                 );
-                return;
+                exit();
             }
 
             if ($data["password"] !== $data["confirm_password"]) {
-                Utils::jsonResponse(
-                    ["error" => "As senhas não coincidem"],
-                    400
-                );
-                return;
+                Utils::jsonResponse(["error" => "Passwords do not match"], 400);
+                exit();
             }
 
             $this->userModel->createUser(
-                $data["nickname"],
-                $data["email"],
-                $data["password"]
+                filter_var($data["nickname"], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+                strval(["email"]),
+                strval($data["password"])
             );
             Utils::jsonResponse(
-                ["message" => "Usuário criado com sucesso!"],
+                ["message" => "User successfully created!"],
                 201
             );
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorUser-create" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
     /**
-     * Realiza o login do usuário com base nas credenciais fornecidas.
+     * Logs in the user based on the provided credentials.
      *
-     * @param string|null $email Email do usuário.
-     * @param string|null $password Senha do usuário.
+     * @param string|null $email User email.
+     * @param string|null $password User password.
      */
     public function login(): void
     {
@@ -142,12 +167,17 @@ class UserController
                     "user_id" => $user["ID_U"],
                     "email" => $user["EMAIL"],
                     "nickname" => $user["NICKNAME"],
+                    "iss" => "hangman-game",
+                    "aud" => "user",
+                    "sub" => "login",
+                    "exp" => time() + 3600,
+                    "iat" => time(),
                 ]);
 
                 session_start();
                 $_SESSION["user_id"] = $user["ID_U"];
                 $_SESSION["nickname"] = $user["NICKNAME"];
-                setcookie("token", $token, time() + 3600, "/", "", true, true);
+                setcookie("jwt", $token, time() + 3600, "/", "", true, true);
                 setcookie(
                     "user_id",
                     $user["ID_U"],
@@ -167,39 +197,54 @@ class UserController
                     false
                 );
 
-                Utils::jsonResponse(
-                    [
-                        "message" => "Login bem-sucedido",
-                        "user_id" => $user["ID_U"],
-                    ],
-                    200
-                );
+                Utils::jsonResponse([
+                    "message" => "Login successful",
+                    "user_id" => $user["ID_U"],
+                ]);
+                exit();
             } else {
-                Utils::jsonResponse(["error" => "Credenciais inválidas"], 400);
+                Utils::jsonResponse(["error" => "Invalid credentials"], 400);
+                exit();
             }
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorUser-login" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
     /**
-     * Obtém as salas que um usuário organiza com base no seu ID.
+     * Retrieves the rooms that a user organizes based on their ID.
      */
     public function getRoomOrganizer(): void
     {
         try {
-            $id = Utils::getUserIdFromToken();
-            if (!$id) {
-                throw new Exception("Token não fornecido.");
+            $userId = Utils::getUserIdFromToken();
+            if (!$userId) {
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
-            $id_o = $id;
+            $id_o = $userId;
 
             Utils::jsonResponse([
                 "rooms" => $this->userModel->getRoomOrganizer($id_o),
             ]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorUser-getRoomOrganizer" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 }

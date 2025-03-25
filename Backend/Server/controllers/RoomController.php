@@ -40,23 +40,24 @@ class RoomController
         try {
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
-                return;
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
             $data = $_POST;
 
             if (!is_array($data)) {
                 Utils::jsonResponse(["error" => "Invalid data."], 404);
-                return;
+                exit();
             }
 
-            $modality = filter_var(strtolower($data["modality"]), FILTER_SANITIZE_STRING);
-            $modalityImg = filter_var($this->photosController->takePhotoWithMatter(
-                $modality
-            ), FILTER_SANITIZE_STRING);
+            $modality = strtolower($data["modality"]);
+            $modalityImg = strval(
+                $this->photosController->takePhotoWithMatter($modality)
+            );
 
             $points = isset($data["points"]) ? intval($data["points"]) : 2000;
-            $roomName = filter_var($data["room_name"],FILTER_SANITIZE_STRING) ?? $this->generateRoomName();
+            $roomName = strval($data["room_name"]) ?? $this->generateRoomName();
             $isPrivate = filter_var(
                 $data["private"] ?? false,
                 FILTER_VALIDATE_BOOLEAN
@@ -67,16 +68,16 @@ class RoomController
                     ["error" => "Room name already in use."],
                     400
                 );
-                return;
+                exit();
             }
 
-            $password = filter_var($data["password"],FILTER_SANITIZE_STRING) ?? "";
+            $password = strval($data["password"]) ?? "";
             if ($isPrivate && empty($password)) {
                 Utils::jsonResponse(
                     ["error" => "Password required for private rooms."],
                     400
                 );
-                return;
+                exit();
             }
 
             $playerCapacity = isset($data["player_capacity"])
@@ -91,11 +92,11 @@ class RoomController
                     ["error" => "Invalid capacity or time limit."],
                     400
                 );
-                return;
+                exit();
             }
 
             $roomId = $this->roomModel->createRoom(
-                filter_var($userId, FILTER_SANITIZE_STRING),
+                strval($userId),
                 $roomName,
                 $isPrivate,
                 $password,
@@ -116,8 +117,16 @@ class RoomController
                 "points" => $points,
                 "modality" => $modality,
             ]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-createRoom" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -134,7 +143,8 @@ class RoomController
         try {
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
-                return;
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
             $data = $_POST;
@@ -142,7 +152,7 @@ class RoomController
 
             if (!$room) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
-                return;
+                exit();
             }
 
             if (
@@ -153,7 +163,7 @@ class RoomController
                 )
             ) {
                 Utils::jsonResponse(["error" => "Invalid password."], 400);
-                return;
+                exit();
             }
 
             if (
@@ -161,13 +171,24 @@ class RoomController
                 $room["PLAYER_CAPACITY"]
             ) {
                 Utils::jsonResponse(["error" => "Room is full."], 403);
-                return;
+                exit();
             }
 
-            $this->playedModel->joinRoom(filter_var($userId, FILTER_SANITIZE_STRING), filter_var($data["roomId"], FILTER_SANITIZE_STRING));
+            $this->playedModel->joinRoom(
+                strval($userId),
+                strval($data["roomId"])
+            );
             Utils::jsonResponse(["message" => "Successfully joined the room."]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-joinRoom" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -183,20 +204,32 @@ class RoomController
         try {
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
-                return;
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
             $data = $_POST;
 
-            if (!$this->roomModel->getRoomById($data['roomId'])) {
+            if (!$this->roomModel->getRoomById($data["roomId"])) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
-                return;
+                exit();
             }
 
-            $this->playedModel->leaveRoom(filter_var($userId, FILTER_SANITIZE_STRING), filter_var($data["roomId"], FILTER_SANITIZE_STRING));
+            $this->playedModel->leaveRoom(
+                strval($userId),
+                strval($data["roomId"])
+            );
             Utils::jsonResponse(["message" => "Player successfully removed."]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-removePlayerFromRoom" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -212,20 +245,27 @@ class RoomController
         try {
             $authUserId = Utils::getUserIdFromToken();
             if (!$authUserId) {
-                return;
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
             }
 
             $rooms = $this->roomModel->getRooms();
             if ($rooms) {
-                Utils::jsonResponse(["rooms" => $rooms], 200);
+                Utils::jsonResponse(["rooms" => $rooms]);
+                exit();
             } else {
-                Utils::jsonResponse(
-                    ["message" => "No rooms found"],
-                    404
-                );
+                Utils::jsonResponse(["message" => "No rooms found"], 404);
+                exit();
             }
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-getRooms" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -239,23 +279,33 @@ class RoomController
     public function countPlayers(): void
     {
         try {
+            $authUserId = Utils::getUserIdFromToken();
+            if (!$authUserId) {
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+                exit();
+            }
 
             $data = $_POST;
 
             if (!isset($data["roomId"])) {
-                Utils::jsonResponse(
-                    ["error" => "Room ID not provided"],
-                    400
-                );
-                return;
+                Utils::jsonResponse(["error" => "Room ID not provided"], 400);
+                exit();
             }
 
             $playerCount = $this->playedModel->countPlayersInRoom(
-                filter_var($data["roomId"], FILTER_SANITIZE_STRING)
+                strval($data["roomId"])
             );
-            Utils::jsonResponse(["players" => $playerCount], 200);
+            Utils::jsonResponse(["players" => $playerCount]);
+            exit();
         } catch (Exception $e) {
-            Utils::jsonResponse(["error" => $e->getMessage()], 500);
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-countPlayers" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -266,6 +316,20 @@ class RoomController
      */
     private function generateRoomName(): string
     {
-        return "room_" . $this->roomModel->getCurrentRoomTime();
+        try {
+            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+            $formattedDate = $dateTime->format('Y-m-d H:i:s');
+
+            return "room_" . $formattedDate;
+        } catch (Exception $e) {
+            Utils::debug_log(
+                [
+                    "controllerErrorRoom-generateRoomName" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 }

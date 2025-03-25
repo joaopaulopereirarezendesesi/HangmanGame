@@ -5,3 +5,4 @@ Server/logs/debug.log/*
 WS/composer.lock
 WS/vendor
 WS/.env
+.idea
