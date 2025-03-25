@@ -7,6 +7,7 @@ use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 use controller\WebSocketController;
+use tools\Utils;
 
 use React\Socket\Server as ReactServer;
 use React\EventLoop\Factory as EventLoopFactory;
@@ -25,6 +26,6 @@ $server = new IoServer(
     $loop
 );
 
-tools\Utils::displayMessage("WebSocket server started!\n", 'success');
+Utils::displayMessage("WebSocket server started!\n", 'success');
 
 $server->run();

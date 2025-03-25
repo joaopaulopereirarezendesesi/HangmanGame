@@ -116,7 +116,7 @@ class Utils
         }
     }
 
-    private static function validateRoomPassword(string $hashedPassword, ?string $password): bool
+    public static function validateRoomPassword(string $hashedPassword, ?string $password): bool
     {
         return !empty($password) && password_verify($password, $hashedPassword);
     }
