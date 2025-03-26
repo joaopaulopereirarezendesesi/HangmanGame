@@ -57,7 +57,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
@@ -92,7 +93,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
@@ -140,7 +142,7 @@ class Utils
     public static function validateRoomPassword(
         string $hashedPassword,
         ?string $password
-    ): bool {
+    ): ?bool {
         try {
             return !empty($password) &&
                 password_verify($password, $hashedPassword);
@@ -161,7 +163,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return false;
         }
     }
 
@@ -193,7 +196,6 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -207,7 +209,7 @@ class Utils
     public static function validateParams(
         array $request,
         array $requiredParams
-    ): array {
+    ): ?array {
         try {
             $missing = [];
             foreach ($requiredParams as $param) {
@@ -232,7 +234,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
@@ -244,7 +247,7 @@ class Utils
     public static function debug_log(
         array|string $message,
         string $path = "debug"
-    ) {
+    ): void {
         try {
             $logFile = __DIR__ . "/../logs/" . $path . ".log";
             $date = date("Y-m-d H:i:s");
@@ -272,7 +275,6 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -284,7 +286,7 @@ class Utils
      * @param string $password Senha a ser validada
      * @return bool Retorna true se a senha for válida
      */
-    public static function validatePassword(string $password): bool
+    public static function validatePassword(string $password): ?bool
     {
         try {
             return preg_match(
@@ -299,7 +301,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
@@ -321,7 +324,8 @@ class Utils
                 "error"
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }
