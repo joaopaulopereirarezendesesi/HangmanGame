@@ -74,7 +74,7 @@ class Utils
         string $query,
         array $params = [],
         bool $fetch = false
-    ): array {
+    ): mixed {
         try {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);

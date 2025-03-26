@@ -1,0 +1,29 @@
+[2025-03-26 01:49:13] Array
+(
+    [data] => Array
+        (
+            [email] => joaopp.rezende@gmail.com
+            [password] => Exemplo123!
+        )
+
+    [email] => joaopp.rezende@gmail.com
+    [password] => Exemplo123!
+)
+
+[2025-03-26 01:49:13] Array
+(
+    [data] => Array
+        (
+            [email] => joaopp.rezende@gmail.com
+            [password] => Exemplo123!
+        )
+
+    [email] => joaopp.rezende@gmail.com
+    [password] => Exemplo123!
+)
+
+[2025-03-26 01:49:14] Array
+(
+    [token] => eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMmY2ZDQ1ZjMtMDhmMC0xMWYwLThjOGItNzQ1NjNjZGI5ZDFhIiwiZW1haWwiOiJqb2FvcHAucmV6ZW5kZUBnbWFpbC5jb20iLCJuaWNrbmFtZSI6IkpvXHUwMGUzbyBQYXVsbyIsImlzcyI6ImhhbmdtYW4tZ2FtZSIsImF1ZCI6InVzZXIiLCJzdWIiOiJsb2dpbiIsImV4cCI6MTc0Mjk1Mzc1NCwiaWF0IjoxNzQyOTUwMTU0fQ.USI_lSy-Zi8s9_z9o2PU-mBqbUxpZ-w9JIPOWw1GjW0
+)
+

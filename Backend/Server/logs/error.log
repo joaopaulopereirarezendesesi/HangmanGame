@@ -1,0 +1,5 @@
+[2025-03-26 01:55:16] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'teste1.sadsa@gmail.com' for key 'EMAIL'
+)
+

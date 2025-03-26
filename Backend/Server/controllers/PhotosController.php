@@ -27,9 +27,9 @@ class PhotosController
      * Captures a photo based on a specific subject.
      *
      * @param string $matter The subject of the photo.
-     * @return string|null The path of the photo or null in case of failure.
+     * @return ?array The path of the photo or null in case of failure.
      */
-    public function takePhotoWithMatter(string $matter): ?string
+    public function takePhotoWithMatter(string $matter): ?array
     {
         try {
             return $this->photoModel->takePhotoWithMatter($matter);
@@ -41,7 +41,8 @@ class PhotosController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

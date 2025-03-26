@@ -40,7 +40,6 @@ class UserController
         try {
             $users = $this->userModel->getAllUsers();
             Utils::jsonResponse($users);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -49,7 +48,6 @@ class UserController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -58,17 +56,15 @@ class UserController
      *
      * @param int $id User ID.
      */
-    public function show($id): void
+    public function show($userId): void
     {
         try {
-            $user = $this->userModel->getUserById($id);
+            $user = $this->userModel->getUserById($userId);
 
             if ($user) {
                 Utils::jsonResponse($user);
-                exit();
             } else {
-                Utils::errorResponse("User not found", 404);
-                exit();
+                Utils::jsonResponse(["error" => "User not found"], 404);
             }
         } catch (Exception $e) {
             Utils::debug_log(
@@ -78,7 +74,6 @@ class UserController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -92,7 +87,6 @@ class UserController
 
             if (empty($data)) {
                 Utils::jsonResponse(["error" => "No data received."], 400);
-                exit();
             }
 
             $requiredParams = [
@@ -105,7 +99,6 @@ class UserController
 
             if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
                 Utils::jsonResponse(["error" => "Invalid email format"], 400);
-                exit();
             }
 
             if (!Utils::validatePassword($data["password"])) {
@@ -116,12 +109,10 @@ class UserController
                     ],
                     400
                 );
-                exit();
             }
 
             if ($data["password"] !== $data["confirm_password"]) {
                 Utils::jsonResponse(["error" => "Passwords do not match"], 400);
-                exit();
             }
 
             $this->userModel->createUser(
@@ -133,7 +124,6 @@ class UserController
                 ["message" => "User successfully created!"],
                 201
             );
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -142,7 +132,6 @@ class UserController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -191,10 +180,8 @@ class UserController
                 Utils::jsonResponse([
                     "message" => "Login successful",
                 ]);
-                exit();
             } else {
                 Utils::jsonResponse(["error" => "Invalid credentials"], 400);
-                exit();
             }
         } catch (Exception $e) {
             Utils::debug_log(
@@ -204,7 +191,6 @@ class UserController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -217,7 +203,6 @@ class UserController
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $id_o = $userId;
@@ -225,7 +210,6 @@ class UserController
             Utils::jsonResponse([
                 "rooms" => $this->userModel->getRoomOrganizer($id_o),
             ]);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -234,7 +218,6 @@ class UserController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 }

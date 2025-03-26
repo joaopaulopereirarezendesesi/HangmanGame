@@ -41,14 +41,12 @@ class RoomController
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $data = $_POST;
 
             if (!is_array($data)) {
                 Utils::jsonResponse(["error" => "Invalid data."], 404);
-                exit();
             }
 
             $modality = strtolower($data["modality"]);
@@ -68,7 +66,6 @@ class RoomController
                     ["error" => "Room name already in use."],
                     400
                 );
-                exit();
             }
 
             $password = strval($data["password"]) ?? "";
@@ -77,7 +74,6 @@ class RoomController
                     ["error" => "Password required for private rooms."],
                     400
                 );
-                exit();
             }
 
             $playerCapacity = isset($data["player_capacity"])
@@ -92,7 +88,6 @@ class RoomController
                     ["error" => "Invalid capacity or time limit."],
                     400
                 );
-                exit();
             }
 
             $roomId = $this->roomModel->createRoom(
@@ -117,7 +112,6 @@ class RoomController
                 "points" => $points,
                 "modality" => $modality,
             ]);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -126,7 +120,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -144,7 +137,6 @@ class RoomController
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $data = $_POST;
@@ -152,7 +144,6 @@ class RoomController
 
             if (!$room) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
-                exit();
             }
 
             if (
@@ -163,7 +154,6 @@ class RoomController
                 )
             ) {
                 Utils::jsonResponse(["error" => "Invalid password."], 400);
-                exit();
             }
 
             if (
@@ -171,7 +161,6 @@ class RoomController
                 $room["PLAYER_CAPACITY"]
             ) {
                 Utils::jsonResponse(["error" => "Room is full."], 403);
-                exit();
             }
 
             $this->playedModel->joinRoom(
@@ -179,7 +168,6 @@ class RoomController
                 strval($data["roomId"])
             );
             Utils::jsonResponse(["message" => "Successfully joined the room."]);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -188,7 +176,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -205,14 +192,12 @@ class RoomController
             $userId = Utils::getUserIdFromToken();
             if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $data = $_POST;
 
             if (!$this->roomModel->getRoomById($data["roomId"])) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
-                exit();
             }
 
             $this->playedModel->leaveRoom(
@@ -220,7 +205,6 @@ class RoomController
                 strval($data["roomId"])
             );
             Utils::jsonResponse(["message" => "Player successfully removed."]);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -229,7 +213,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -246,16 +229,13 @@ class RoomController
             $authUserId = Utils::getUserIdFromToken();
             if (!$authUserId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $rooms = $this->roomModel->getRooms();
             if ($rooms) {
                 Utils::jsonResponse(["rooms" => $rooms]);
-                exit();
             } else {
                 Utils::jsonResponse(["message" => "No rooms found"], 404);
-                exit();
             }
         } catch (Exception $e) {
             Utils::debug_log(
@@ -265,7 +245,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -282,21 +261,18 @@ class RoomController
             $authUserId = Utils::getUserIdFromToken();
             if (!$authUserId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
-                exit();
             }
 
             $data = $_POST;
 
             if (!isset($data["roomId"])) {
                 Utils::jsonResponse(["error" => "Room ID not provided"], 400);
-                exit();
             }
 
             $playerCount = $this->playedModel->countPlayersInRoom(
                 strval($data["roomId"])
             );
             Utils::jsonResponse(["players" => $playerCount]);
-            exit();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -305,7 +281,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
@@ -314,7 +289,7 @@ class RoomController
      *
      * @return string Retorna o nome gerado para a sala.
      */
-    private function generateRoomName(): string
+    private function generateRoomName(): ?string
     {
         try {
             $dateTime = new DateTime('now', new DateTimeZone('UTC'));
@@ -329,7 +304,8 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

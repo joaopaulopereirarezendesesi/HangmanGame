@@ -2,7 +2,7 @@
 
 namespace core;
 
-require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . "/../config/config.php";
 
 use tools\Utils;
 use PDO;
@@ -32,7 +32,10 @@ final class Database
                     self::getDefaultOptions($options)
                 );
             } catch (PDOException $e) {
-                Utils::displayMessage("Erro na conexão: " . $e->getMessage(), 'error');
+                Utils::debug_log(
+                    "Erro na conexão: " . $e->getMessage(),
+                    "error"
+                );
                 throw new PDOException("Erro ao conectar ao banco de dados.");
             }
         }
@@ -47,7 +50,11 @@ final class Database
      */
     private static function getDsn(): string
     {
-        return 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+        return "mysql:host=" .
+            DB_HOST .
+            ";dbname=" .
+            DB_NAME .
+            ";charset=utf8mb4";
     }
 
     /**
