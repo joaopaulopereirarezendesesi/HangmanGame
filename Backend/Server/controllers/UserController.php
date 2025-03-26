@@ -126,7 +126,7 @@ class UserController
 
             $this->userModel->createUser(
                 filter_var($data["nickname"], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-                strval(["email"]),
+                strval($data["email"]),
                 strval($data["password"])
             );
             Utils::jsonResponse(
@@ -179,15 +179,6 @@ class UserController
                 $_SESSION["nickname"] = $user["NICKNAME"];
                 setcookie("jwt", $token, time() + 3600, "/", "", true, true);
                 setcookie(
-                    "user_id",
-                    $user["ID_U"],
-                    time() + 86400 * 30,
-                    "/",
-                    "",
-                    true,
-                    false
-                );
-                setcookie(
                     "nickname",
                     $user["NICKNAME"],
                     time() + 86400 * 30,
@@ -199,7 +190,6 @@ class UserController
 
                 Utils::jsonResponse([
                     "message" => "Login successful",
-                    "user_id" => $user["ID_U"],
                 ]);
                 exit();
             } else {

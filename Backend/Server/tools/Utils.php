@@ -2,7 +2,7 @@
 
 namespace tools;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 use PDO;
 use PDOException;
@@ -13,7 +13,7 @@ use core\JwtHandler;
 
 class Utils
 {
-    private $db;
+    private PDO $db;
 
     public function __construct()
     {
@@ -32,22 +32,33 @@ class Utils
      * @throws Exception Lança uma exceção caso o token não seja válido ou
      *                   ocorra algum erro ao decodificá-lo.
      */
-    public static function getUserIdFromToken()
+    public static function getUserIdFromToken(): ?string
     {
-        $token = self::getToken();  
-        self::debug_log($token);
+        try {
+            $token = self::getToken();
+            self::debug_log($token);
 
-        if (!$token) {
-            self::errorResponse('Token não encontrado.', 401);  
-            return null;
+            if (!$token) {
+                self::jsonResponse("Token não encontrado.", 401);
+                return null;
+            }
+
+            $decoded = JwtHandler::validateToken($token);
+            if (!$decoded) {
+                return null;
+            }
+
+            return $decoded["user_id"];
+        } catch (PDOException $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-getUserIdFromToken" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
-
-        $decoded = JwtHandler::validateToken($token);
-        if (!$decoded) {
-            return null;
-        }
-
-        return $decoded['user_id'];  
     }
 
     /**
@@ -59,8 +70,11 @@ class Utils
      * @return mixed Retorna os resultados da consulta (se fetch for true) ou o statement
      * @throws Exception Em caso de erro na execução da consulta
      */
-    public function executeQuery($query, $params = [], $fetch = false)
-    {
+    public function executeQuery(
+        string $query,
+        array $params = [],
+        bool $fetch = false
+    ): array {
         try {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);
@@ -71,7 +85,14 @@ class Utils
 
             return $stmt;
         } catch (PDOException $e) {
-            throw new Exception("Erro ao executar a consulta: " . $e->getMessage());
+            self::debug_log(
+                [
+                    "toolsErrorUtils-executeQuery" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
     }
 
@@ -87,56 +108,61 @@ class Utils
      * @return bool Retorna true se o e-mail for enviado com sucesso
      * @throws Exception Se houver erro no envio do e-mail
      */
-    public function sendEmailWithInlineImage($to, $subject, $body, $imagePath, $from = 'hangmangame.com@gmail.com', $fromName = 'HangmanGame.com')
-    {
-        $mail = new PHPMailer(true);
+    // public function sendEmailWithInlineImage($to, $subject, $body, $imagePath, $from = 'hangmangame.com@gmail.com', $fromName = 'HangmanGame.com')
+    // {
+    //     $mail = new PHPMailer(true);
 
+    //     try {
+    //         $mail->isSMTP();
+    //         $mail->Host = 'smtp.gmail.com';
+    //         $mail->SMTPAuth = true;
+    //         $mail->Username = 'hangmangame.com@gmail.com';
+    //         $mail->Password = 'HangMangame123';
+    //         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    //         $mail->Port = 587;
+
+    //         $mail->setFrom($from, $fromName);
+    //         $mail->addAddress($to);
+
+    //         $mail->isHTML(true);
+    //         $mail->Subject = $subject;
+    //         $mail->Body = $body;
+
+    //         $mail->addEmbeddedImage($imagePath, 'image1');
+
+    //         $mail->send();
+    //         return true;
+    //     } catch (Exception $e) {
+    //         throw new Exception("Erro ao enviar email: " . $mail->ErrorInfo);
+    //     }
+    // }
+
+    public static function validateRoomPassword(
+        string $hashedPassword,
+        ?string $password
+    ): bool {
         try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'hangmangame.com@gmail.com';
-            $mail->Password = 'HangMangame123'; 
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
-
-            $mail->setFrom($from, $fromName);
-            $mail->addAddress($to);
-
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = $body;
-
-            $mail->addEmbeddedImage($imagePath, 'image1');
-
-            $mail->send();
-            return true;
-        } catch (Exception $e) {
-            throw new Exception("Erro ao enviar email: " . $mail->ErrorInfo);
+            return !empty($password) &&
+                password_verify($password, $hashedPassword);
+        } catch (PDOException $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-validateRoomPassword" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        } catch (PDOException $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-validateRoomPassword" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
-    }
-
-    public static function validateRoomPassword(string $hashedPassword, ?string $password): bool
-    {
-        return !empty($password) && password_verify($password, $hashedPassword);
-    }
-
-    /**
-     * Exibe mensagens no console, formatando-as com cores.
-     *
-     * @param string $message Mensagem a ser exibida
-     * @param string $type    Tipo da mensagem (info, success, error)
-     */
-    public static function displayMessage($message, $type = 'info')
-    {
-        $colors = [
-            'info' => "\033[34m",
-            'success' => "\033[32m",
-            'error' => "\033[31m",
-            'reset' => "\033[0m"
-        ];
-
-        echo $colors[$type] . $message . $colors['reset'] . "\n";
     }
 
     /**
@@ -145,12 +171,30 @@ class Utils
      * @param mixed $data   Dados a serem enviados no JSON
      * @param int   $status Código de status HTTP (padrão: 200)
      */
-    public static function jsonResponse($data, $status = 200)
-    {
-        header('Content-Type: application/json');
-        http_response_code($status);
-        echo json_encode($data);
-        exit;
+    public static function jsonResponse(
+        array|string $data,
+        int $status = 200
+    ): void {
+        try {
+            header("Content-Type: application/json; charset=utf-8");
+            http_response_code($status);
+
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+            exit();
+        } catch (PDOException $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-jsonResponse" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 
     /**
@@ -160,20 +204,36 @@ class Utils
      * @param array $requiredParams Lista de parâmetros obrigatórios
      * @return array Retorna os parâmetros validados
      */
-    public static function validateParams($request, $requiredParams)
-    {
-        $missing = [];
-        foreach ($requiredParams as $param) {
-            if (!isset($request[$param])) {
-                $missing[] = $param;
+    public static function validateParams(
+        array $request,
+        array $requiredParams
+    ): array {
+        try {
+            $missing = [];
+            foreach ($requiredParams as $param) {
+                if (!isset($request[$param])) {
+                    $missing[] = $param;
+                }
             }
-        }
 
-        if (!empty($missing)) {
-            self::errorResponse("Parâmetros ausentes: " . implode(', ', $missing), 400);
-        }
+            if (!empty($missing)) {
+                self::jsonResponse(
+                    "Parâmetros ausentes: " . implode(", ", $missing),
+                    400
+                );
+            }
 
-        return array_intersect_key($request, array_flip($requiredParams));
+            return array_intersect_key($request, array_flip($requiredParams));
+        } catch (PDOException $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-jsonResponse" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 
     /**
@@ -181,20 +241,40 @@ class Utils
      *
      * @param string $message Mensagem a ser registrada
      */
-    public static function debug_log($message, $path = "debug")
-    {
-        $logFile = __DIR__ . '/../logs/'. $path . '.log';
-        $date = date('Y-m-d H:i:s');
-        
-        if (is_array($message) || is_object($message)) {
-            $message = print_r($message, true);
+    public static function debug_log(
+        array|string $message,
+        string $path = "debug"
+    ) {
+        try {
+            $logFile = __DIR__ . "/../logs/" . $path . ".log";
+            $date = date("Y-m-d H:i:s");
+
+            if (!is_dir(__DIR__ . "/../logs/")) {
+                mkdir(__DIR__ . "/../logs/", 0777, true);
+            }
+
+            if (is_array($message) || is_object($message)) {
+                $message = print_r($message, true);
+            }
+
+            $logMessage = "[$date] $message\n";
+
+            if (
+                file_put_contents($logFile, $logMessage, FILE_APPEND) === false
+            ) {
+                throw new Exception("Erro ao escrever no arquivo de log.");
+            }
+        } catch (Exception $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-debug_log" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
         }
-        
-        $logMessage = "[$date] $message\n";
-        
-        file_put_contents($logFile, $logMessage, FILE_APPEND);
     }
-    
 
     /**
      * Valida se uma senha atende aos critérios de segurança.
@@ -204,9 +284,23 @@ class Utils
      * @param string $password Senha a ser validada
      * @return bool Retorna true se a senha for válida
      */
-    public static function validatePassword($password)
+    public static function validatePassword(string $password): bool
     {
-        return preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
+        try {
+            return preg_match(
+                '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+                $password
+            );
+        } catch (Exception $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-debug_log" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 
     /**
@@ -214,8 +308,20 @@ class Utils
      *
      * @return string|null Retorna o token ou null se não encontrado
      */
-    public static function getToken()
+    public static function getToken(): ?string
     {
-        return $_COOKIE['token'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+        try {
+            return $_COOKIE["token"] ??
+                ($_SERVER["HTTP_AUTHORIZATION"] ?? null);
+        } catch (Exception $e) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-debug_log" => $e->getMessage(),
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+            exit();
+        }
     }
 }
