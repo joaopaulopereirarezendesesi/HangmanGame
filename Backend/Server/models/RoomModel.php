@@ -58,7 +58,7 @@ class RoomModel
         }
     }
 
-    public function getRoomNameId(string $roomName): string|null
+    public function getRoomNameId(string $roomName): ?string
     {
         try {
             $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
@@ -79,7 +79,7 @@ class RoomModel
         }
     }
 
-    public function getRoomById(string $roomId): array|null
+    public function getRoomById(string $roomId): ?array
     {
         try {
             $query = "SELECT * FROM rooms WHERE ID_R = :roomId";
@@ -121,7 +121,7 @@ class RoomModel
         }
     }
 
-    public function getRooms(): array|null
+    public function getRooms(): ?array
     {
         try {
             $query = "SELECT * FROM rooms";

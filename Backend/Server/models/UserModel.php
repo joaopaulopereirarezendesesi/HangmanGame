@@ -14,7 +14,7 @@ class UserModel
         $this->utils = new Utils();
     }
 
-    public function getAllUsers(): array|null
+    public function getAllUsers(): ?array
     {
         try {
             $query = "SELECT * FROM users";
@@ -33,7 +33,7 @@ class UserModel
         }
     }
 
-    public function getUserById(string $userId): array|null
+    public function getUserById(string $userId): ?array
     {
         try {
             $query = "SELECT * FROM users WHERE ID_U = :id";
@@ -106,7 +106,7 @@ class UserModel
         }
     }
 
-    public function getUserByEmail(string $email): array|null
+    public function getUserByEmail(string $email): ?array
     {
         try {
             $query = "SELECT * FROM users WHERE email = :email";
@@ -126,7 +126,7 @@ class UserModel
         }
     }
 
-    public function getRoomOrganizer(string $id_o): array|null
+    public function getRoomOrganizer(string $id_o): ?array
     {
         try {
             $query = "SELECT * FROM users WHERE ID_U = :id_o";
