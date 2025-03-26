@@ -8,8 +8,6 @@ use models\UserModel;
 use tools\Utils;
 use core\JwtHandler;
 use Exception;
-use DateTime;
-use DateTimeZone;
 
 /**
  * Class UserController
@@ -105,7 +103,7 @@ class UserController
                 Utils::jsonResponse(
                     [
                         "error" =>
-                            "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
+                        "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
                     ],
                     400
                 );
