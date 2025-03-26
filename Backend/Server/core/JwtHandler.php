@@ -6,6 +6,7 @@ require_once __DIR__ . "/../config/config.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use models\UserModel;
 use tools\Utils;
 use Exception;
 
@@ -63,7 +64,27 @@ class JwtHandler
     public static function validateToken(string $token): ?array
     {
         try {
-            $decoded = JWT::decode($token, new Key(self::$secret, self::$alg));
+            $decoded = JWT::decode(Utils::decrypt($token), new Key(self::$secret, self::$alg));
+
+            $userModel = new UserModel();
+            $data =  $userModel->getUserById($decoded->user_id);
+
+            if (!$data) {
+                Utils::jsonResponse(["error" => "unrecognized token"], 403);
+            }
+
+            if ($data['EMAIL'] !== $decoded->email) {
+                Utils::jsonResponse(["error" => "unrecognized token"], 403);
+            }
+
+            if ($data['NICKNAME'] !== $decoded->nickname) {
+                Utils::jsonResponse(["error" => "unrecognized token"], 403);
+            }
+
+            if ("hangman-game" !== $decoded->iss) {
+                Utils::jsonResponse(["error" => "unrecognized token"], 403);
+            }
+
             return (array) $decoded;
         } catch (\Exception $e) {
             return null;

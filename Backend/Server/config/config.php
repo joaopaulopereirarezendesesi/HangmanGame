@@ -19,3 +19,4 @@ define('DB_NAME', $_ENV['DB_NAME']); // Nome do banco de dados
 define('DB_USER', $_ENV['DB_USER']); // Nome de usuário do banco de dados
 define('DB_PASS', $_ENV['DB_PASS']); // Senha do banco de dados
 define('JWT_SECRET', $_ENV['JWT_SECRET']); // Chave secreta usada para gerar e validar JWTs
+define('ENCIPITATE_KEY', $_ENV['ENCIPITATE_KEY']);

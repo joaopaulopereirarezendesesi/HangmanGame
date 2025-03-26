@@ -164,16 +164,20 @@ class UserController
                 session_start();
                 $_SESSION["user_id"] = $user["ID_U"];
                 $_SESSION["nickname"] = $user["NICKNAME"];
-                setcookie("jwt", $token, time() + 3600, "/", "", true, true);
-                setcookie(
-                    "nickname",
-                    $user["NICKNAME"],
-                    time() + 86400 * 30,
-                    "/",
-                    "",
-                    true,
-                    false
+                header(
+                    "Set-Cookie: jwt=" .
+                        Utils::encrypt($token) .
+                        "; Path=/; Secure; HttpOnly; SameSite=None; Partitioned; Expires=" .
+                        gmdate("D, d M Y H:i:s T", time() + 3600)
                 );
+                setcookie("nickname", $user["NICKNAME"], [
+                    "expires" => time() + 86400 * 30,
+                    "path" => "/",
+                    "domain" => "",
+                    "secure" => true,
+                    "httponly" => false,
+                    "samesite" => "Strict"
+                ]);
 
                 Utils::jsonResponse([
                     "message" => "Login successful",

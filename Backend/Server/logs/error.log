@@ -3,3 +3,198 @@
     [toolsErrorUtils-executeQuery] => SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'teste1.sadsa@gmail.com' for key 'EMAIL'
 )
 
+[2025-03-26 17:23:16] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:23:16] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:44:29] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:44:29] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:45:40] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:45:40] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:52:10] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 17:52:10] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:00:12] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:00:12] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:14:13] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:14:13] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:17:22] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 18:17:22] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:22:20] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:22:20] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:28:12] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:28:29] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:29:06] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:30:03] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:30:26] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:30:48] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:32:32] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:35:08] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:35:09] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:37:17] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:37:32] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:39:27] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:42:06] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:42:06] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:42:16] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:44:13] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:44:22] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:44:43] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:44:49] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:45:42] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:46:06] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:46:31] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-26 19:46:58] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+

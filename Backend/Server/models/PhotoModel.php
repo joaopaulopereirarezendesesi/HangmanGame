@@ -21,10 +21,10 @@ class PhotoModel
      * Obtém as fotos relacionadas a uma matéria específica.
      *
      * @param string $matter A matéria que será utilizada como filtro para as fotos
-     * @return array Lista de fotos relacionadas à matéria
+     * @return ?array Lista de fotos relacionadas à matéria
      * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
      */
-    public function takePhotoWithMatter(string $matter): array
+    public function takePhotoWithMatter(string $matter): string
     {
         try {
             $query = "SELECT * FROM photos WHERE MATTER = :matter";
@@ -33,7 +33,7 @@ class PhotoModel
 
             $result = $this->utils->executeQuery($query, $params, true);
 
-            return $result[0]["ADDRESS"] ?? [];
+            return $result[0]["ADDRESS"] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [

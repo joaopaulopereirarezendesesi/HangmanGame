@@ -119,11 +119,10 @@ function Rooms() {
 
   // Função para fazer logout
   const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("user_id");
+    Cookies.remove("jwt");
     Cookies.remove("nickname");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("nickname");
     navigate("/");
   };
 
@@ -203,10 +202,12 @@ function Rooms() {
           </aside>
         </section>
       </section>
-      {isModalOpen && <ModalCriarSala 
-      setIsModalOpen={setIsModalOpen} 
-      fetchRooms={fetchRooms}
-      />}
+      {isModalOpen && (
+        <ModalCriarSala
+          setIsModalOpen={setIsModalOpen}
+          fetchRooms={fetchRooms}
+        />
+      )}
     </main>
   );
 }

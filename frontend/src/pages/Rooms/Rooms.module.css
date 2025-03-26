@@ -120,7 +120,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding: 10px;
+  padding: 8px;
 }
 
 .rooms .content .roomsGames .games div {
@@ -133,11 +133,13 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  padding: 10px;
 }
 
 .rooms .content .roomsGames .games .text {
   width: 100%;
-  margin-top: 15px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -145,15 +147,15 @@ body {
 }
 
 .rooms .content .roomsGames .games div img {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 80px;
   box-shadow: 1px 1px 5px #000;
 }
 
 .rooms .content .roomsGames .games div .titleRoom {
   color: #000;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 500;
   font-style: italic;
 }

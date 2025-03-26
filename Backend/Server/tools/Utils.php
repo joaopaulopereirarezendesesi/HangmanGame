@@ -3,6 +3,7 @@
 namespace tools;
 
 require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../config/config.php";
 
 use PDO;
 use PDOException;
@@ -36,7 +37,6 @@ class Utils
     {
         try {
             $token = self::getToken();
-            self::debug_log($token);
 
             if (!$token) {
                 self::jsonResponse("Token não encontrado.", 401);
@@ -61,6 +61,50 @@ class Utils
             return null;
         }
     }
+
+    public static function encrypt(string $data): string
+    {
+        $cipher = "AES-256-CBC";
+        $iv = random_bytes(openssl_cipher_iv_length($cipher));
+        $encrypted = openssl_encrypt($data, $cipher, ENCIPITATE_KEY, 0, $iv);
+
+        if ($encrypted === false) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-executeQuery" => "encryption error",
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+        }
+
+        return base64_encode($iv . $encrypted);
+    }
+
+    public static function decrypt(string $encryptedData): ?string
+    {
+        $cipher = "AES-256-CBC";
+        $data = base64_decode($encryptedData, true);
+
+        if ($data === false) {
+            self::debug_log(
+                [
+                    "toolsErrorUtils-executeQuery" => "deencryption error",
+                ],
+                "error"
+            );
+            self::jsonResponse(["error" => "Internal server error"], 500);
+        }
+
+        $ivLength = openssl_cipher_iv_length($cipher);
+        $iv = substr($data, 0, $ivLength);
+        $encrypted = substr($data, $ivLength);
+
+        $decrypted = openssl_decrypt($encrypted, $cipher, ENCIPITATE_KEY, 0, $iv);
+
+        return $decrypted !== false ? $decrypted : null;
+    }
+
 
     /**
      * Executa uma consulta SQL parametrizada.
@@ -314,7 +358,7 @@ class Utils
     public static function getToken(): ?string
     {
         try {
-            return $_COOKIE["token"] ??
+            return $_COOKIE["jwt"] ??
                 ($_SERVER["HTTP_AUTHORIZATION"] ?? null);
         } catch (Exception $e) {
             self::debug_log(

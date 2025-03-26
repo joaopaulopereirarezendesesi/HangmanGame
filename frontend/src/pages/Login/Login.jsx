@@ -14,7 +14,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("nickname");
     if (token) {
       navigate("/rooms");
     }
@@ -55,15 +55,14 @@ function Login() {
         }
       );
 
-      if (response.data.message === "Login bem-sucedido") {
-        const userId = Cookies.get("user_id");
+      console.log(response.data);
+
+      if (response.data.message === "Login successful") {
         const nickname = Cookies.get("nickname");
-        console.log("User ID do cookie:", userId);
         console.log("Nickname do cookie:", nickname);
 
-        localStorage.setItem("token", userId);
         localStorage.setItem("userName", nickname);
-        navigate("/game");
+        navigate("/rooms");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -96,10 +95,7 @@ function Login() {
       console.log(response.data);
 
       if (response.data.success) {
-        alert("Usuário cadastrado com sucesso!");
-
         console.log(email, password);
-        // Realizando o login após o cadastro
         const loginResponse = await axios.post(
           "http://localhost:80/?url=User/login",
           new URLSearchParams({
@@ -115,14 +111,12 @@ function Login() {
 
         console.log(loginResponse);
 
-        if (loginResponse.data.message === "Login bem-sucedido") {
-          const userId = Cookies.get("user_id");
+        if (loginResponse.data.message === "Login successful") {
           const nickname = Cookies.get("nickname");
-          console.log("User ID do cookie:", userId);
           console.log("Nickname do cookie:", nickname);
 
-          localStorage.setItem("token", userId); // Armazenando token no localStorage
-          navigate("/rooms"); // Redireciona após login
+          localStorage.setItem("nickname", nickname);
+          navigate("/rooms");
         }
       } else if (response.data.errors || response.data.error) {
         console.log(response.data.errors);
