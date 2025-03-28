@@ -198,3 +198,23 @@
     [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
 )
 
+[2025-03-28 12:13:37] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-28 12:13:37] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number
+)
+
+[2025-03-28 12:23:03] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+)
+
+[2025-03-28 12:23:03] Array
+(
+    [toolsErrorUtils-executeQuery] => SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+)
+
