@@ -50,7 +50,10 @@ function Login() {
           remember: remember ? "true" : "false",
         }),
         {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: { 
+            "Content-Type": "application/x-www-form-urlencoded", 
+            "X-Requested-With": "XMLHttpRequest", 
+          },
           withCredentials: true,
         }
       );

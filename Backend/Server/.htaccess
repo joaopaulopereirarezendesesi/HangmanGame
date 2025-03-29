@@ -1,0 +1,8 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !^/assets/photos/ [NC]
+RewriteCond %{REQUEST_URI} !^/index.php$ [NC]
+RewriteCond %{HTTP:X-Requested-With} !^XMLHttpRequest$ [NC]
+RewriteRule ^.+\.php$ - [F]
+DirectoryIndex index.php
+

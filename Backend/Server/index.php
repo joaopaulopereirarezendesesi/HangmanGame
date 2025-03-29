@@ -8,47 +8,39 @@ class App
 {
     public function __construct()
     {
-        $this->validateConfig();
         $this->configureCORS();
+        $this->validateConfig();
         $this->initializeRouter();
     }
 
     function configureCORS(
         array $allowedOrigins = ["http://localhost:5173"],
         array $allowedMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        array $allowedHeaders = ["Content-Type", "Authorization"]
+        array $allowedHeaders = ["Content-Type", "Authorization", "X-Requested-With"]
     ): void {
         $origin = $_SERVER["HTTP_ORIGIN"] ?? "";
-
+    
         if (in_array($origin, $allowedOrigins)) {
             header("Access-Control-Allow-Origin: $origin");
-            header("Access-Control-Allow-Credentials: true");
+            header("Access-Control-Allow-Credentials: true");  
         } else {
             header("HTTP/1.1 403 Forbidden");
             exit("Origem não permitida.");
         }
-
-        header(
-            "Access-Control-Allow-Methods: " . implode(", ", $allowedMethods)
-        );
-        header(
-            "Access-Control-Allow-Headers: " . implode(", ", $allowedHeaders)
-        );
-
+    
+        header("Access-Control-Allow-Methods: " . implode(", ", $allowedMethods));
+    
+        header("Access-Control-Allow-Headers: " . implode(", ", $allowedHeaders));
         if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
-            $this->handleOptionsRequest($origin);
+            header("Access-Control-Allow-Origin: $origin");
+            header("Access-Control-Allow-Methods: " . implode(", ", $allowedMethods));
+            header("Access-Control-Allow-Headers: " . implode(", ", $allowedHeaders));
+            header("Access-Control-Allow-Credentials: true");
+            header("HTTP/1.1 204 No Content"); 
             exit();
         }
     }
-
-    private function handleOptionsRequest(string $origin): void
-    {
-        header("Access-Control-Allow-Origin: $origin");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization");
-        header("HTTP/1.1 204 No Content");
-        exit();
-    }
+    
 
     private function validateConfig(): void
     {

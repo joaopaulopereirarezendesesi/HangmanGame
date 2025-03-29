@@ -24,7 +24,7 @@ class PhotoModel
      * @return ?array Lista de fotos relacionadas à matéria
      * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
      */
-    public function takePhotoWithMatter(string $matter): string
+    public function takePhotoWithMatter(string $matter): ?string
     {
         try {
             $query = "SELECT * FROM photos WHERE MATTER = :matter";
