@@ -21,11 +21,8 @@ function Login() {
   }, [navigate]);
 
   useEffect(() => {
-    if (error) {
-      const timeout = setTimeout(() => {
-        setError("");
-      }, 5000);
-
+    if (error.length > 0) {
+      const timeout = setTimeout(() => setError([]), 5000);
       return () => clearTimeout(timeout);
     }
   }, [error]);
@@ -36,23 +33,15 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const remember = event.target.remember.checked;
-
-    console.log(email);
-    console.log(password);
 
     try {
       const response = await axios.post(
         "http://localhost:80/?url=User/login",
-        new URLSearchParams({
-          email,
-          password,
-          remember: remember ? "true" : "false",
-        }),
+        new URLSearchParams({ email, password }),
         {
-          headers: { 
-            "Content-Type": "application/x-www-form-urlencoded", 
-            "X-Requested-With": "XMLHttpRequest", 
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest",
           },
           withCredentials: true,
         }
@@ -62,10 +51,7 @@ function Login() {
 
       if (response.data.message === "Login successful") {
         const nickname = Cookies.get("nickname");
-        console.log("Nickname do cookie:", nickname);
-
         localStorage.setItem("userName", nickname);
-        navigate("/rooms");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -84,9 +70,9 @@ function Login() {
       const response = await axios.post(
         "http://localhost:80/?url=User/create",
         {
-          email: email,
-          nickname: nickname,
-          password: password,
+          email,
+          nickname,
+          password,
           confirm_password: confirmPassword,
         },
         {
@@ -97,15 +83,10 @@ function Login() {
 
       console.log(response.data);
 
-      if (response.data.success) {
-        console.log(email, password);
+      if (response.data.message === "User created successfully") {
         const loginResponse = await axios.post(
           "http://localhost:80/?url=User/login",
-          new URLSearchParams({
-            email,
-            password,
-            remember: "true",
-          }),
+          new URLSearchParams({ email, password }),
           {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             withCredentials: true,
@@ -122,12 +103,11 @@ function Login() {
           navigate("/rooms");
         }
       } else if (response.data.errors || response.data.error) {
-        console.log(response.data.errors);
         setError(response.data.errors || response.data.error);
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      setError("Ocorreu um erro ao cadastrar. Tente novamente.");
+      setError(error.response?.data?.error || "Erro ao criar usuário!");
     }
   };
 
@@ -188,12 +168,11 @@ function Login() {
         </div>
 
         <div className={`${styles.form_container} ${styles.sign_in}`}>
-          <form action="meuFormulario" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
             <input
               type="email"
               name="email"
-              id="email"
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -201,22 +180,22 @@ function Login() {
             <input
               type="password"
               name="password"
-              id="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-
-            <label className={styles.custom_checkbox}>
-              <input
-                type="checkbox"
-                name="remember"
-                className={styles.remember}
-              />
-              <span className={styles.checkmark}></span>
-              Lembrar-me
-            </label>
             <a href="#">Forget Your Password?</a>
+            {error && (
+                <div className={styles.error}>
+                  {Array.isArray(error) ? (
+                    Object.entries(error).map(([key, message]) => (
+                      <p key={key}>{message}</p>
+                    ))
+                  ) : (
+                    <p>{error}</p>
+                  )}
+                </div>
+              )}
             <button className={styles.btn}>Sign In</button>
           </form>
         </div>
@@ -226,11 +205,7 @@ function Login() {
             <div className={`${styles.toggle_panel} ${styles.toggle_left}`}>
               <h1>Welcome back!</h1>
               <p>Enter your personal details to use all of site features</p>
-              <button
-                className={styles.hidden}
-                id="login"
-                onClick={toggleActiveClass}
-              >
+              <button className={styles.hidden} onClick={toggleActiveClass}>
                 Sign In
               </button>
             </div>
@@ -240,11 +215,7 @@ function Login() {
               <p>
                 Register with your personal details to use all of site features
               </p>
-              <button
-                className={styles.hidden}
-                id="register"
-                onClick={toggleActiveClass}
-              >
+              <button className={styles.hidden} onClick={toggleActiveClass}>
                 Sign Up
               </button>
             </div>

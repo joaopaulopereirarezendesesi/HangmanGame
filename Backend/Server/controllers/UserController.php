@@ -5,6 +5,7 @@ namespace controllers;
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use models\UserModel;
+use core\Handler2FA;
 use tools\Utils;
 use core\JwtHandler;
 use Exception;
@@ -20,6 +21,9 @@ class UserController
     /** @var UserModel User model instance */
     private UserModel $userModel;
 
+    /** @var Handler2FA Two-factor authentication handler instance */
+    private Handler2FA $handler2FA;
+
     /**
      * UserController constructor.
      *
@@ -27,6 +31,7 @@ class UserController
      */
     public function __construct()
     {
+        $this->handler2FA = new Handler2FA();
         $this->userModel = new UserModel();
     }
 
@@ -42,6 +47,26 @@ class UserController
             Utils::debug_log(
                 [
                     "controllerErrorUser-show" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+        }
+    }
+
+    public function generateSecretImage(): void
+    {
+        try {
+            $userId = Utils::getUserIdFromToken();
+            if (!$userId) {
+                Utils::jsonResponse(["error" => "Token not provided"], 403);
+            }
+
+            $this->handler2FA->generateSecretImage($userId);
+        } catch (Exception $e) {
+            Utils::debug_log(
+                [
+                    "controllerErrorPhotos-takePhotoWithMatter" => $e->getMessage(),
                 ],
                 "error"
             );

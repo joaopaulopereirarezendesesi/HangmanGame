@@ -1,0 +1,89 @@
+.twofa {
+  height: 100vh; /* A altura é 100% da tela */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os itens horizontalmente */
+  justify-content: center; /* Centraliza os itens verticalmente */
+  text-align: center;
+  padding: 20px;
+}
+
+.modalOverlay {
+  position: fixed; /* Fixa a posição do modal */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Ocupa toda a largura da tela */
+  height: 100vh; /* Ocupa toda a altura da tela */
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro e semitransparente */
+  display: flex;
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  z-index: 1000; /* Coloca o modal em cima de outros elementos */
+}
+
+.modalContainer {
+  max-width: 600px; /* Limita a largura máxima do container */
+  width: 100%; /* Garante que o container ocupe 100% da largura disponível */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Alinha os itens centralizados */
+  justify-content: space-around;
+  background-color: #f9f9f9; /* Cor de fundo clara */
+  border-radius: 15px; /* Borda arredondada */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 20px;
+  z-index: 2000; /* Garante que o conteúdo do modal fique acima do overlay */
+}
+
+h1 {
+  color: rgba(199, 8, 12, 1); /* Cor de título */
+  font-size: 28px;
+  font-style: italic; /* Estilo em itálico */
+  text-shadow: 1px 1px 2px #000; /* Sombra para dar destaque */
+}
+
+.qrCodeContainer {
+  margin-bottom: 20px; /* Espaço abaixo do QR code */
+}
+
+.qrCode {
+  width: 250px; /* Ajuste no tamanho do QR code */
+  height: 250px; /* Ajuste no tamanho do QR code */
+  object-fit: cover; /* Faz com que a imagem se ajuste ao tamanho do container */
+}
+
+.secretContainer {
+  margin-bottom: 20px; /* Espaço abaixo da área do código secreto */
+}
+
+.secretContainer strong {
+  font-weight: bold; /* Deixa o código secreto em negrito */
+}
+
+.btn {
+  background: linear-gradient(
+    120deg,
+    rgba(226, 34, 39, 1) 0%,
+    rgba(199, 8, 12, 1) 19%,
+    rgba(108, 1, 2, 1) 38%,
+    rgba(68, 1, 1, 1) 63%,
+    rgba(34, 43, 49, 1) 86%,
+    rgba(85, 102, 110, 1) 100%
+  );
+  color: #fff;
+  font-size: 14px; /* Ajuste no tamanho da fonte */
+  padding: 12px 50px; /* Ajuste no padding para tornar o botão mais largo */
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 20px; /* Espaço acima do botão */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Adiciona transição suave ao hover */
+}
+
+.btn:hover {
+  background-color: #45a049; /* Cor ao passar o mouse */
+}

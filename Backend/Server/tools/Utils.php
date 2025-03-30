@@ -220,10 +220,11 @@ class Utils
      */
     public static function jsonResponse(
         array|string $data,
-        int $status = 200
+        int $status = 200,
+        string $header = "application/json"
     ): void {
         try {
-            header("Content-Type: application/json; charset=utf-8");
+            header("Content-Type:" . $header . "; charset=utf-8");
             http_response_code($status);
 
             if (ob_get_length()) {
@@ -295,20 +296,18 @@ class Utils
         try {
             $logFile = __DIR__ . "/../logs/" . $path . ".log";
             $date = date("Y-m-d H:i:s");
-
+    
             if (!is_dir(__DIR__ . "/../logs/")) {
                 mkdir(__DIR__ . "/../logs/", 0777, true);
             }
-
+    
             if (is_array($message) || is_object($message)) {
-                $message = print_r($message, true);
+                $message = json_encode($message, JSON_PRETTY_PRINT);
             }
-
+    
             $logMessage = "[$date] $message\n";
-
-            if (
-                file_put_contents($logFile, $logMessage, FILE_APPEND) === false
-            ) {
+    
+            if (file_put_contents($logFile, $logMessage, FILE_APPEND) === false) {
                 throw new Exception("Erro ao escrever no arquivo de log.");
             }
         } catch (Exception $e) {
@@ -321,7 +320,7 @@ class Utils
             self::jsonResponse(["error" => "Internal server error"], 500);
         }
     }
-
+    
     /**
      * Valida se uma senha atende aos critérios de segurança.
      * - Mínimo de 8 caracteres

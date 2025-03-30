@@ -117,7 +117,6 @@ function Rooms() {
     }
   };
 
-  // Função para fazer logout
   const handleLogout = () => {
     Cookies.remove("jwt");
     Cookies.remove("nickname");

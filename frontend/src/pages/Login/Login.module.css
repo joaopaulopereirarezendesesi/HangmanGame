@@ -55,6 +55,8 @@ body {
     }
 
     & .hidden {
+      outline: none;
+      margin-top: 10px;
       background-color: transparent;
       border-color: #fff;
       color: #fff;
@@ -104,15 +106,6 @@ body {
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
-
-  /* & form label {
-    display: flex;
-    width: 100%;
-    padding-left: 10px;
-    align-items: center;
-
-    & 
-  } */
 }
 
 .sign_in {
@@ -161,7 +154,7 @@ body {
   overflow: hidden;
   transition: all 0.6s ease-in-out;
   border-radius: 150px 0 0 100px;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .container.active .toggle_container {
@@ -213,6 +206,10 @@ body {
   top: 0;
   transform: translateX(0);
   transition: all 0.6s ease;
+}
+
+.toggle_panel h1 {
+  color: #fff;
 }
 
 .toggle_left {
@@ -363,35 +360,4 @@ input[type="checkbox"]:checked + .checkmark {
   .container.active .toggle_right {
     transform: translateY(200%);
   }
-
-  /* 
-  .container.active .toggle_container {
-    transform: translateY(101%);
-    border-radius: 150px 150px 0 0;
-  }
-
-  .container .sign_up {
-    transform: translateY(100%);
-    opacity: 1;
-    z-index: 5;
-    animation: move 0.6s;
-  }
-
-  .container.active .sign_up {
-    transform: translateY(0);
-    opacity: 1;
-    z-index: 5;
-    animation: move 0.6s;
-  }
-
-  .container.active .sign_in {
-    transform: translateY(0);
-    opacity: 1;
-    z-index: 5;
-    animation: move 0.6s;
-  }
-
-  .container.active .toggle_right {
-    transform: translateY(200%);
-  } */
 }

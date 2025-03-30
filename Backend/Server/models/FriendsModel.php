@@ -47,17 +47,14 @@ class FriendsModel
                 ":id2" => $userId,
             ];
 
-            // Executando as duas consultas
             $resultFriends = $this->utils->executeQuery($queryFriends, $params, true);
             $resultTotalPlayers = $this->utils->executeQuery($queryTotalPlayers, [], true);
 
-            // Obtendo o total de jogadores do ranking
             $totalPlayers = $resultTotalPlayers[0]['total_players'] ?? 0;
 
-            // Estrutura final com os amigos e o total de jogadores
             $response = [
-                "total_players" => $totalPlayers, // total de jogadores
-                "friends" => $resultFriends,      // amigos
+                "total_players" => $totalPlayers, 
+                "friends" => $resultFriends,     
             ];
 
             return $response;

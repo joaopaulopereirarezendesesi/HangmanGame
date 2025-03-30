@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 24/03/2025 às 02:59
+-- Tempo de geração: 29/03/2025 às 23:38
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -32,6 +32,18 @@ CREATE TABLE `attempts` (
   `ID_ROUND` char(36) NOT NULL,
   `GUESS` varchar(255) NOT NULL,
   `IS_CORRECT` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `codestwofa`
+--
+
+CREATE TABLE `codestwofa` (
+  `ID_CTFA` char(36) NOT NULL,
+  `ID_U` char(36) NOT NULL,
+  `CODE` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -156,7 +168,7 @@ CREATE TABLE `users` (
   `NICKNAME` varchar(50) NOT NULL,
   `EMAIL` varchar(100) NOT NULL,
   `PASSWORD` varchar(255) NOT NULL,
-  `ONLINE` enum('offline','online','away') NOT NULL DEFAULT 'offline',
+  `ONLINE` ENUM('offline', 'online', 'away') DEFAULT 'offline',
   `PHOTO` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -174,10 +186,10 @@ CREATE TABLE `wordsmatter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Índices para tabelas despejadas
+-- Despejando dados para a tabela `wordsmatter`
 --
 
-iNSERT INTO `wordsmatter` (`ID_W`, `matter`, `word`, `definition`) VALUES
+INSERT INTO `wordsmatter` (`ID_W`, `MATTER`, `WORD`, `DEFINITION`) VALUES
 (UUID(), 'Geografia', 'Continente', 'Grande massa de terra delimitada pelos oceanos.'),
 (UUID(), 'Geografia', 'Latitude', 'Distância angular de um ponto em relação ao Equador.'),
 (UUID(), 'Geografia', 'Longitude', 'Distância angular de um ponto em relação ao Meridiano de Greenwich.'),
@@ -365,6 +377,10 @@ iNSERT INTO `wordsmatter` (`ID_W`, `matter`, `word`, `definition`) VALUES
 (UUID(), 'Ciência Política', 'Geopolítica', 'Estudo das relações entre política e geografia.');
 
 --
+-- Índices para tabelas despejadas
+--
+
+--
 -- Índices de tabela `attempts`
 --
 ALTER TABLE `attempts`
@@ -377,6 +393,13 @@ ALTER TABLE `attempts`
 ALTER TABLE `friends`
   ADD PRIMARY KEY (`ID_U`,`ID_A`),
   ADD KEY `fk_friends_a` (`ID_A`);
+
+--
+-- Índices de tabela `codestwofa`
+--
+ALTER TABLE `codestwofa`
+  ADD PRIMARY KEY (`ID_CTFA`),
+  ADD KEY `fk_attempts_user` (`ID_U`);
 
 --
 -- Índices de tabela `friend_requests`
@@ -443,6 +466,12 @@ ALTER TABLE `wordsmatter`
 --
 ALTER TABLE `attempts`
   ADD CONSTRAINT `fk_attempts_round` FOREIGN KEY (`ID_ROUND`) REFERENCES `rounds` (`ID_RD`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `attempts`
+--
+ALTER TABLE `codestwofa`
+  ADD CONSTRAINT `fk_attempts_user` FOREIGN KEY (`ID_U`) REFERENCES `users` (`ID_U`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `friends`
