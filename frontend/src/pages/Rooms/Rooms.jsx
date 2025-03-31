@@ -83,8 +83,9 @@ function Rooms() {
       if (Array.isArray(response.data.friends)) {
         setFriends(response.data.friends);
       }
-      console.log(response.data.friends);
+      setLoading(false); 
     } catch (error) {
+      setLoading(true); 
       console.error(
         "Erro ao buscar amigos:",
         error.response ? error.response.data : error.message
