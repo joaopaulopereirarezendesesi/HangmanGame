@@ -83,9 +83,9 @@ function Rooms() {
       if (Array.isArray(response.data.friends)) {
         setFriends(response.data.friends);
       }
-      setLoading(false); 
+      setLoading(false);
     } catch (error) {
-      setLoading(true); 
+      setLoading(true);
       console.error(
         "Erro ao buscar amigos:",
         error.response ? error.response.data : error.message
@@ -171,9 +171,16 @@ function Rooms() {
                     </p>
                   </div>
                   <div className={styles.text}>
-                    <p>
+                    <GiCrown className={styles.iconLeader} />
+
+                    <p className={styles.titleRoom}>
                       <GiCrown className={styles.iconLeader} />
-                      {room.organizerName}
+                      {
+                        new DOMParser().parseFromString(
+                          room.organizerName,
+                          "text/html"
+                        ).body.textContent
+                      }
                     </p>
                     <p>
                       <FaUser className={styles.capacityRoom} />{" "}
