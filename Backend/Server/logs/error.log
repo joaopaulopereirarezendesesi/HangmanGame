@@ -19,3 +19,6 @@
 [2025-03-31 02:28:45] {
     "controllerErrorUser-create": "WriteBlob Failed `..\/assets\/photos\/usersPhotos\/aooocomespa\u00e7os.png' @ error\/png.c\/MagickPNGError\/1305"
 }
+[2025-03-31 04:04:27] {
+    "toolsErrorUtils-executeQuery": "SQLSTATE[42S22]: Column not found: 1054 Unknown column 'TFA' in 'field list'"
+}

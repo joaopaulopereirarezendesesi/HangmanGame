@@ -48,9 +48,14 @@ class FriendsModel
             ];
 
             $resultFriends = $this->utils->executeQuery($queryFriends, $params, true);
+
+            if (empty($resultFriends)) {
+                return [];
+            }
+
             $resultTotalPlayers = $this->utils->executeQuery($queryTotalPlayers, [], true);
 
-            $totalPlayers = $resultTotalPlayers[0]['total_players'] ?? 0;
+            $totalPlayers = $resultTotalPlayers[0]['total_players'];
 
             $response = [
                 "total_players" => $totalPlayers, 

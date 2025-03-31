@@ -11,8 +11,9 @@ import { GiCrown } from "react-icons/gi";
 function Rooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [playersCount, setPlayersCount] = useState({});
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const nickname = Cookies.get("nickname");
   const photo = Cookies.get("photo");
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function Rooms() {
 
   const fetchRooms = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
       const response = await axios.get(
         "http://localhost:80/?url=Room/getRooms",
         {
@@ -41,7 +42,7 @@ function Rooms() {
           await countPlayers(room.ID_R);
         })
       );
-      setLoading(false); 
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Erro na requisição:", error);
@@ -79,8 +80,10 @@ function Rooms() {
           withCredentials: true,
         }
       );
-
-      console.log("MEUS AMIGUXOS:", response.data);
+      if (Array.isArray(response.data.friends)) {
+        setFriends(response.data.friends);
+      }
+      console.log(response.data.friends);
     } catch (error) {
       console.error(
         "Erro ao buscar amigos:",
@@ -126,7 +129,12 @@ function Rooms() {
         <header className={styles.playerInfo}>
           <div>
             <img src={photo} alt="Imagem de perfil do usuário" />
-            <h2>{nickname ? nickname : "Anonymous"}</h2>
+            <h2>
+              {nickname
+                ? new DOMParser().parseFromString(nickname, "text/html").body
+                    .textContent
+                : "Anonymous"}{" "}
+            </h2>
           </div>
 
           <button
@@ -143,7 +151,7 @@ function Rooms() {
         <section className={styles.content}>
           <div className={styles.roomsGames}>
             {loading ? (
-              <div>Carregando...</div> 
+              <div>Carregando...</div>
             ) : (
               rooms.map((room) => (
                 <div key={room.ID_R} className={styles.games}>
@@ -152,7 +160,14 @@ function Rooms() {
                       src={room.MODALITY_IMG}
                       alt="Imagem de perfil do usuário"
                     />
-                    <p className={styles.titleRoom}>{room.ROOM_NAME}</p>
+                    <p className={styles.titleRoom}>
+                      {
+                        new DOMParser().parseFromString(
+                          room.ROOM_NAME,
+                          "text/html"
+                        ).body.textContent
+                      }
+                    </p>
                   </div>
                   <div className={styles.text}>
                     <p>
@@ -187,12 +202,17 @@ function Rooms() {
             )}
           </div>
           <aside className={styles.friends}>
-            <div className={styles.friend}></div>
-            <div className={styles.friend}></div>
-            <div className={styles.friend}></div>
-            <div className={styles.friend}></div>
-            <div className={styles.friend}></div>
-            <div className={styles.friend}></div>
+            {loading ? (
+              <div>Carregando...</div>
+            ) : (
+              Array.isArray(friends) &&
+              friends.map((friend) => (
+                <div className={styles.friend} key={friend.rank}>
+                  <img src={friend.foto} alt={friend.name} />
+                  <p>{friend.name}</p>
+                </div>
+              ))
+            )}
           </aside>
         </section>
       </section>

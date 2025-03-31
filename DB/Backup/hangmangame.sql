@@ -168,8 +168,9 @@ CREATE TABLE `users` (
   `NICKNAME` varchar(50) NOT NULL,
   `EMAIL` varchar(100) NOT NULL,
   `PASSWORD` varchar(255) NOT NULL,
-  `ONLINE` ENUM('offline', 'online', 'away') DEFAULT 'offline',
-  `PHOTO` varchar(255) DEFAULT NULL
+  `ONLINE` ENUM('offline', 'online', 'away') DEFAULT 'offline' NOT NULL,
+  `PHOTO` varchar(255) DEFAULT NULL,
+  `TFA` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
