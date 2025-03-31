@@ -9,6 +9,7 @@ use core\Handler2FA;
 use tools\Utils;
 use core\JwtHandler;
 use Exception;
+use Imagick;
 
 /**
  * Class UserController
@@ -120,6 +121,39 @@ class UserController
             ];
             $data = Utils::validateParams($data, $requiredParams);
 
+            $profileImage = $_FILES["profileImage"] ?? null;
+
+            $imageInfo = getimagesize($profileImage['tmp_name']);
+
+            if ($imageInfo === false) {
+                Utils::jsonResponse(["error" => "Invalid image file."], 400);
+            }
+
+            if ($imageInfo[2] !== IMAGETYPE_PNG) {
+                $imagick = new Imagick($profileImage['tmp_name']);
+                $imagick->setImageFormat('png');
+
+                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png'; 
+
+                if (!$imagick->writeImage($avatarPath)) {
+                    Utils::jsonResponse(["error" => "Failed to convert image."], 500);
+                }
+            } else {
+                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png';
+
+                if (!move_uploaded_file($profileImage['tmp_name'], $avatarPath)) {
+                    Utils::debug_log(
+                        [
+                            "controllerErrorUser-create" => "Failed to move uploaded file.",
+                        ],
+                        "error"
+                    );
+                    Utils::jsonResponse(["error" => "Internal Server Error."], 500);
+                }
+            }
+
+            $userAvatarPath = "http://localhost:80/assets/photos/usersPhotos/" . strtolower(str_replace(' ', '', $data["nickname"])) . ".png";
+
             if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
                 Utils::jsonResponse(["error" => "Invalid email format"], 400);
             }
@@ -141,7 +175,8 @@ class UserController
             $this->userModel->createUser(
                 filter_var($data["nickname"], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
                 strval($data["email"]),
-                strval($data["password"])
+                strval($data["password"]),
+                strval($userAvatarPath)
             );
             Utils::jsonResponse(
                 ["message" => "User successfully created!"],
@@ -187,7 +222,6 @@ class UserController
                 ]);
 
                 session_start();
-                $_SESSION["user_id"] = $user["ID_U"];
                 $_SESSION["nickname"] = $user["NICKNAME"];
                 header(
                     "Set-Cookie: jwt=" .
@@ -196,6 +230,15 @@ class UserController
                         gmdate("D, d M Y H:i:s T", time() + 3600)
                 );
                 setcookie("nickname", $user["NICKNAME"], [
+                    "expires" => time() + 86400 * 30,
+                    "path" => "/",
+                    "domain" => "",
+                    "secure" => true,
+                    "httponly" => false,
+                    "samesite" => "Strict"
+                ]);
+
+                setcookie("photo", $user["PHOTO"], [
                     "expires" => time() + 86400 * 30,
                     "path" => "/",
                     "domain" => "",

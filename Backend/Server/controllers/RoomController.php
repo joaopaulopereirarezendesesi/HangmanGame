@@ -57,7 +57,7 @@ class RoomController
             );
 
             $points = isset($data["points"]) ? intval($data["points"]) : 2000;
-            $roomName = strval($data["room_name"]) ?? $this->generateRoomName();
+            $roomName = strval($data["room_name"]) ?? "room_" . uniqid();
             $isPrivate = filter_var(
                 $data["private"] ?? false,
                 FILTER_VALIDATE_BOOLEAN
@@ -283,31 +283,6 @@ class RoomController
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-        }
-    }
-
-    /**
-     * Gera um nome único para uma sala com base no horário atual.
-     *
-     * @return string Retorna o nome gerado para a sala.
-     */
-    private function generateRoomName(): ?string
-    {
-        try {
-            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
-            $formattedDate = $dateTime->format('Y-m-d H:i:s');
-
-            return "room_" . $formattedDate;
-        } catch (Exception $e) {
-            Utils::debug_log(
-                [
-                    "controllerErrorRoom-generateRoomName" => $e->getMessage(),
-                ],
-                "error"
-            );
-            Utils::jsonResponse(["error" => "Internal server error"], 500);
-
-            return null;
         }
     }
 }

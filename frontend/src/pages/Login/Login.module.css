@@ -52,6 +52,20 @@ body {
       text-transform: uppercase;
       margin-top: 10px;
       cursor: pointer;
+      outline: none;
+      transition: background ease 1s;
+    }
+  
+    & .btn:hover {
+      background: linear-gradient(
+        120deg,
+        rgba(85, 34, 39, 1) 0%,
+        rgba(34, 8, 12, 1) 19%,
+        rgba(68, 1, 2, 1) 38%,
+        rgba(188, 1, 1, 1) 63%,
+        rgba(199, 43, 49, 1) 86%,
+        rgba(226, 102, 110, 1) 100%
+      );
     }
 
     & .hidden {
@@ -83,6 +97,53 @@ body {
         outline: none;
       }
 
+      & .fileUploadButton {
+        display: flex;
+        background-color: #eee;
+        border-radius: 8px;
+        height: 35px;
+        width: 100%;
+        margin-top: 8px;
+        align-items: center; 
+        justify-content: flex-start; 
+      }
+      
+      & .iconfile {
+        background: linear-gradient(
+          120deg,
+          rgba(226, 34, 39, 1) 0%,
+          rgba(199, 8, 12, 1) 19%,
+          rgba(108, 1, 2, 1) 38%,
+          rgba(68, 1, 1, 1) 63%,
+          rgba(34, 43, 49, 1) 86%,
+          rgba(85, 102, 110, 1) 100%
+        );
+        color: #fff;
+        height: 100%;
+        width: 30px; 
+        padding: 3px; 
+        border-radius: 8px;
+        text-transform: uppercase; 
+        outline: none;
+        display: flex;
+        align-items: center; 
+        justify-content: center; 
+      }
+      
+      & .fileUploadButton p {
+        background-color: #eee;
+        border: none;
+        margin: 0 8px;
+        color: black !important;
+        font-weight: 400;
+        font-size: 14px;
+        border-radius: 8px;
+        width: auto;
+        outline: none;
+        flex: 1;
+      }
+      
+      
       & input::placeholder {
         color: black !important;
       }
@@ -302,7 +363,6 @@ input[type="checkbox"]:checked + .checkmark {
     top: 50%;
     left: 0;
   }
-
   .container.active .sign_in {
     transform: translateY(-100%);
   }

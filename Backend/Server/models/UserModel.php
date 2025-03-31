@@ -56,7 +56,8 @@ class UserModel
     public function createUser(
         string $nickname,
         string $email,
-        string $password
+        string $password,
+        ?string $userPhoto = null
     ): string {
         try {
             $query =
@@ -80,11 +81,12 @@ class UserModel
             }
 
             $query =
-                "INSERT INTO users (ID_U, NICKNAME, EMAIL, PASSWORD, ONLINE) VALUES (UUID(), :nickname, :email, :password, 1)";
+                "INSERT INTO users (ID_U, NICKNAME, EMAIL, PASSWORD, ONLINE, PHOTO, TFA) VALUES (UUID(), :nickname, :email, :password, 2, :userPhoto, 0)";
             $params = [
                 ":nickname" => $nickname,
                 ":email" => $email,
                 ":password" => password_hash($password, PASSWORD_ARGON2ID),
+                ":userPhoto" => $userPhoto,
             ];
 
             $this->utils->executeQuery($query, $params);

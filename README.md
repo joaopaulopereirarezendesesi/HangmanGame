@@ -14,6 +14,7 @@ Este projeto é um jogo da forca online, desenvolvido em **PHP**, utilizando **W
 - **[Composer](https://getcomposer.org/)**: Gerenciador de dependências PHP  
 - **Banco de Dados**: MySQL  
 - **Extensões PHP Necessárias**: `sockets`, `mbstring`, `pdo`, `pdo_mysql`  
+- **Imagick**: Manipulador de imagens PHP
 
 ---
 

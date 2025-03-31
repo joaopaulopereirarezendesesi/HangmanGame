@@ -4,7 +4,7 @@ import styles from "./ModalCriarSala.module.css";
 import axios from "axios";
 import RoomStatus from "../RoomStatus/RoomStatus";
 
-const ModalCriarSala = ({ setIsModalOpen,  fetchRooms }) => {
+const ModalCriarSala = ({ setIsModalOpen, fetchRooms }) => {
   const [roomName, setRoomName] = useState("");
   const [privateRoom, setPrivateRoom] = useState(false);
   const [password, setPassword] = useState("");
@@ -25,7 +25,7 @@ const ModalCriarSala = ({ setIsModalOpen,  fetchRooms }) => {
         player_capacity: capacity,
         time_limit: time,
         points: points,
-        modality: modality
+        modality: modality,
       });
 
       const formData = new URLSearchParams();
@@ -47,7 +47,7 @@ const ModalCriarSala = ({ setIsModalOpen,  fetchRooms }) => {
         }
       );
 
-      fetchRooms(); 
+      fetchRooms();
 
       console.log(response.data);
 

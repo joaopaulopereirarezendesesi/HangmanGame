@@ -1,63 +1,63 @@
 .twofa {
-  height: 100vh; /* A altura é 100% da tela */
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centraliza os itens horizontalmente */
-  justify-content: center; /* Centraliza os itens verticalmente */
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 20px;
 }
 
 .modalOverlay {
-  position: fixed; /* Fixa a posição do modal */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Ocupa toda a largura da tela */
-  height: 100vh; /* Ocupa toda a altura da tela */
-  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro e semitransparente */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center; /* Centraliza o conteúdo horizontalmente */
-  align-items: center; /* Centraliza o conteúdo verticalmente */
-  z-index: 1000; /* Coloca o modal em cima de outros elementos */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modalContainer {
-  max-width: 600px; /* Limita a largura máxima do container */
-  width: 100%; /* Garante que o container ocupe 100% da largura disponível */
+  max-width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Alinha os itens centralizados */
+  align-items: center;
   justify-content: space-around;
-  background-color: #f9f9f9; /* Cor de fundo clara */
-  border-radius: 15px; /* Borda arredondada */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  z-index: 2000; /* Garante que o conteúdo do modal fique acima do overlay */
+  z-index: 2000;
 }
 
 h1 {
-  color: rgba(199, 8, 12, 1); /* Cor de título */
+  color: rgba(199, 8, 12, 1);
   font-size: 28px;
-  font-style: italic; /* Estilo em itálico */
-  text-shadow: 1px 1px 2px #000; /* Sombra para dar destaque */
+  font-style: italic;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .qrCodeContainer {
-  margin-bottom: 20px; /* Espaço abaixo do QR code */
+  margin-bottom: 20px;
 }
 
 .qrCode {
-  width: 250px; /* Ajuste no tamanho do QR code */
-  height: 250px; /* Ajuste no tamanho do QR code */
-  object-fit: cover; /* Faz com que a imagem se ajuste ao tamanho do container */
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
 }
 
 .secretContainer {
-  margin-bottom: 20px; /* Espaço abaixo da área do código secreto */
+  margin-bottom: 20px;
 }
 
 .secretContainer strong {
-  font-weight: bold; /* Deixa o código secreto em negrito */
+  font-weight: bold;
 }
 
 .btn {
@@ -71,19 +71,15 @@ h1 {
     rgba(85, 102, 110, 1) 100%
   );
   color: #fff;
-  font-size: 14px; /* Ajuste no tamanho da fonte */
-  padding: 12px 50px; /* Ajuste no padding para tornar o botão mais largo */
+  font-size: 14px;
+  padding: 12px 50px;
   border: 1px solid transparent;
   border-radius: 8px;
   text-align: center;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  margin-top: 20px; /* Espaço acima do botão */
+  margin-top: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Adiciona transição suave ao hover */
-}
-
-.btn:hover {
-  background-color: #45a049; /* Cor ao passar o mouse */
+  transition: background-color 0.3s ease;
 }

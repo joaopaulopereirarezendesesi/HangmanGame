@@ -42,15 +42,25 @@ function TwoFASetup({ onClose }) {
       <div className={styles.modalContainer}>
         <h1>Configuração de Autenticação de Dois Fatores</h1>
         <div className={styles.qrCodeContainer}>
-          {qrCode && <img src={qrCode} alt="QR Code para 2FA" className={styles.qrCode} />}
+          {qrCode && (
+            <img
+              src={qrCode}
+              alt="QR Code para 2FA"
+              className={styles.qrCode}
+            />
+          )}
         </div>
         {secret && (
           <div className={styles.secretContainer}>
-            <p>Seu código secreto: <strong>{secret}</strong></p>
+            <p>
+              Seu código secreto: <strong>{secret}</strong>
+            </p>
           </div>
         )}
         <div className={styles.buttonContainer}>
-          <button className={styles.btn} onClick={onClose}>Concluir</button>
+          <button className={styles.btn} onClick={onClose}>
+            Concluir
+          </button>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./Login.module.css";
@@ -11,6 +13,7 @@ function Login() {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +32,10 @@ function Login() {
 
   const toggleActiveClass = () => {
     setIsActive((prevState) => !prevState);
+  };
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
   };
 
   const handleSubmit = async (event) => {
@@ -52,6 +59,8 @@ function Login() {
       if (response.data.message === "Login successful") {
         const nickname = Cookies.get("nickname");
         localStorage.setItem("userName", nickname);
+
+        navigate("/rooms");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -66,17 +75,21 @@ function Login() {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("nickname", nickname);
+    formData.append("password", password);
+    formData.append("confirm_password", confirmPassword);
+    if (profileImage) {
+      formData.append("profileImage", profileImage);
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:80/?url=User/create",
+        formData,
         {
-          email,
-          nickname,
-          password,
-          confirm_password: confirmPassword,
-        },
-        {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
@@ -152,6 +165,31 @@ function Login() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            <input
+              type="file"
+              id="profileImage"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+            <label htmlFor="profileImage" className={styles.fileUploadButton}>
+              {profileImage ? (
+                <>
+                  <div className={styles.iconfile}>
+                  <FontAwesomeIcon icon={faFileAlt} />
+                  </div>
+                  <p>Arquivo carregado!</p>
+                </>
+              ) : (
+                <>
+                  <div className={styles.iconfile}>
+                    <FontAwesomeIcon icon={faFile} />
+                  </div>
+                  <p>Adicione sua imagem de perfil</p>
+                </>
+              )}
+            </label>
+
             {error && (
               <div className={styles.error}>
                 {Array.isArray(error) ? (
@@ -186,16 +224,16 @@ function Login() {
             />
             <a href="#">Forget Your Password?</a>
             {error && (
-                <div className={styles.error}>
-                  {Array.isArray(error) ? (
-                    Object.entries(error).map(([key, message]) => (
-                      <p key={key}>{message}</p>
-                    ))
-                  ) : (
-                    <p>{error}</p>
-                  )}
-                </div>
-              )}
+              <div className={styles.error}>
+                {Array.isArray(error) ? (
+                  Object.entries(error).map(([key, message]) => (
+                    <p key={key}>{message}</p>
+                  ))
+                ) : (
+                  <p>{error}</p>
+                )}
+              </div>
+            )}
             <button className={styles.btn}>Sign In</button>
           </form>
         </div>

@@ -3,7 +3,6 @@ import styles from "./Rooms.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import img from "../../assets/persona.jpg";
 import ModalCriarSala from "../../components/ModalCriarSala/ModalCriarSala";
 import { FaArrowRight, FaUser } from "react-icons/fa";
 import { GrStatusGoodSmall } from "react-icons/gr";
@@ -13,8 +12,9 @@ function Rooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [playersCount, setPlayersCount] = useState({});
-  const [loading, setLoading] = useState(false); // Estado de carregamento
+  const [loading, setLoading] = useState(false); 
   const nickname = Cookies.get("nickname");
+  const photo = Cookies.get("photo");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,10 +22,9 @@ function Rooms() {
     fetchFriends();
   }, []);
 
-  // Função para buscar as salas
   const fetchRooms = async () => {
     try {
-      setLoading(true); // Inicia o carregamento
+      setLoading(true); 
       const response = await axios.get(
         "http://localhost:80/?url=Room/getRooms",
         {
@@ -36,21 +35,19 @@ function Rooms() {
 
       setRooms(response.data.rooms);
 
-      // Usando Promise.all para garantir que todas as requisições sejam feitas corretamente
       await Promise.all(
         response.data.rooms.map(async (room) => {
           await fetchOrganizeRoom(room.ID_O, room.ID_R);
           await countPlayers(room.ID_R);
         })
       );
-      setLoading(false); // Finaliza o carregamento
+      setLoading(false); 
     } catch (error) {
-      setLoading(false); // Finaliza o carregamento em caso de erro
+      setLoading(false);
       console.error("Erro na requisição:", error);
     }
   };
 
-  // Função para buscar o organizador da sala
   const fetchOrganizeRoom = async (id_o, roomID) => {
     try {
       const response = await axios.get(
@@ -73,7 +70,6 @@ function Rooms() {
     }
   };
 
-  // Função para buscar os amigos
   const fetchFriends = async () => {
     try {
       const response = await axios.get(
@@ -93,7 +89,6 @@ function Rooms() {
     }
   };
 
-  // Função para contar os jogadores em uma sala
   const countPlayers = async (roomID) => {
     try {
       const response = await axios.post(
@@ -130,7 +125,7 @@ function Rooms() {
       <section className={styles.content_section}>
         <header className={styles.playerInfo}>
           <div>
-            <img src={img} alt="Imagem de perfil do usuário" />
+            <img src={photo} alt="Imagem de perfil do usuário" />
             <h2>{nickname ? nickname : "Anonymous"}</h2>
           </div>
 
@@ -148,7 +143,7 @@ function Rooms() {
         <section className={styles.content}>
           <div className={styles.roomsGames}>
             {loading ? (
-              <div>Carregando...</div> // Feedback visual de carregamento
+              <div>Carregando...</div> 
             ) : (
               rooms.map((room) => (
                 <div key={room.ID_R} className={styles.games}>
