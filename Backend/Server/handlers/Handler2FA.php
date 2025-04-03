@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace handlers;
 
 use tools\Utils;
 use Exception;

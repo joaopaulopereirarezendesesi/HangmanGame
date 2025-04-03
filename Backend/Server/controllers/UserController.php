@@ -5,9 +5,9 @@ namespace controllers;
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use models\UserModel;
-use core\Handler2FA;
+use handlers\Handler2FA;
+use handlers\HandlerJwt;
 use tools\Utils;
-use core\JwtHandler;
 use Exception;
 use Imagick;
 
@@ -210,7 +210,7 @@ class UserController
             $user = $this->userModel->getUserByEmail($email);
 
             if ($user && password_verify($password, $user["PASSWORD"])) {
-                $token = JwtHandler::generateToken([
+                $token = HandlerJwt::generateToken([
                     "user_id" => $user["ID_U"],
                     "email" => $user["EMAIL"],
                     "nickname" => $user["NICKNAME"],

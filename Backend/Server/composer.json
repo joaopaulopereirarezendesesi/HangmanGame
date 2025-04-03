@@ -4,7 +4,8 @@
       "models\\": "models/",
       "core\\": "core/",
       "tools\\": "tools/",
-      "controllers\\": "controllers/"
+      "controllers\\": "controllers/",
+      "handlers\\": "handlers/"
     }
   },
   "require": {

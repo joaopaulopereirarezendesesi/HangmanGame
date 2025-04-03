@@ -10,7 +10,7 @@ use PDOException;
 use Exception;
 use core\Database;
 use PHPMailer\PHPMailer\PHPMailer;
-use core\JwtHandler;
+use ;
 
 class Utils
 {

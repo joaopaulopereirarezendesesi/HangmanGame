@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace handlers;
 
 require_once __DIR__ . "/../config/config.php";
 
@@ -13,7 +13,7 @@ use Exception;
 /**
  * Classe responsável por gerar e validar tokens JWT.
  */
-class JwtHandler
+class HandlerJwt
 {
     /**
      * @var string A chave secreta usada para assinar os tokens JWT.
