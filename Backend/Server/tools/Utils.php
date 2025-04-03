@@ -10,7 +10,7 @@ use PDOException;
 use Exception;
 use core\Database;
 use PHPMailer\PHPMailer\PHPMailer;
-use ;
+use handlers\HandlerJwt;
 
 class Utils
 {
@@ -43,7 +43,7 @@ class Utils
                 return null;
             }
 
-            $decoded = JwtHandler::validateToken($token);
+            $decoded = HandlerJwt::validateToken($token);
             if (!$decoded) {
                 return null;
             }
