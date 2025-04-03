@@ -14,6 +14,7 @@ function Rooms() {
   const [friends, setFriends] = useState([]);
   const [playersCount, setPlayersCount] = useState({});
   const [loading, setLoading] = useState(false);
+  const [allRaking, setallRanking] = useState(0);
   const nickname = Cookies.get("nickname");
   const photo = Cookies.get("photo");
   const navigate = useNavigate();
@@ -42,17 +43,17 @@ function Rooms() {
           await countPlayers(room.ID_R);
         })
       );
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchOrganizeRoom = async (id_o, roomID) => {
     try {
       const response = await axios.get(
-        `http://localhost:80/?url=User/getRoomOrganizer`,
+        `http://localhost:80/?url=User/getRoomOrganizer&id_o=${id_o}`,
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           withCredentials: true,
@@ -62,7 +63,7 @@ function Rooms() {
       setRooms((prevRooms) =>
         prevRooms.map((room) =>
           room.ID_R === roomID
-            ? { ...room, organizerName: response.data.rooms.NICKNAME }
+            ? { ...room, organizerName: response.data.NICKNAME }
             : room
         )
       );
@@ -73,6 +74,7 @@ function Rooms() {
 
   const fetchFriends = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "http://localhost:80/?url=Friends/getFriendsById",
         {
@@ -80,16 +82,24 @@ function Rooms() {
           withCredentials: true,
         }
       );
-      if (Array.isArray(response.data.friends)) {
-        setFriends(response.data.friends);
+      console.log(response.data.friends);
+      if (
+        response.data.friends &&
+        Array.isArray(response.data.friends.friends)
+      ) {
+        setallRanking(response.data.friends.total_players);
+        setFriends([...response.data.friends.friends]);
+      } else {
+        console.warn("Formato inesperado da API:", response.data);
+        setFriends([]);
       }
-      setLoading(false);
     } catch (error) {
-      setLoading(true);
       console.error(
         "Erro ao buscar amigos:",
         error.response ? error.response.data : error.message
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +116,7 @@ function Rooms() {
 
       setPlayersCount((prevCounts) => ({
         ...prevCounts,
-        [roomID]: response.data.players,
+        [roomID]: response.data.players || 0,
       }));
     } catch (error) {
       console.error(
@@ -130,21 +140,14 @@ function Rooms() {
         <header className={styles.playerInfo}>
           <div>
             <img src={photo} alt="Imagem de perfil do usuário" />
-            <h2>
-              {nickname
-                ? new DOMParser().parseFromString(nickname, "text/html").body
-                    .textContent
-                : "Anonymous"}{" "}
-            </h2>
+            <h2>{nickname || "Anonymous"}</h2>
           </div>
-
           <button
             className={styles.btnCreateRoom}
             onClick={() => setIsModalOpen(true)}
           >
             Criar sala
           </button>
-
           <button className={styles.btnLogout} onClick={handleLogout}>
             Logout
           </button>
@@ -161,47 +164,30 @@ function Rooms() {
                       src={room.MODALITY_IMG}
                       alt="Imagem de perfil do usuário"
                     />
-                    <p className={styles.titleRoom}>
-                      {
-                        new DOMParser().parseFromString(
-                          room.ROOM_NAME,
-                          "text/html"
-                        ).body.textContent
-                      }
-                    </p>
+                    <p className={styles.titleRoom}>{room.ROOM_NAME}</p>
                   </div>
                   <div className={styles.text}>
                     <GiCrown className={styles.iconLeader} />
-
                     <p className={styles.titleRoom}>
-                      <GiCrown className={styles.iconLeader} />
-                      {
-                        new DOMParser().parseFromString(
-                          room.organizerName,
-                          "text/html"
-                        ).body.textContent
-                      }
+                      {room.organizerName || "Carregando..."}
                     </p>
                     <p>
                       <FaUser className={styles.capacityRoom} />{" "}
-                      {playersCount[room.ID_R] !== undefined
-                        ? playersCount[room.ID_R]
-                        : "Carregando..."}
-                      /{room.PLAYER_CAPACITY}
+                      {playersCount[room.ID_R] ?? "Carregando..."}/
+                      {room.PLAYER_CAPACITY}
                     </p>
                     <p>
                       <GrStatusGoodSmall
-                        className={`${
+                        className={
                           room.PRIVATE === 1
                             ? styles.privateRoom
                             : styles.publicRoom
-                        }`}
+                        }
                       />
                       {room.PRIVATE === 1 ? "Privado" : "Aberto"}
                     </p>
                     <p>🎮 {room.MODALITY}</p>
                   </div>
-
                   <button className={styles.btnGames}>
                     <FaArrowRight className={styles.iconBtnGames} />
                   </button>
@@ -213,13 +199,53 @@ function Rooms() {
             {loading ? (
               <div>Carregando...</div>
             ) : (
-              Array.isArray(friends) &&
-              friends.map((friend) => (
-                <div className={styles.friend} key={friend.rank}>
-                  <img src={friend.foto} alt={friend.name} />
-                  <p>{friend.name}</p>
-                </div>
-              ))
+              friends
+                .sort((a, b) => {
+                  if (a.status === "online" && b.status !== "online") return -1;
+                  if (a.status === "away" && b.status !== "away") return -1;
+                  if (a.status === "offline" && b.status !== "offline")
+                    return 1;
+                  return 0;
+                })
+                .map((friend) => (
+                  <div className={styles.friend} key={friend.rank}>
+                    <img src={friend.foto} alt={friend.name} />
+                    <div className={styles.statusContainer}>
+                      <p className={styles.userName}>{friend.name}</p>
+                      <p>
+                        Ranking: {friend.rank}/{allRaking}
+                      </p>
+                      <div className={styles.statusWrapper}>
+                        <span
+                          className={`${styles.statusDot} ${
+                            friend.status === "online"
+                              ? styles.online
+                              : friend.status === "away"
+                              ? styles.away
+                              : styles.offline
+                          }`}
+                        ></span>
+                        <p
+                          className={`${
+                            friend.status === "online"
+                              ? styles.onlineText
+                              : friend.status === "away"
+                              ? styles.awayText
+                              : friend.status === "offline"
+                              ? styles.offlineText
+                              : ""
+                          }`}
+                        >
+                          {friend.status === "online"
+                            ? "Online"
+                            : friend.status === "away"
+                            ? "Ausente"
+                            : "Offline"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
             )}
           </aside>
         </section>

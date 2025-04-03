@@ -221,11 +221,79 @@ body {
   scrollbar-width: none;
 }
 
+.rooms .content .friends img {
+  width: 90px;
+  height: 90px;
+  border-radius: 70px;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.online {
+  background-color: green;
+}
+
+.away {
+  background-color: yellow;
+}
+
+.offline {
+  background-color: red;
+  opacity: 0.5; 
+}
+
+.onlineText {
+  color: green;
+}
+
+.awayText {
+  color: orange;
+}
+
+.offlineText {
+  color: red;
+  opacity: 0.5; 
+}
+
+.statusContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.userName {
+  font-size: 20px;
+}
+
+.rooms .content .friends .statusContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding-left: 10px;
+  font-weight:500;
+}
+
 .rooms .content_section .content .friends .friend {
   width: 100%;
   height: 120px;
+  font-size: 16px;
+  padding: 14px;
   background-color: #fff;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   border-bottom: 1px solid #bbb;
 }
 
