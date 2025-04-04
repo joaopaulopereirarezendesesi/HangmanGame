@@ -64,10 +64,35 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
    - Importe o `.sql` da pasta `/DB/Backup`.
    - (Opcional) Popular com dados de `/DB/Pupular`.
 
-9. **Instale as dependências:**
-   ```sh
-   composer install
-   ```
+9. **Instale o Imagick e o ImageMagick:**
+
+- Baixe os arquivos ZIP do Imagick e do ImageMagick:
+
+  - [Imagick](./assets/installer/php_imagick-3.7.0-8.2-ts-vs16-x64.zip)
+  - [ImageMagick](./assets/installer/ImageMagick-7.1.0-18-vc15-x64.zip)
+
+- Extraia os arquivos em uma nova pasta.
+
+- Instale o Imagick:
+
+  - Acesse a pasta extraída do Imagick (`php_imagick-3.7.0-8.2-ts-vs16-x64`).
+  - Localize o arquivo `php_imagick.dll`.
+  - Mova o arquivo `php_imagick.dll` para o diretório de extensões do PHP: `C:\xampp\php\ext`.
+
+- Instale o ImageMagick:
+
+  - Renomeie a pasta extraída do ImageMagick para `ImageMagick`.
+  - Mova a pasta `ImageMagick` para o diretório raiz: `C:\`.
+
+- Adicione uma variável de ambiente:
+
+  - Crie uma variável de ambiente do tipo `Path` com o valor: `C:\ImageMagick`.
+
+- Instale as dependências:
+
+```sh
+composer install
+```
 
 > ✅ Pronto! O backend está funcional.
 
