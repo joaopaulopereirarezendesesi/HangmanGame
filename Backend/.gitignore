@@ -1,7 +1,5 @@
 Server/vendor
-Server/composer.lock
 Server/.env
-WS/composer.lock
 WS/vendor
 WS/.env
 .idea
