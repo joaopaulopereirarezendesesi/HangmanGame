@@ -8,8 +8,6 @@ use models\RoomModel;
 use models\PlayedModel;
 use controllers\PhotosController;
 use tools\Utils;
-use DateTime;
-use DateTimeZone;
 use Exception;
 
 class RoomController

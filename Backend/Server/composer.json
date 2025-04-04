@@ -13,6 +13,8 @@
     "firebase/php-jwt": "v6.11.0",
     "phpmailer/phpmailer": "v6.9.3",
     "robthree/twofactorauth": "^3.0",
-    "bacon/bacon-qr-code": "^3.0"
+    "bacon/bacon-qr-code": "^3.0",
+    "ext-pdo": "*",
+    "ext-imagick": "*"
   }
 }

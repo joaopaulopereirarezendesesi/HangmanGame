@@ -51,7 +51,7 @@ class Router
                     $this->callAction($controller, $action, $param);
                 } else {
                     Utils::jsonResponse(
-                        "Método inválido: {$action} em {$controllerName}",
+                        "Método inválido: {$action} em $controllerName}",
                         400
                     );
                 }
@@ -190,7 +190,7 @@ class Router
     ): void {
         try {
             $param ? $controller->$action($param) : $controller->$action();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Utils::debug_log(
                 [
                     "coreErrorRouter-callAction" => $e->getMessage(),

@@ -86,7 +86,7 @@ class HandlerJwt
             }
 
             return (array) $decoded;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }

@@ -7,7 +7,7 @@ use Exception;
 
 class UserModel
 {
-    private $utils;
+    private Utils $utils;
 
     public function __construct()
     {
