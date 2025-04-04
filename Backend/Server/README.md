@@ -114,10 +114,6 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 
 ---
 
-## 5. Modelos de Dados
-
-## 🧾 Modelos de Dados
-
 ## 🧾 Modelos de Dados
 
 ### `users`
@@ -251,14 +247,5 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 O sistema suporta:
 
 1. **JWT**: Para autenticação de jogadores logados.
-2. **Sessões WebSocket**: Cada jogador recebe um identificador único durante a conexão.
-
-## 7. Testes
-
-Os testes podem ser executados via PHPUnit:
-
-```bash
-vendor/bin/phpunit
-```
 
 Essa documentação pode ser expandida conforme necessário. Se quiser adicionar mais detalhes, me avise!
