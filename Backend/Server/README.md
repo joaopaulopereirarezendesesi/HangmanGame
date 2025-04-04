@@ -1,524 +1,118 @@
-# Documentação do Backend - Jogo da Forca
+# 🕹️ Backend - Jogo da Forca
 
-## 1. Visão Geral
+## 📌 Visão Geral
 
-Este backend gerencia o CRUD e funcionalidade de um Jogo da Forca online.
+Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 
-**Tecnologias utilizadas:**
+**Tecnologias:**
 
-- PHP 8.2
-- MySQL (armazenamento de dados)
-- Apache (servidor HTTP com suporte a WebSockets via proxy)
-- Imagick (Biblioteca de criação de imagens)
-- php-jwt (Biblioteca de integração de tokens JWT)
-- phpmailer (Biblioteca de integração de envio de emails)
-- phpdotenv (Biblioteca para carregamento de variáveis de ambiente do .env)
-- twofactorauth (Biblioteca para adicionar autenticação de dois fatores)
-- bacon-qr-code (Biblioteca para geração de códigos QR)
-- PDO (Dependência do PDO (PHP Data Objects))
+- **PHP 8.2**
+- **MySQL**
+- **Apache (WebSockets via proxy)**
+- **Composer + Bibliotecas:**
+  - Imagick / ImageMagick
+  - php-jwt (JWT)
+  - phpmailer (e-mail)
+  - phpdotenv (variáveis de ambiente)
+  - twofactorauth (2FA)
+  - bacon-qr-code (QR Code)
+  - PDO (acesso ao BD)
 
-## 2. Guia de Instalação e Configuração
+---
 
-### Requisitos do Sistema
+## ⚙️ Instalação e Configuração
+
+### ✅ Pré-requisitos
 
 - PHP 8.2
 - MySQL
 - Composer
 - Apache com suporte a WebSockets
-- Imagick
-- ImageMagick
+- Imagick + ImageMagick
 
-## 🔧 Executando o Backend (para testes)
+### 🛠️ Passo a passo
 
-1. **Clone o repositório:**
+1. **Clone o projeto:**
+
    ```sh
    git clone https://github.com/joaopaulopereirarezendesesi/HangmanGame
    ```
-2. **Instale o [XAMPP](https://www.apachefriends.org/pt_br/index.html)** e adicione `C:\xampp\php` às variáveis de ambiente do sistema.
 
-3. **Instale o gerneciador de dependências [Composer](https://getcomposer.org/)**
+2. **Instale o [XAMPP](https://www.apachefriends.org/pt_br/index.html)** e adicione `C:\xampp\php` às variáveis de ambiente.
 
-4. **Habilite OpenSSL no Apache:**
+3. **Instale o [Composer](https://getcomposer.org/)**.
 
-   - No XAMPP, clique em **Config** do Apache e edite `php.ini`.
-   - Localize `openssl` e descomente `;extension=openssl` e `;extension=php_openssl.dll` retirando o `;`.
+4. **Ative o OpenSSL:**
 
-5. **Gere certificado HTTPS:**
+   - Edite `php.ini` e descomente `extension=openssl` e `extension=php_openssl.dll`.
 
-   - [Blog de tutorial](https://www.jetersonlordano.com.br/ferramentas-e-configuracoes/como-configurar-certificado-ssl-https-no-xampp-e-google-chrome)
+5. **Configure o HTTPS:**
 
-6. **Configure a pasta root do Apache:**
+   - Siga este [tutorial](https://www.jetersonlordano.com.br/ferramentas-e-configuracoes/como-configurar-certificado-ssl-https-no-xampp-e-google-chrome).
 
-   - Edite `httpd.conf` e `httpd-ssl.conf`(você pode localizar esses arquivos clicando no botão `config` do apache na interface do XAMPP), alterando `DocumentRoot`(nos dois arquivos) e `<Directory "C:/xampp/htdocs">` (no arquivo `httpd.conf`) para o caminho do Backend/Server deste projeto.
-   - Reinicie o Apache.
+6. **Ajuste o Apache:**
 
-7. **Crie o arquivo `.env` na pasta Backend/Server:**
+   - Edite `httpd.conf` e `httpd-ssl.conf`, atualizando `DocumentRoot` e `<Directory>` para o caminho da pasta `Backend/Server`.
 
-- Vá até `.env.exemple` e copie o conteudo deste arquivo para um arquivo `.env` na raiz do projeto
+7. **Crie o arquivo `.env`:**
+
+   - Copie o conteúdo de `.env.exemple` e cole em um novo `.env`.
 
 8. **Configure o banco de dados:**
 
-   - Inicie os serviços do MySQL e Apache no XAMPP.
-   - Crie um banco e importe o banco disponível na pasta `/DB/Backup`.
-     **Para testes:**
-   - Pupule o BD com o arquivo de INSERTS `/DB/Pupular`
+   - Inicie o MySQL e Apache.
+   - Importe o `.sql` da pasta `/DB/Backup`.
+   - (Opcional) Popular com dados de `/DB/Pupular`.
 
-9. **Instale as dependências do backend:**
+9. **Instale as dependências:**
+   ```sh
+   composer install
+   ```
 
-- Instale Imagick (biblioteca de criação de imagens):
-
-  - [Imagick](./assets/installer/php_imagick-3.7.0-8.2-ts-vs16-x64.zip)
-
-- Instalando dependencias:
-
-```sh
-composer install
-```
-
-✅ **Backend pronto para uso!**
-
-## 3. Arquitetura do Sistema
-
-- **`assets/`**: Contém arquivos estáticos, como imagens, estilos e arquivos compactados.
-- **`controllers/`**: Contém os handlers de conexões WebSocket, responsáveis por gerenciar eventos e interações.
-- **`models/`**: Contém os modelos de dados, como jogadores, salas e partidas.
-- **`config/`**: Armazena configurações gerais do sistema.
-- **`logs/`**: Diretório onde são armazenados os arquivos de log do servidor.
-- **`test/`**: Arquivo de testes de funcionalidades.
-- **`tools/`**: Reúne ferramentas auxiliares utilizadas no desenvolvimento e manutenção do sistema.
-- **`core/`**: Contém o núcleo da aplicação, incluindo a inicialização e funções essenciais.
-- **`handlers/`**: Pasta que tem classes com funções expecificas.
-
-## 4. Rotas da API
-
-- UserController
-
-### POST User/index
-
-**Descrição:** Lista todos os usuários.
-
-**Requisição:**
-
-```json
-{}
-```
-
-**Resposta de sucesso:**
-
-```json
-[
-  {
-    "ID_U": 1,
-    "NICKNAME": "fulano",
-    "EMAIL": "fulano@email.com",
-    "PHOTO": "http://localhost:80/assets/photos/usersPhotos/fulano.png"
-  }
-]
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Internal server error"
-}
-```
+> ✅ Pronto! O backend está funcional.
 
 ---
 
-### POST User/show
+## 🧱 Estrutura do Projeto
 
-**Descrição:** Exibe os dados de um usuário pelo ID.
-
-**Requisição:**
-
-```json
-{
-  "id": 1
-}
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "ID_U": 1,
-  "NICKNAME": "fulano",
-  "EMAIL": "fulano@email.com",
-  "PHOTO": "http://localhost:80/assets/photos/usersPhotos/fulano.png"
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "User not found"
-}
-```
+| Pasta          | Descrição                                     |
+| -------------- | --------------------------------------------- |
+| `assets/`      | Arquivos estáticos (imagens, CSS, zips, etc)  |
+| `controllers/` | Handlers WebSocket e lógicas de controle      |
+| `models/`      | Modelos de dados (Usuário, Sala, Partida)     |
+| `config/`      | Arquivos de configuração geral                |
+| `logs/`        | Logs gerados pelo servidor                    |
+| `test/`        | Scripts de teste                              |
+| `tools/`       | Ferramentas auxiliares                        |
+| `core/`        | Inicialização e funções centrais da aplicação |
+| `handlers/`    | Funções específicas e utilitárias             |
 
 ---
 
-### POST User/create
+## 📡 Rotas da API
 
-**Descrição:** Cria um novo usuário. (_multipart/form-data_)
+### 👤 `UserController`
 
-**Requisição (form-data):**
+- **POST `/User/index`** – Lista usuários
+- **POST `/User/show`** – Exibe usuário por ID
+- **POST `/User/create`** – Cria novo usuário (form-data)
+- **POST `/User/login`** – Autentica usuário
+- **GET `/User/getRoomOrganizer`** – Retorna salas criadas (JWT)
+- **GET `/User/generateSecretImage`** – Gera QR Code 2FA
 
-- nickname: string
-- email: string
-- password: string
-- confirm_password: string
-- profileImage: arquivo .png/.jpg
+### 🏠 `RoomController`
 
-**Resposta de sucesso:**
+- **POST `/Room/createRoom`** – Cria nova sala
+- **POST `/Room/joinRoom`** – Entra em sala existente
+- **POST `/Room/removePlayerFromRoom`** – Sai de uma sala
+- **GET `/Room/getRooms`** – Lista salas disponíveis
+- **POST `/Room/countPlayers`** – Conta jogadores na sala
 
-```json
-{
-  "message": "User successfully created!"
-}
-```
+### 🤝 `FriendsController`
 
-**Resposta de erro:**
-
-```json
-{
-  "error": "Passwords do not match"
-}
-```
+- **GET `/Friends/getFriendsById`** – Lista amigos (JWT)
 
 ---
-
-### POST User/login
-
-**Descrição:** Login do usuário com email e senha.
-
-**Requisição:**
-
-```json
-{
-  "email": "fulano@email.com",
-  "password": "Senha@123"
-}
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "message": "Login successful"
-}
-```
-
-**Cookies definidos:**
-
-- jwt (criptografado)
-- nickname
-- photo
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Invalid credentials"
-}
-```
-
----
-
-### GET User/getRoomOrganizer
-
-**Descrição:** Retorna as salas organizadas pelo usuário logado (via token JWT).
-
-**Requisição:** _(sem corpo)_
-
-**Resposta de sucesso:**
-
-```json
-{
-  "rooms": [
-    {
-      "ID_ROOM": 1,
-      "NAME": "Sala A",
-      "DESCRIPTION": "Descrição aqui"
-    }
-  ]
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Token not provided"
-}
-```
-
----
-
-### GET User/generateSecretImage
-
-**Descrição:** Gera imagem/QR code para 2FA do usuário autenticado.
-
-**Requisição:** _(sem corpo, requer JWT no cookie)_
-
-**Resposta esperada:** Imagem inline ou download automático
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Token not provided"
-}
-```
-
-- RoomController
-
-### POST Room/createRoom
-
-**Descrição:** Cria uma nova sala.
-
-**Requisição (form-data):**
-
-- room_name: string (opcional)
-- private: boolean
-- password: string (necessário se `private` for `true`)
-- player_capacity: int (mínimo 2, padrão 10)
-- time_limit: int (mínimo 2, padrão 5)
-- points: int (padrão 2000)
-- modality: string (ex: "criptografia")
-
-**Resposta de sucesso:**
-
-```json
-{
-  "id_creator": 1,
-  "id_room": 10,
-  "room_name": "Minha Sala",
-  "private": true,
-  "capacity": 5,
-  "timeout": 5,
-  "points": 2000,
-  "modality": "criptografia"
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Room name already in use."
-}
-```
-
-ou
-
-```json
-{
-  "error": "Password required for private rooms."
-}
-```
-
-ou
-
-```json
-{
-  "error": "Invalid capacity or time limit."
-}
-```
-
----
-
-### POST Room/joinRoom
-
-**Descrição:** Permite que um usuário entre em uma sala existente.
-
-**Requisição:**
-
-```json
-{
-  "roomId": 10,
-  "password": "1234" // somente se a sala for privada
-}
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "message": "Successfully joined the room."
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Room not found."
-}
-```
-
-ou
-
-```json
-{
-  "error": "Invalid password."
-}
-```
-
-ou
-
-```json
-{
-  "error": "Room is full."
-}
-```
-
----
-
-### POST Room/removePlayerFromRoom
-
-**Descrição:** Remove o jogador logado da sala informada.
-
-**Requisição:**
-
-```json
-{
-  "roomId": 10
-}
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "message": "Player successfully removed."
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Room not found."
-}
-```
-
----
-
-### GET Room/getRooms
-
-**Descrição:** Lista todas as salas disponíveis.
-
-**Requisição:** _(sem corpo, precisa estar autenticado)_
-
-**Resposta de sucesso:**
-
-```json
-{
-  "rooms": [
-    {
-      "ID_ROOM": 1,
-      "NAME": "Sala A",
-      "PRIVATE": false,
-      "PLAYER_CAPACITY": 10,
-      ...
-    }
-  ]
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "message": "No rooms found"
-}
-```
-
----
-
-### POST Room/countPlayers
-
-**Descrição:** Conta quantos jogadores estão em uma sala.
-
-**Requisição:**
-
-```json
-{
-  "roomId": 10
-}
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "players": 4
-}
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Room ID not provided"
-}
-```
-
-- FriendsController
-
-### GET Friends/getFriendsById
-
-**Descrição:** Retorna a lista de amigos do usuário autenticado.
-
-**Requisição:** _(necessário token JWT no cabeçalho Authorization)_
-
-**Headers:**
-
-```
-Authorization: Bearer <seu_token>
-```
-
-**Resposta de sucesso:**
-
-```json
-{
-  "friends": [
-    {
-      "id": "123",
-      "username": "amigo1",
-      "status": "online"
-    },
-    {
-      "id": "456",
-      "username": "amigo2",
-      "status": "offline"
-    }
-  ]
-}
-```
-
-**Resposta de erro (sem token):**
-
-```json
-{
-  "error": "Token not provided"
-}
-```
-
-**Resposta de erro (servidor):**
-
-```json
-{
-  "error": "Internal server error"
-}
-```
-
-**Observações:**
-
-- A função depende de autenticação via token.
-- O método chama `getFriendsById` no modelo para buscar a lista.
 
 ## 5. Modelos de Dados
 
