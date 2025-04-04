@@ -13,30 +13,30 @@ final class Database
     private static ?PDO $instance = null;
 
     /**
-     * Conecta ao banco de dados usando PDO.
+     * Connects to the database using PDO.
      *
-     * @param array $options Opções customizadas para a configuração do PDO.
-     * @return PDO A instância de conexão com o banco de dados.
-     * @throws PDOException Se houver erro ao conectar ao banco de dados.
+     * @param array $options Custom options for PDO configuration.
+     * @return PDO The database connection instance.
+     * @throws PDOException If there is an error connecting to the database.
      */
     public static function connect(array $options = []): PDO
     {
         if (self::$instance === null) {
             try {
-                $dsn = self::getDsn();
+                $dataSourceName = self::getDataSourceName();
 
                 self::$instance = new PDO(
-                    $dsn,
+                    $dataSourceName,
                     DB_USER,
                     DB_PASS,
                     self::getDefaultOptions($options)
                 );
             } catch (PDOException $e) {
                 Utils::debug_log(
-                    "Erro na conexão: " . $e->getMessage(),
+                    "Connection error: " . $e->getMessage(),
                     "error"
                 );
-                throw new PDOException("Erro ao conectar ao banco de dados.");
+                throw new PDOException("Error connecting to the database.");
             }
         }
 
@@ -44,11 +44,11 @@ final class Database
     }
 
     /**
-     * Gera o Data Source Name (DSN) para a conexão PDO com o banco de dados.
+     * Generates the Data Source Name (DSN) for the PDO connection to the database.
      *
-     * @return string O DSN para a conexão com o banco de dados.
+     * @return string The DSN for the database connection.
      */
-    private static function getDsn(): string
+    private static function getDataSourceName(): string
     {
         return "mysql:host=" .
             DB_HOST .
@@ -58,10 +58,10 @@ final class Database
     }
 
     /**
-     * Obtém as opções padrão para a configuração do PDO.
+     * Gets the default options for PDO configuration.
      *
-     * @param array $customOptions Opções customizadas para mesclar com as opções padrão.
-     * @return array As opções de configuração do PDO.
+     * @param array $customOptions Custom options to merge with the default options.
+     * @return array The PDO configuration options.
      */
     private static function getDefaultOptions(array $customOptions = []): array
     {

@@ -31,11 +31,11 @@ class FriendsController
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
-            $friends = $this->friendsModel->getFriendsById(
+            $friendList = $this->friendsModel->getFriendsById(
                 strval($userId)
             );
 
-            Utils::jsonResponse(["friends" => $friends]);
+            Utils::jsonResponse(["friends" => $friendList]);
         } catch (Exception $e) {
             Utils::debug_log(
                 ["controllerErrorFriends-getFriendsById" => $e->getMessage()],
@@ -45,3 +45,4 @@ class FriendsController
         }
     }
 }
+?>

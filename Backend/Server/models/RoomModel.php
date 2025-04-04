@@ -15,37 +15,37 @@ class RoomModel
     }
 
     public function createRoom(
-        string $id_o,
-        string $room_name,
-        bool $private,
-        string $password,
-        int $player_capacity,
-        int $time_limit,
+        string $organizerId,
+        string $roomName,
+        bool $isPrivate,
+        string $roomPassword,
+        int $playerCapacity,
+        int $timeLimit,
         int $points,
         string $modality,
-        string $modality_img
-    ): string {
+        string $modalityImage
+    ): ?string {
         try {
-            $query = "INSERT INTO rooms (ID_R, ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS, MODALITY, MODALITY_IMG) 
-                    VALUES (UUID(), :id_o, :room_name, :private, :password, :player_capacity, :time_limit, :points, :modality, :modality_img)";
+            $createRoomQuery = "INSERT INTO rooms (ID_R, ID_O, ROOM_NAME, PRIVATE, PASSWORD, PLAYER_CAPACITY, TIME_LIMIT, POINTS, MODALITY, MODALITY_IMG) 
+                    VALUES (UUID(), :organizerId, :roomName, :isPrivate, :roomPassword, :playerCapacity, :timeLimit, :points, :modality, :modalityImage)";
 
-            $params = [
-                ":id_o" => $id_o,
-                ":room_name" => $room_name,
-                ":private" => $private,
-                ":password" => $private
-                    ? password_hash($password, PASSWORD_ARGON2ID)
+            $queryParameters = [
+                ":organizerId" => $organizerId,
+                ":roomName" => $roomName,
+                ":isPrivate" => $isPrivate,
+                ":roomPassword" => $isPrivate
+                    ? password_hash($roomPassword, PASSWORD_ARGON2ID)
                     : null,
-                ":player_capacity" => $player_capacity,
-                ":time_limit" => $time_limit,
+                ":playerCapacity" => $playerCapacity,
+                ":timeLimit" => $timeLimit,
                 ":points" => $points,
                 ":modality" => $modality,
-                ":modality_img" => $modality_img,
+                ":modalityImage" => $modalityImage,
             ];
 
-            $this->utils->executeQuery($query, $params);
+            $this->utils->executeQuery($createRoomQuery, $queryParameters);
 
-            return $this->getRoomNameId($room_name);
+            return $this->getRoomIdByName($roomName);
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -54,19 +54,20 @@ class RoomModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
-    public function getRoomNameId(string $roomName): ?string
+    public function getRoomIdByName(string $roomName): ?string
     {
         try {
-            $query = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
-            $params = [":roomName" => $roomName];
+            $roomIdQuery = "SELECT ID_R FROM rooms WHERE ROOM_NAME = :roomName";
+            $queryParameters = [":roomName" => $roomName];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $roomIdResult = $this->utils->executeQuery($roomIdQuery, $queryParameters, true);
 
-            return $result[0]["ID_R"] ?? null;
+            return $roomIdResult[0]["ID_R"] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -75,19 +76,20 @@ class RoomModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
     public function getRoomById(string $roomId): ?array
     {
         try {
-            $query = "SELECT * FROM rooms WHERE ID_R = :roomId";
-            $params = [":roomId" => $roomId];
+            $roomQuery = "SELECT * FROM rooms WHERE ID_R = :roomId";
+            $queryParameters = [":roomId" => $roomId];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $roomResult = $this->utils->executeQuery($roomQuery, $queryParameters, true);
 
-            return $result[0] ?? null;
+            return $roomResult[0] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -96,19 +98,20 @@ class RoomModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
-    public function doesRoomNameExist(string $roomName): bool
+    public function doesRoomNameExist(string $roomName): ?bool
     {
         try {
-            $query = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = :roomName";
-            $params = [":roomName" => $roomName];
+            $roomNameExistsQuery = "SELECT COUNT(*) FROM rooms WHERE ROOM_NAME = :roomName";
+            $queryParameters = [":roomName" => $roomName];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $roomNameExistsResult = $this->utils->executeQuery($roomNameExistsQuery, $queryParameters, true);
 
-            return $result[0]["COUNT(*)"] > 0;
+            return $roomNameExistsResult[0]["COUNT(*)"] > 0;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -117,18 +120,19 @@ class RoomModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
     public function getRooms(): ?array
     {
         try {
-            $query = "SELECT * FROM rooms";
+            $roomsQuery = "SELECT * FROM rooms";
 
-            $result = $this->utils->executeQuery($query, [], true);
+            $roomsResult = $this->utils->executeQuery($roomsQuery, [], true);
 
-            return $result ?? null;
+            return $roomsResult ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -137,7 +141,8 @@ class RoomModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

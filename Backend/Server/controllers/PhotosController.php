@@ -26,13 +26,13 @@ class PhotosController
     /**
      * Captures a photo based on a specific subject.
      *
-     * @param string $matter The subject of the photo.
+     * @param string $subject The subject of the photo.
      * @return ?string The path of the photo or null in case of failure.
      */
-    public function takePhotoWithMatter(string $matter): ?string
+    public function takePhotoWithMatter(string $subject): ?string
     {
         try {
-            return $this->photoModel->takePhotoWithMatter($matter);
+            return $this->photoModel->takePhotoWithMatter($subject);
         } catch (Exception $e) {
             Utils::debug_log(
                 [

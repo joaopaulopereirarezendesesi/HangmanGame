@@ -17,8 +17,8 @@ class RoomController
     private PhotosController $photosController;
 
     /**
-     * Construtor da classe RoomController.
-     * Inicializa os modelos necessários e o controlador de fotos.
+     * RoomController class constructor.
+     * Initializes the necessary models and the photo controller.
      */
     public function __construct()
     {
@@ -28,12 +28,12 @@ class RoomController
     }
 
     /**
-     * Cria uma nova sala.
+     * Creates a new room.
      *
-     * Este método recebe dados via POST, valida as informações fornecidas
-     * e cria uma nova sala no sistema.
+     * This method receives data via POST, validates the provided information
+     * and creates a new room in the system.
      *
-     * @return void Retorna uma resposta JSON com os detalhes da sala criada.
+     * @return void Returns a JSON response with the details of the created room.
      */
     public function createRoom(): void
     {
@@ -50,7 +50,7 @@ class RoomController
             }
 
             $modality = strtolower($data["modality"]);
-            $modalityImg = strval(
+            $modalityImage = strval(
                 $this->photosController->takePhotoWithMatter($modality)
             );
 
@@ -99,7 +99,7 @@ class RoomController
                 $timeLimit,
                 $points,
                 $modality,
-                $modalityImg
+                $modalityImage
             );
 
             Utils::jsonResponse([
@@ -124,12 +124,12 @@ class RoomController
     }
 
     /**
-     * Permite que um usuário entre em uma sala existente.
+     * Allows a user to join an existing room.
      *
-     * Este método valida se a sala existe, se está cheia, e se a senha está correta
-     * para salas privadas. Caso contrário, o usuário é adicionado à sala.
+     * This method validates if the room exists, if it is full, and if the password is correct
+     * for private rooms. Otherwise, the user is added to the room.
      *
-     * @return void Retorna uma resposta JSON com o status da operação.
+     * @return void Returns a JSON response with the operation status.
      */
     public function joinRoom(): void
     {
@@ -140,7 +140,8 @@ class RoomController
             }
 
             $data = $_POST;
-            $room = $this->roomModel->getRoomById($data["roomId"]);
+            $roomId = $data["roomId"];
+            $room = $this->roomModel->getRoomById($roomId);
 
             if (!$room) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
@@ -157,7 +158,7 @@ class RoomController
             }
 
             if (
-                $this->playedModel->getPlayersCountInRoom($data["roomId"]) >=
+                $this->playedModel->getPlayersCountInRoom($roomId) >=
                 $room["PLAYER_CAPACITY"]
             ) {
                 Utils::jsonResponse(["error" => "Room is full."], 403);
@@ -165,7 +166,7 @@ class RoomController
 
             $this->playedModel->joinRoom(
                 strval($userId),
-                strval($data["roomId"])
+                strval($roomId)
             );
             Utils::jsonResponse(["message" => "Successfully joined the room."]);
         } catch (Exception $e) {
@@ -195,14 +196,15 @@ class RoomController
             }
 
             $data = $_POST;
+            $roomId = $data["roomId"];
 
-            if (!$this->roomModel->getRoomById($data["roomId"])) {
+            if (!$this->roomModel->getRoomById($roomId)) {
                 Utils::jsonResponse(["error" => "Room not found."], 404);
             }
 
             $this->playedModel->leaveRoom(
                 strval($userId),
-                strval($data["roomId"])
+                strval($roomId)
             );
             Utils::jsonResponse(["message" => "Player successfully removed."]);
         } catch (Exception $e) {
@@ -217,17 +219,17 @@ class RoomController
     }
 
     /**
-     * Obtém a lista de salas disponíveis.
+     * Gets the list of available rooms.
      *
-     * Este método retorna todas as salas disponíveis no sistema.
+     * This method returns all available rooms in the system.
      *
-     * @return void Retorna uma resposta JSON com a lista de salas ou mensagem de erro.
+     * @return void Returns a JSON response with the list of rooms or an error message.
      */
     public function getRooms(): void
     {
         try {
-            $authUserId = Utils::getUserIdFromToken();
-            if (!$authUserId) {
+            $userId = Utils::getUserIdFromToken();
+            if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
@@ -249,28 +251,29 @@ class RoomController
     }
 
     /**
-     * Conta o número de jogadores em uma sala.
+     * Counts the number of players in a room.
      *
-     * Este método retorna o número atual de jogadores em uma sala específica.
+     * This method returns the current number of players in a specific room.
      *
-     * @return void Retorna uma resposta JSON com a contagem de jogadores.
+     * @return void Returns a JSON response with the player count.
      */
     public function countPlayers(): void
     {
         try {
-            $authUserId = Utils::getUserIdFromToken();
-            if (!$authUserId) {
+            $userId = Utils::getUserIdFromToken();
+            if (!$userId) {
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
             $data = $_POST;
+            $roomId = $data["roomId"];
 
-            if (!isset($data["roomId"])) {
+            if (!isset($roomId)) {
                 Utils::jsonResponse(["error" => "Room ID not provided"], 400);
             }
 
             $playerCount = $this->playedModel->countPlayersInRoom(
-                strval($data["roomId"])
+                strval($roomId)
             );
             Utils::jsonResponse(["players" => $playerCount]);
         } catch (Exception $e) {

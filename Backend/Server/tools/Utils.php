@@ -208,7 +208,7 @@ class Utils
             );
             self::jsonResponse(["error" => "Internal server error"], 500);
 
-            return false;
+            return null;
         }
     }
 

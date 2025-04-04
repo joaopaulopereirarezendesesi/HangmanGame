@@ -17,10 +17,10 @@ class UserModel
     public function getAllUsers(): ?array
     {
         try {
-            $query = "SELECT * FROM users";
-            $result = $this->utils->executeQuery($query, [], true);
+            $usersQuery = "SELECT * FROM users";
+            $usersResult = $this->utils->executeQuery($usersQuery, [], true);
 
-            return $result[0] ?? null;
+            return $usersResult[0] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -29,18 +29,19 @@ class UserModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
     public function getUserById(string $userId): ?array
     {
         try {
-            $query = "SELECT * FROM users WHERE ID_U = :id";
-            $params = [":id" => $userId];
-            $result = $this->utils->executeQuery($query, $params, true);
+            $userQuery = "SELECT * FROM users WHERE ID_U = :userId";
+            $queryParameters = [":userId" => $userId];
+            $userResult = $this->utils->executeQuery($userQuery, $queryParameters, true);
 
-            return $result[0] ?? null;
+            return $userResult[0] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -49,7 +50,8 @@ class UserModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
@@ -58,21 +60,21 @@ class UserModel
         string $email,
         string $password,
         ?string $userPhoto = null
-    ): string {
+    ): ?string {
         try {
-            $query =
+            $existingUserQuery =
                 "SELECT * FROM users WHERE email = :email OR NICKNAME = :nickname";
-            $params = [":email" => $email, ":nickname" => $nickname];
-            $existingUser = $this->utils->executeQuery($query, $params, true);
+            $queryParameters = [":email" => $email, ":nickname" => $nickname];
+            $existingUserData = $this->utils->executeQuery($existingUserQuery, $queryParameters, true);
 
-            if ($existingUser) {
-                if ($existingUser[0]["email"] === $email) {
+            if ($existingUserData) {
+                if ($existingUserData[0]["email"] === $email) {
                     Utils::jsonResponse(
                         ["error" => "Email já utilizado!"],
                         400
                     );
                 }
-                if ($existingUser[0]["NICKNAME"] === $nickname) {
+                if ($existingUserData[0]["NICKNAME"] === $nickname) {
                     Utils::jsonResponse(
                         ["error" => "Nickname já utilizado!"],
                         400
@@ -80,22 +82,21 @@ class UserModel
                 }
             }
 
-            $query =
+            $createUserQuery =
                 "INSERT INTO users (ID_U, NICKNAME, EMAIL, PASSWORD, ONLINE, PHOTO, TFA) VALUES (UUID(), :nickname, :email, :password, 2, :userPhoto, 0)";
-            $params = [
+            $createUserParameters = [
                 ":nickname" => $nickname,
                 ":email" => $email,
                 ":password" => password_hash($password, PASSWORD_ARGON2ID),
                 ":userPhoto" => $userPhoto,
             ];
 
-            $this->utils->executeQuery($query, $params);
+            $this->utils->executeQuery($createUserQuery, $createUserParameters);
 
-            return $this->utils->executeQuery(
-                "SELECT LAST_INSERT_ID()",
-                [],
-                true
-            )[0]["LAST_INSERT_ID()"];
+            $lastInsertIdQuery = "SELECT LAST_INSERT_ID()";
+            $lastInsertIdResult = $this->utils->executeQuery($lastInsertIdQuery, [], true);
+
+            return $lastInsertIdResult[0]["LAST_INSERT_ID()"];
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -104,18 +105,19 @@ class UserModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
     public function getUserByEmail(string $email): ?array
     {
         try {
-            $query = "SELECT * FROM users WHERE email = :email";
-            $params = [":email" => $email];
-            $result = $this->utils->executeQuery($query, $params, true);
+            $userEmailQuery = "SELECT * FROM users WHERE email = :email";
+            $queryParameters = [":email" => $email];
+            $userEmailResult = $this->utils->executeQuery($userEmailQuery, $queryParameters, true);
 
-            return $result[0] ?? null;
+            return $userEmailResult[0] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -124,18 +126,19 @@ class UserModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
-    public function getRoomOrganizer(string $id_o): ?array
+    public function getRoomOrganizer(string $organizerId): ?array
     {
         try {
-            $query = "SELECT * FROM users WHERE ID_U = :id_o";
-            $params = [":id_o" => $id_o];
-            $result = $this->utils->executeQuery($query, $params, true);
+            $organizerQuery = "SELECT * FROM users WHERE ID_U = :organizerId";
+            $queryParameters = [":organizerId" => $organizerId];
+            $organizerResult = $this->utils->executeQuery($organizerQuery, $queryParameters, true);
 
-            return $result[0] ?? null;
+            return $organizerResult[0] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -144,7 +147,8 @@ class UserModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

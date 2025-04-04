@@ -36,8 +36,7 @@ class App
             header("Access-Control-Allow-Methods: " . implode(", ", $allowedMethods));
             header("Access-Control-Allow-Headers: " . implode(", ", $allowedHeaders));
             header("Access-Control-Allow-Credentials: true");
-            header("HTTP/1.1 204 No Content"); 
-            exit();
+            header("HTTP/1.1 204 No Content");
         }
     }
     

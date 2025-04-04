@@ -14,12 +14,12 @@ class FriendsModel
         $this->utils = new Utils();
     }
 
-    public function getFriendsById(string $userId): array
+    public function getFriendsById(string $userId): ?array
     {
         try {
-            $queryFriends = "
+            $friendsQuery = "
             SELECT 
-                u.PHOTO AS foto,
+                u.PHOTO AS photo,
                 u.NICKNAME AS name,
                 u.ONLINE AS status,
                 r.POSITION AS rank
@@ -27,42 +27,38 @@ class FriendsModel
             JOIN users u ON r.ID_U = u.ID_U
             WHERE r.ID_U IN (
                 SELECT CASE 
-                    WHEN f.ID_U = :id THEN f.ID_A
+                    WHEN f.ID_U = :userId THEN f.ID_A
                     ELSE f.ID_U
                 END
                 FROM friends f
-                WHERE f.ID_U = :id1 OR f.ID_A = :id2
+                WHERE f.ID_U = :userId1 OR f.ID_A = :userId2
             )
             ORDER BY r.POSITION ASC;
             ";
 
-            $queryTotalPlayers = "
+            $totalPlayersQuery = "
             SELECT COUNT(*) AS total_players
             FROM ranking;
             ";
 
-            $params = [
-                ":id" => $userId,
-                ":id1" => $userId,
-                ":id2" => $userId,
+            $queryParameters = [
+                ":userId" => $userId,
+                ":userId1" => $userId,
+                ":userId2" => $userId,
             ];
 
-            $resultFriends = $this->utils->executeQuery($queryFriends, $params, true);
+            $friendsResult = $this->utils->executeQuery($friendsQuery, $queryParameters, true);
 
-            if (empty($resultFriends)) {
+            if (empty($friendsResult)) {
                 return [];
             }
 
-            $resultTotalPlayers = $this->utils->executeQuery($queryTotalPlayers, [], true);
+            $totalPlayersResult = $this->utils->executeQuery($totalPlayersQuery, [], true);
 
-            $totalPlayers = $resultTotalPlayers[0]['total_players'];
-
-            $response = [
-                "total_players" => $totalPlayers, 
-                "friends" => $resultFriends,     
+            return [
+                "total_players" => $totalPlayersResult[0]['total_players'],
+                "friends" => $friendsResult,
             ];
-
-            return $response;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -71,7 +67,8 @@ class FriendsModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

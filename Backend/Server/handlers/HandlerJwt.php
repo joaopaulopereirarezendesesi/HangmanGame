@@ -11,37 +11,37 @@ use tools\Utils;
 use Exception;
 
 /**
- * Classe responsável por gerar e validar tokens JWT.
+ * Class responsible for generating and validating JWT tokens.
  */
 class HandlerJwt
 {
     /**
-     * @var string A chave secreta usada para assinar os tokens JWT.
+     * @var string The secret key used to sign the JWT tokens.
      */
-    private static string $secret = JWT_SECRET;
+    private static string $secretKey = JWT_SECRET;
 
     /**
-     * @var string O algoritmo de assinatura utilizado, que é HS256 (HMAC com SHA-256).
+     * @var string The signing algorithm used, which is HS256 (HMAC with SHA-256).
      */
-    private static string $alg = "HS256";
+    private static string $algorithm = "HS256";
 
     /**
-     * Gera um novo token JWT.
+     * Generates a new JWT token.
      *
-     * @param array $payload Dados a serem incluídos no token (por exemplo, informações do usuário).
-     * @param int $expTime Tempo de expiração do token em segundos. O padrão é 3600 segundos (1 hora).
-     * @return string O token JWT gerado.
+     * @param array $payload Data to be included in the token (e.g., user information).
+     * @param int $expirationTime Token expiration time in seconds. The default is 3600 seconds (1 hour).
+     * @return ?string The generated JWT token.
      */
     public static function generateToken(
         array $payload,
-        int $expTime = 3600
+        int $expirationTime = 3600
     ): ?string {
         try {
             $issuedAt = time();
             $payload["iat"] = $issuedAt;
-            $payload["exp"] = $issuedAt + $expTime;
+            $payload["exp"] = $issuedAt + $expirationTime;
 
-            return JWT::encode($payload, self::$secret, self::$alg);
+            return JWT::encode($payload, self::$secretKey, self::$algorithm);
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -56,37 +56,45 @@ class HandlerJwt
     }
 
     /**
-     * Valida e decodifica um token JWT.
+     * Validates and decodes a JWT token.
      *
-     * @param string $token O token JWT a ser validado.
-     * @return array|null Retorna os dados decodificados do token se válido, ou null caso contrário.
+     * @param string $token The JWT token to be validated.
+     * @return ?array Returns the decoded data from the token if valid, or null otherwise.
      */
     public static function validateToken(string $token): ?array
     {
         try {
-            $decoded = JWT::decode(Utils::decrypt($token), new Key(self::$secret, self::$alg));
+            $decodedToken = JWT::decode(Utils::decrypt($token), new Key(self::$secretKey, self::$algorithm));
 
             $userModel = new UserModel();
-            $data =  $userModel->getUserById($decoded->user_id);
+            $userData =  $userModel->getUserById($decodedToken->user_id);
 
-            if (!$data) {
+            if (!$userData) {
                 Utils::jsonResponse(["error" => "unrecognized token"], 403);
             }
 
-            if ($data['EMAIL'] !== $decoded->email) {
+            if ($userData['EMAIL'] !== $decodedToken->email) {
                 Utils::jsonResponse(["error" => "unrecognized token"], 403);
             }
 
-            if ($data['NICKNAME'] !== $decoded->nickname) {
+            if ($userData['NICKNAME'] !== $decodedToken->nickname) {
                 Utils::jsonResponse(["error" => "unrecognized token"], 403);
             }
 
-            if ("hangman-game" !== $decoded->iss) {
+            if ("hangman-game" !== $decodedToken->iss) {
                 Utils::jsonResponse(["error" => "unrecognized token"], 403);
             }
 
-            return (array) $decoded;
+            return get_object_vars($decodedToken);
         } catch (Exception $e) {
+            Utils::debug_log(
+                [
+                    "coreErrorJwtHandler-validateToken" => $e->getMessage(),
+                ],
+                "error"
+            );
+            Utils::jsonResponse(["error" => "Internal server error"], 500);
+
             return null;
         }
     }

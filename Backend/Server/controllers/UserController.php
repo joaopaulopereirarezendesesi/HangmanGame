@@ -63,37 +63,11 @@ class UserController
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
-            $this->handler2FA->generateSecretImage($userId);
+            $this->handler2FA->generateSecretImage();
         } catch (Exception $e) {
             Utils::debug_log(
                 [
                     "controllerErrorPhotos-takePhotoWithMatter" => $e->getMessage(),
-                ],
-                "error"
-            );
-            Utils::jsonResponse(["error" => "Internal server error"], 500);
-        }
-    }
-
-    /**
-     * Displays a specific user based on the provided ID.
-     *
-     * @param int $id User ID.
-     */
-    public function show($userId): void
-    {
-        try {
-            $user = $this->userModel->getUserById($userId);
-
-            if ($user) {
-                Utils::jsonResponse($user);
-            } else {
-                Utils::jsonResponse(["error" => "User not found"], 404);
-            }
-        } catch (Exception $e) {
-            Utils::debug_log(
-                [
-                    "controllerErrorUser-show" => $e->getMessage(),
                 ],
                 "error"
             );
@@ -133,7 +107,7 @@ class UserController
                 $imagick = new Imagick($profileImage['tmp_name']);
                 $imagick->setImageFormat('png');
 
-                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png'; 
+                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png';
 
                 if (!$imagick->writeImage($avatarPath)) {
                     Utils::jsonResponse(["error" => "Failed to convert image."], 500);
@@ -162,7 +136,7 @@ class UserController
                 Utils::jsonResponse(
                     [
                         "error" =>
-                        "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
+                            "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
                     ],
                     400
                 );
@@ -176,7 +150,7 @@ class UserController
                 filter_var($data["nickname"], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
                 strval($data["email"]),
                 strval($data["password"]),
-                strval($userAvatarPath)
+                $userAvatarPath
             );
             Utils::jsonResponse(
                 ["message" => "User successfully created!"],
@@ -195,9 +169,6 @@ class UserController
 
     /**
      * Logs in the user based on the provided credentials.
-     *
-     * @param string|null $email User email.
-     * @param string|null $password User password.
      */
     public function login(): void
     {
@@ -209,7 +180,11 @@ class UserController
 
             $user = $this->userModel->getUserByEmail($email);
 
-            if ($user && password_verify($password, $user["PASSWORD"])) {
+            if (!$user) {
+                Utils::jsonResponse(["error" => "User not found."], 404);
+            }
+
+            if (password_verify($password, $user["PASSWORD"])) {
                 $token = HandlerJwt::generateToken([
                     "user_id" => $user["ID_U"],
                     "email" => $user["EMAIL"],
@@ -225,17 +200,18 @@ class UserController
                 $_SESSION["nickname"] = $user["NICKNAME"];
                 header(
                     "Set-Cookie: jwt=" .
-                        Utils::encrypt($token) .
-                        "; Path=/; Secure; HttpOnly; SameSite=None; Partitioned; Expires=" .
-                        gmdate("D, d M Y H:i:s T", time() + 3600)
+                    Utils::encrypt($token) .
+                    "; Path=/; Secure; HttpOnly; SameSite=None; Partitioned; Expires=" .
+                    gmdate("D, d M Y H:i:s T", time() + 3600)
                 );
+
                 setcookie("nickname", $user["NICKNAME"], [
                     "expires" => time() + 86400 * 30,
                     "path" => "/",
                     "domain" => "",
                     "secure" => true,
                     "httponly" => false,
-                    "samesite" => "Strict"
+                    "SameSite" => "Strict"
                 ]);
 
                 setcookie("photo", $user["PHOTO"], [
@@ -244,7 +220,7 @@ class UserController
                     "domain" => "",
                     "secure" => true,
                     "httponly" => false,
-                    "samesite" => "Strict"
+                    "SameSite" => "Strict"
                 ]);
 
                 Utils::jsonResponse([
@@ -275,10 +251,10 @@ class UserController
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
-            $id_o = $userId;
+            $rooms = $this->userModel->getRoomOrganizer($userId);
 
             Utils::jsonResponse([
-                "rooms" => $this->userModel->getRoomOrganizer($id_o),
+                "rooms" => $rooms ? $rooms : "",
             ]);
         } catch (Exception $e) {
             Utils::debug_log(

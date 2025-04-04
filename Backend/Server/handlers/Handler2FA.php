@@ -16,18 +16,18 @@ class Handler2FA
         $this->tfa = new TwoFactorAuth(new BaconQrCodeProvider());
     }
 
-    public function generateSecretImage(string $userId): void
+    public function generateSecretImage(): void
     {
         try {
-            $secret = $this->tfa->createSecret();
-            $imageData = $this->tfa->getQRCodeImageAsDataUri('HangmanGame', $secret);
-    
-            $imageBase64 = explode(',', $imageData)[1];
-    
+            $secretKey = $this->tfa->createSecret();
+            $qrCodeImageData = $this->tfa->getQRCodeImageAsDataUri('HangmanGame', $secretKey);
+
+            $base64Image = explode(',', $qrCodeImageData)[1];
+
             Utils::jsonResponse([
-                "secret" => $secret,
-                "image" => $imageBase64,
-            ]); 
+                "secret" => $secretKey,
+                "image" => $base64Image,
+            ]);
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -38,5 +38,4 @@ class Handler2FA
             Utils::jsonResponse(["error" => "Internal server error"], 500);
         }
     }
-     
 }

@@ -10,7 +10,7 @@ class PlayedModel
     private Utils $utils;
 
     /**
-     * Construtor da classe. Instancia o objeto Utils para realizar operações de banco de dados.
+     * Class constructor. Instantiates the Utils object to perform database operations.
      */
     public function __construct()
     {
@@ -18,22 +18,22 @@ class PlayedModel
     }
 
     /**
-     * Retorna o número de jogadores em uma sala.
+     * Returns the number of players in a room.
      *
-     * @param int $roomId O ID da sala que será verificado
-     * @return int O número de jogadores na sala
-     * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
+     * @param string $roomId The ID of the room to be checked
+     * @return ?int The number of players in the room
+     * @throws Exception If an error occurs while executing the database query
      */
-    public function getPlayersCountInRoom(string $roomId): array
+    public function getPlayersCountInRoom(string $roomId): ?int
     {
         try {
-            $query =
+            $playerCountQuery =
                 "SELECT COUNT(*) AS player_count FROM played WHERE ID_R = :roomId";
-            $params = [":roomId" => $roomId];
+            $queryParameters = [":roomId" => $roomId];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $playerCountResult = $this->utils->executeQuery($playerCountQuery, $queryParameters, true);
 
-            return $result[0]["player_count"] ?? 0;
+            return $playerCountResult[0]["player_count"] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -42,25 +42,26 @@ class PlayedModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 
     /**
-     * Adiciona um jogador em uma sala.
+     * Adds a player to a room.
      *
-     * @param int $userId O ID do usuário a ser adicionado
-     * @param int $roomId O ID da sala em que o usuário será adicionado
-     * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
+     * @param string $userId The ID of the user to be added
+     * @param string $roomId The ID of the room where the user will be added
+     * @throws Exception If an error occurs while executing the database query
      */
     public function joinRoom(string $userId, string $roomId): void
     {
         try {
-            $query =
+            $joinRoomQuery =
                 "INSERT INTO played (ID_PLAYED, ID_U, ID_R, SCORE, IS_THE_CHALLENGER) VALUES (UUID(), :userId, :roomId, 0, 0)";
-            $params = [":userId" => $userId, ":roomId" => $roomId];
+            $queryParameters = [":userId" => $userId, ":roomId" => $roomId];
 
-            $this->utils->executeQuery($query, $params);
+            $this->utils->executeQuery($joinRoomQuery, $queryParameters);
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -69,25 +70,24 @@ class PlayedModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
     /**
-     * Remove um jogador de uma sala.
+     * Removes a player from a room.
      *
-     * @param int $userId O ID do usuário a ser removido
-     * @param int $roomId O ID da sala em que o jogador será removido
-     * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
+     * @param string $userId The ID of the user to be removed
+     * @param string $roomId The ID of the room from which the player will be removed
+     * @throws Exception If an error occurs while executing the database query
      */
     public function leaveRoom(string $userId, string $roomId): void
     {
         try {
-            $query =
+            $leaveRoomQuery =
                 "DELETE FROM played WHERE ID_U = :userId AND ID_R = :roomId";
-            $params = [":userId" => $userId, ":roomId" => $roomId];
+            $queryParameters = [":userId" => $userId, ":roomId" => $roomId];
 
-            $this->utils->executeQuery($query, $params);
+            $this->utils->executeQuery($leaveRoomQuery, $queryParameters);
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -96,26 +96,25 @@ class PlayedModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
         }
     }
 
     /**
-     * Conta o número de jogadores em uma sala (função adicional com nome semelhante a getPlayersCountInRoom).
+     * Counts the number of players in a room (additional function with a name similar to getPlayersCountInRoom).
      *
-     * @param int $roomId O ID da sala que será verificado (valor padrão é 1)
-     * @return int O número de jogadores na sala
+     * @param string $roomId The ID of the room to be checked (default value is 1)
+     * @return ?int The number of players in the room
      */
-    public function countPlayersInRoom(string $roomId): int
+    public function countPlayersInRoom(string $roomId): ?int
     {
         try {
-            $query =
+            $countPlayersQuery =
                 "SELECT COUNT(*) as player_count FROM played WHERE ID_R = :roomId";
-            $params = [":roomId" => $roomId];
+            $queryParameters = [":roomId" => $roomId];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $countPlayersResult = $this->utils->executeQuery($countPlayersQuery, $queryParameters, true);
 
-            return $result[0]["player_count"] ?? 0;
+            return $countPlayersResult[0]["player_count"] ?? 0;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -124,7 +123,8 @@ class PlayedModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }

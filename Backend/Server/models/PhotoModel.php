@@ -10,7 +10,7 @@ class PhotoModel
     private Utils $utils;
 
     /**
-     * Construtor da classe. Instancia o objeto Utils para realizar operações de banco de dados.
+     * Constructor of the class. Instantiates the Utils object to perform database operations.
      */
     public function __construct()
     {
@@ -18,22 +18,22 @@ class PhotoModel
     }
 
     /**
-     * Obtém as fotos relacionadas a uma matéria específica.
+     * Gets the photos related to a specific subject.
      *
-     * @param string $matter A matéria que será utilizada como filtro para as fotos
-     * @return ?array Lista de fotos relacionadas à matéria
-     * @throws Exception Se ocorrer um erro ao executar a consulta no banco de dados
+     * @param string $subject The subject that will be used as a filter for the photos
+     * @return ?string List of photos related to the subject
+     * @throws Exception If an error occurs when executing the database query
      */
-    public function takePhotoWithMatter(string $matter): ?string
+    public function takePhotoWithMatter(string $subject): ?string
     {
         try {
-            $query = "SELECT * FROM photos WHERE MATTER = :matter";
+            $photoQuery = "SELECT * FROM photos WHERE MATTER = :subject";
 
-            $params = [":matter" => $matter];
+            $queryParameters = [":subject" => $subject];
 
-            $result = $this->utils->executeQuery($query, $params, true);
+            $photoResult = $this->utils->executeQuery($photoQuery, $queryParameters, true);
 
-            return $result[0]["ADDRESS"] ?? null;
+            return $photoResult[0]["ADDRESS"] ?? null;
         } catch (Exception $e) {
             Utils::debug_log(
                 [
@@ -42,7 +42,8 @@ class PhotoModel
                 "error"
             );
             Utils::jsonResponse(["error" => "Internal server error"], 500);
-            exit();
+
+            return null;
         }
     }
 }
