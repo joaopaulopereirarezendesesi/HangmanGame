@@ -116,70 +116,149 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 
 ## 5. Modelos de Dados
 
-### Tabela `rooms`
+## 🧾 Modelos de Dados
 
-| Campo      | Tipo    | Descrição             |
-| ---------- | ------- | --------------------- |
-| id         | INT     | Identificador da sala |
-| name       | VARCHAR | Nome da sala          |
-| maxPlayers | INT     | Máximo de jogadores   |
+## 🧾 Modelos de Dados
 
-### Tabela `players`
+### `users`
 
-| Campo  | Tipo    | Descrição                |
-| ------ | ------- | ------------------------ |
-| id     | INT     | Identificador do jogador |
-| name   | VARCHAR | Nome do jogador          |
-| roomId | INT     | Sala onde está conectado |
+| Campo    | Tipo                              | Descrição                   |
+| -------- | --------------------------------- | --------------------------- |
+| ID_U     | CHAR(36)                          | ID do usuário (UUID)        |
+| NICKNAME | VARCHAR(50)                       | Apelido do usuário          |
+| EMAIL    | VARCHAR(100)                      | E-mail                      |
+| PASSWORD | VARCHAR(255)                      | Senha criptografada         |
+| ONLINE   | ENUM('offline', 'online', 'away') | Status atual do usuário     |
+| PHOTO    | VARCHAR(255)                      | Caminho da imagem de perfil |
+| TFA      | TINYINT(1)                        | 2FA ativado (1) ou não (0)  |
+
+---
+
+### `rooms`
+
+| Campo           | Tipo         | Descrição                         |
+| --------------- | ------------ | --------------------------------- |
+| ID_R            | CHAR(36)     | ID da sala                        |
+| ROOM_NAME       | VARCHAR(100) | Nome da sala                      |
+| ID_O            | CHAR(36)     | ID do organizador (usuário)       |
+| PRIVATE         | TINYINT(1)   | Sala privada (1) ou pública (0)   |
+| PASSWORD        | VARCHAR(50)  | Senha da sala (se privada)        |
+| PLAYER_CAPACITY | INT          | Capacidade máxima de jogadores    |
+| TIME_LIMIT      | INT          | Tempo limite por rodada (minutos) |
+| POINTS          | INT          | Pontuação total da sala           |
+| MODALITY        | VARCHAR(255) | Nome da modalidade                |
+| MODALITY_IMG    | VARCHAR(255) | Caminho da imagem da modalidade   |
+
+---
+
+### `rounds`
+
+| Campo              | Tipo     | Descrição                                   |
+| ------------------ | -------- | ------------------------------------------- |
+| ID_RD              | CHAR(36) | ID da rodada                                |
+| ID_R               | CHAR(36) | ID da sala                                  |
+| PLAYER_OF_THE_TIME | CHAR(36) | Jogador da vez (usuário que define palavra) |
+
+---
+
+### `attempts`
+
+| Campo      | Tipo         | Descrição                        |
+| ---------- | ------------ | -------------------------------- |
+| ID_T       | CHAR(36)     | ID da tentativa                  |
+| ID_ROUND   | CHAR(36)     | ID da rodada                     |
+| GUESS      | VARCHAR(255) | Letra/palavra tentada            |
+| IS_CORRECT | TINYINT(1)   | Se a tentativa foi correta (1/0) |
+
+---
+
+### `played`
+
+| Campo             | Tipo       | Descrição                       |
+| ----------------- | ---------- | ------------------------------- |
+| ID_PLAYED         | CHAR(36)   | ID da entrada de participação   |
+| ID_U              | CHAR(36)   | ID do usuário                   |
+| ID_R              | CHAR(36)   | ID da sala                      |
+| SCORE             | INT        | Pontuação obtida                |
+| IS_THE_CHALLENGER | TINYINT(1) | É o desafiante da rodada? (1/0) |
+
+---
+
+### `ranking`
+
+| Campo           | Tipo     | Descrição                  |
+| --------------- | -------- | -------------------------- |
+| ID_U            | CHAR(36) | ID do usuário              |
+| POSITION        | INT      | Posição no ranking         |
+| AMOUNT_OF_WINS  | INT      | Total de vitórias          |
+| NUMBER_OF_GAMES | INT      | Total de partidas jogadas  |
+| POINT_AMOUNT    | INT      | Total de pontos acumulados |
+
+---
+
+### `wordsmatter`
+
+| Campo      | Tipo         | Descrição                          |
+| ---------- | ------------ | ---------------------------------- |
+| ID_W       | CHAR(36)     | ID da palavra                      |
+| MATTER     | VARCHAR(255) | Tema ou assunto relacionado        |
+| WORD       | VARCHAR(255) | Palavra usada na rodada            |
+| DEFINITION | TEXT         | Definição ou explicação da palavra |
+
+---
+
+### `photos`
+
+| Campo   | Tipo         | Descrição                    |
+| ------- | ------------ | ---------------------------- |
+| ID_PH   | CHAR(36)     | ID da imagem                 |
+| MATTER  | VARCHAR(255) | Tema associado à imagem      |
+| ADDRESS | VARCHAR(255) | Caminho do arquivo da imagem |
+
+---
+
+### `friends`
+
+| Campo | Tipo     | Descrição     |
+| ----- | -------- | ------------- |
+| ID_U  | CHAR(36) | ID do usuário |
+| ID_A  | CHAR(36) | ID do amigo   |
+
+---
+
+### `friend_requests`
+
+| Campo       | Tipo     | Descrição                    |
+| ----------- | -------- | ---------------------------- |
+| ID          | CHAR(36) | ID da solicitação            |
+| SENDER_ID   | CHAR(36) | Usuário que enviou o pedido  |
+| RECEIVER_ID | CHAR(36) | Usuário que recebeu o pedido |
+
+---
+
+### `codestwofa`
+
+| Campo   | Tipo     | Descrição                      |
+| ------- | -------- | ------------------------------ |
+| ID_CTFA | CHAR(36) | ID do código 2FA               |
+| ID_U    | CHAR(36) | ID do usuário                  |
+| CODE    | INT(11)  | Código gerado para verificação |
+
+---
 
 ## 6. Autenticação e Autorização
 
 O sistema suporta:
 
 1. **JWT**: Para autenticação de jogadores logados.
-2. **API Key**: Para integração com terceiros.
-3. **Sessões WebSocket**: Cada jogador recebe um identificador único durante a conexão.
+2. **Sessões WebSocket**: Cada jogador recebe um identificador único durante a conexão.
 
-## 7. Logs e Monitoramento
-
-- Logs de eventos são armazenados em `logs/server.log`.
-- Erros são registrados no banco de dados na tabela `logs`.
-
-## 8. Testes
+## 7. Testes
 
 Os testes podem ser executados via PHPUnit:
 
 ```bash
 vendor/bin/phpunit
 ```
-
-## 9. Exemplos de Uso
-
-Para testar conexão WebSocket:
-
-```js
-const ws = new WebSocket("ws://seu-servidor.com/ws");
-ws.onopen = () => {
-  ws.send(
-    JSON.stringify({ action: "join", roomId: "abc123", playerName: "Jogador1" })
-  );
-};
-ws.onmessage = (event) => {
-  console.log("Recebido:", event.data);
-};
-```
-
-## 10. FAQ e Solução de Problemas
-
-### O servidor WebSocket não inicia
-
-- Verifique se a extensão `sockets` está habilitada no PHP.
-- Confirme se nenhuma outra instância está rodando na porta configurada.
-
-### Erro 500 ao criar sala
-
-- Confira se o banco de dados está corretamente configurado no `.env`.
-
----
 
 Essa documentação pode ser expandida conforme necessário. Se quiser adicionar mais detalhes, me avise!
