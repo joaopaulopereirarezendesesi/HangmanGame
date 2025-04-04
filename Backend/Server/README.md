@@ -245,7 +245,7 @@ composer install
 | ID_U    | CHAR(36) | ID do usuário                  |
 | CODE    | INT(11)  | Código gerado para verificação |
 
-## 6. Autenticação e Autorização
+## 🔒 Autenticação e Autorização
 
 O sistema suporta:
 
