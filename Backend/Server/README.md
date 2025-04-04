@@ -68,7 +68,7 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 
 - Baixe os arquivos ZIP do Imagick e do ImageMagick:
 
-  - <a download="./assets/installer/php_imagick-3.7.0-8.2-ts-vs16-x64.zip"><button>Imagick</button></a>
+  - [Imagick](./assets/installer/php_imagick-3.7.0-8.2-ts-vs16-x64.zip)
   - [ImageMagick](./assets/installer/ImageMagick-7.1.0-18-vc15-x64.zip)
 
 - Extraia os arquivos em uma nova pasta.
