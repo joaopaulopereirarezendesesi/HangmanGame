@@ -103,6 +103,15 @@ class UserController
                 Utils::jsonResponse(["error" => "Invalid image file."], 400);
             }
 
+            $mimeType = mime_content_type($profileImage['tmp_name']);
+            if (!in_array($mimeType, ['image/png', 'image/jpeg'])) {
+                Utils::jsonResponse(["error" => "Invalid image type."], 400);
+            }
+
+            if ($profileImage['size'] > 2097152) {
+                Utils::jsonResponse(["error" => "File size exceeds 2MB."], 400);
+            }
+
             if ($imageInfo[2] !== IMAGETYPE_PNG) {
                 $imagick = new Imagick($profileImage['tmp_name']);
                 $imagick->setImageFormat('png');
@@ -136,7 +145,7 @@ class UserController
                 Utils::jsonResponse(
                     [
                         "error" =>
-                            "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
+                        "The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.",
                     ],
                     400
                 );
@@ -200,9 +209,9 @@ class UserController
                 $_SESSION["nickname"] = $user["NICKNAME"];
                 header(
                     "Set-Cookie: jwt=" .
-                    Utils::encrypt($token) .
-                    "; Path=/; Secure; HttpOnly; SameSite=None; Partitioned; Expires=" .
-                    gmdate("D, d M Y H:i:s T", time() + 3600)
+                        Utils::encrypt($token) .
+                        "; Path=/; Secure; HttpOnly; SameSite=None; Partitioned; Expires=" .
+                        gmdate("D, d M Y H:i:s T", time() + 3600)
                 );
 
                 setcookie("nickname", $user["NICKNAME"], [
