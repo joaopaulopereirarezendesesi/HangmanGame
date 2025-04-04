@@ -102,7 +102,7 @@ composer install
 
 | Pasta          | Descrição                                     |
 | -------------- | --------------------------------------------- |
-| `assets/`      | Arquivos estáticos (imagens, CSS, zips, etc)  |
+| `assets/`      | Arquivos estáticos (imagens, zips, etc)       |
 | `controllers/` | Handlers WebSocket e lógicas de controle      |
 | `models/`      | Modelos de dados (Usuário, Sala, Partida)     |
 | `config/`      | Arquivos de configuração geral                |
