@@ -130,8 +130,8 @@ composer install
 - **POST `/Room/createRoom`** – Cria nova sala
 - **POST `/Room/joinRoom`** – Entra em sala existente
 - **POST `/Room/removePlayerFromRoom`** – Sai de uma sala
-- **GET `/Room/getRooms`** – Lista salas disponíveis
 - **POST `/Room/countPlayers`** – Conta jogadores na sala
+- **GET `/Room/getRooms`** – Lista salas disponíveis
 
 ### 🤝 `FriendsController`
 
@@ -153,8 +153,6 @@ composer install
 | PHOTO    | VARCHAR(255)                      | Caminho da imagem de perfil |
 | TFA      | TINYINT(1)                        | 2FA ativado (1) ou não (0)  |
 
----
-
 ### `rooms`
 
 | Campo           | Tipo         | Descrição                         |
@@ -170,8 +168,6 @@ composer install
 | MODALITY        | VARCHAR(255) | Nome da modalidade                |
 | MODALITY_IMG    | VARCHAR(255) | Caminho da imagem da modalidade   |
 
----
-
 ### `rounds`
 
 | Campo              | Tipo     | Descrição                                   |
@@ -179,8 +175,6 @@ composer install
 | ID_RD              | CHAR(36) | ID da rodada                                |
 | ID_R               | CHAR(36) | ID da sala                                  |
 | PLAYER_OF_THE_TIME | CHAR(36) | Jogador da vez (usuário que define palavra) |
-
----
 
 ### `attempts`
 
@@ -190,8 +184,6 @@ composer install
 | ID_ROUND   | CHAR(36)     | ID da rodada                     |
 | GUESS      | VARCHAR(255) | Letra/palavra tentada            |
 | IS_CORRECT | TINYINT(1)   | Se a tentativa foi correta (1/0) |
-
----
 
 ### `played`
 
@@ -203,8 +195,6 @@ composer install
 | SCORE             | INT        | Pontuação obtida                |
 | IS_THE_CHALLENGER | TINYINT(1) | É o desafiante da rodada? (1/0) |
 
----
-
 ### `ranking`
 
 | Campo           | Tipo     | Descrição                  |
@@ -215,8 +205,6 @@ composer install
 | NUMBER_OF_GAMES | INT      | Total de partidas jogadas  |
 | POINT_AMOUNT    | INT      | Total de pontos acumulados |
 
----
-
 ### `wordsmatter`
 
 | Campo      | Tipo         | Descrição                          |
@@ -226,8 +214,6 @@ composer install
 | WORD       | VARCHAR(255) | Palavra usada na rodada            |
 | DEFINITION | TEXT         | Definição ou explicação da palavra |
 
----
-
 ### `photos`
 
 | Campo   | Tipo         | Descrição                    |
@@ -236,16 +222,12 @@ composer install
 | MATTER  | VARCHAR(255) | Tema associado à imagem      |
 | ADDRESS | VARCHAR(255) | Caminho do arquivo da imagem |
 
----
-
 ### `friends`
 
 | Campo | Tipo     | Descrição     |
 | ----- | -------- | ------------- |
 | ID_U  | CHAR(36) | ID do usuário |
 | ID_A  | CHAR(36) | ID do amigo   |
-
----
 
 ### `friend_requests`
 
@@ -255,8 +237,6 @@ composer install
 | SENDER_ID   | CHAR(36) | Usuário que enviou o pedido  |
 | RECEIVER_ID | CHAR(36) | Usuário que recebeu o pedido |
 
----
-
 ### `codestwofa`
 
 | Campo   | Tipo     | Descrição                      |
@@ -264,8 +244,6 @@ composer install
 | ID_CTFA | CHAR(36) | ID do código 2FA               |
 | ID_U    | CHAR(36) | ID do usuário                  |
 | CODE    | INT(11)  | Código gerado para verificação |
-
----
 
 ## 6. Autenticação e Autorização
 
