@@ -8,7 +8,7 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 
 - **PHP 8.2**
 - **MySQL**
-- **Apache (WebSockets via proxy)**
+- **Apache**
 - **Composer + Bibliotecas:**
   - Imagick / ImageMagick
   - php-jwt (JWT)
@@ -27,7 +27,7 @@ Este backend gerencia o CRUD e funcionalidades de um jogo da forca online.
 - PHP 8.2
 - MySQL
 - Composer
-- Apache com suporte a WebSockets
+- Apache
 - Imagick + ImageMagick
 
 ### 🛠️ Passo a passo
