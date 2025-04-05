@@ -209,7 +209,7 @@ function Rooms() {
                 })
                 .map((friend) => (
                   <div className={styles.friend} key={friend.rank}>
-                    <img src={friend.foto} alt={friend.name} />
+                    <img src={friend.photo} alt={friend.name} />
                     <div className={styles.statusContainer}>
                       <p className={styles.userName}>{friend.name}</p>
                       <p>

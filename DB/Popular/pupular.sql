@@ -1,15 +1,15 @@
 INSERT INTO users (ID_U, NICKNAME, EMAIL, PASSWORD, ONLINE, PHOTO)
 VALUES
-    (UUID(), 'Jogador1', 'jogador1@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/jogador1.png'),
-    (UUID(), 'Jogador2', 'jogador2@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/jogador2.png'),
-    (UUID(), 'Jogador3', 'jogador3@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/jogador3.png'),
-    (UUID(), 'Jogador4', 'jogador4@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'away', 'http://localhost:80/assets/photos/jogador4.png'),
-    (UUID(), 'Jogador5', 'jogador5@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/jogador5.png'),
-    (UUID(), 'Jogador6', 'jogador6@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/jogador6.png'),
-    (UUID(), 'Jogador7', 'jogador7@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/jogador7.png'),
-    (UUID(), 'Jogador8', 'jogador8@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'away', 'http://localhost:80/assets/photos/jogador8.png'),
-    (UUID(), 'Jogador9', 'jogador9@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/jogador9.png'),
-    (UUID(), 'Jogador10', 'jogador10@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/jogador10.png');
+    (UUID(), 'Jogador1', 'jogador1@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador2', 'jogador2@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador3', 'jogador3@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador4', 'jogador4@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'away', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador5', 'jogador5@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador6', 'jogador6@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador7', 'jogador7@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador8', 'jogador8@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'away', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador9', 'jogador9@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'online', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp'),
+    (UUID(), 'Jogador10', 'jogador10@email.com', '$argon2id$v=19$m=65536,t=4,p=1$NnBYc1ZnQmYuQlF5V2hPcg$UeodXoEgkE8/EtiQ0c+HBDeHLq4b73k8po7zp94gWl4', 'offline', 'http://localhost:80/assets/photos/sysPhotos/anonymous.webp');
 
 INSERT INTO ranking (ID_U, POSITION, AMOUNT_OF_WINS, NUMBER_OF_GAMES, POINT_AMOUNT)
 SELECT ID_U, 1, 10, 20, 1500 FROM users WHERE NICKNAME = 'Jogador1'

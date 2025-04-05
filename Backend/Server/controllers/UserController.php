@@ -247,6 +247,8 @@ class UserController
                 Utils::jsonResponse(["error" => "Token not provided"], 403);
             }
 
+            $data = $_POST;
+
             $rooms = $this->userModel->getRoomOrganizer($userId);
 
             Utils::jsonResponse([

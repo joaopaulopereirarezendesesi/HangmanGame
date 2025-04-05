@@ -1,4 +1,6 @@
-a fazer (segurança): 
+a fazer: 
+
+arrumar requisição que usa id
 
 Rate Limiting,
 
