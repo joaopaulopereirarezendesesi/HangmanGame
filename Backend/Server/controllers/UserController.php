@@ -97,46 +97,33 @@ class UserController
 
             $profileImage = $_FILES["profileImage"] ?? null;
 
-            $imageInfo = getimagesize($profileImage['tmp_name']);
-
-            if ($imageInfo === false) {
-                Utils::jsonResponse(["error" => "Invalid image file."], 400);
-            }
-
-            $mimeType = mime_content_type($profileImage['tmp_name']);
-            if (!in_array($mimeType, ['image/png', 'image/jpeg'])) {
-                Utils::jsonResponse(["error" => "Invalid image type."], 400);
-            }
-
-            if ($profileImage['size'] > 2097152) {
-                Utils::jsonResponse(["error" => "File size exceeds 2MB."], 400);
-            }
-
-            if ($imageInfo[2] !== IMAGETYPE_PNG) {
-                $imagick = new Imagick($profileImage['tmp_name']);
-                $imagick->setImageFormat('png');
-
-                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png';
-
+            $userAvatarPath = "/../assets/photos/sysPhotos/anonymous.webp";
+            
+            if (!empty($profileImage["tmp_name"]) && is_uploaded_file($profileImage["tmp_name"])) {
+                $nicknameSlug = strtolower(str_replace(" ", "", $data["nickname"]));
+                $avatarPath = __DIR__ . "/../assets/photos/usersPhotos/{$nicknameSlug}.webp";
+            
+                $imageInfo = getimagesize($profileImage["tmp_name"]);
+                $mimeType = mime_content_type($profileImage["tmp_name"]);
+            
+                if (!in_array($mimeType, ["image/png", "image/jpeg", "image/webp"])) {
+                    Utils::jsonResponse(["error" => "Invalid image type."], 400);
+                }
+            
+                if ($profileImage["size"] > 2097152) {
+                    Utils::jsonResponse(["error" => "File size exceeds 2MB."], 400);
+                }
+            
+                $imagick = new Imagick($profileImage["tmp_name"]);
+                $imagick->setImageFormat("webp");
+            
                 if (!$imagick->writeImage($avatarPath)) {
-                    Utils::jsonResponse(["error" => "Failed to convert image."], 500);
+                    Utils::jsonResponse(["error" => "Failed to save image."], 500);
                 }
-            } else {
-                $avatarPath = __DIR__ . '/../assets/photos/usersPhotos/' . strtolower(str_replace(' ', '', $data["nickname"])) . '.png';
-
-                if (!move_uploaded_file($profileImage['tmp_name'], $avatarPath)) {
-                    Utils::debug_log(
-                        [
-                            "controllerErrorUser-create" => "Failed to move uploaded file.",
-                        ],
-                        "error"
-                    );
-                    Utils::jsonResponse(["error" => "Internal Server Error."], 500);
-                }
+            
+                $userAvatarPath = "http://localhost:80/assets/photos/usersPhotos/{$nicknameSlug}.webp";
             }
-
-            $userAvatarPath = "http://localhost:80/assets/photos/usersPhotos/" . strtolower(str_replace(' ', '', $data["nickname"])) . ".png";
-
+            
             if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
                 Utils::jsonResponse(["error" => "Invalid email format"], 400);
             }

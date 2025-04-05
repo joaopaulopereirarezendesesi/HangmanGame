@@ -1,5 +1,8 @@
 Server/vendor
 Server/.env
+Server/.idea
+Server/logs/*.log
+Server/assets/photos/usersPhotos/*.webp
 WS/vendor
 WS/.env
 .idea

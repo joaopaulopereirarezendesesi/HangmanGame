@@ -76,6 +76,13 @@ class RoomController
                 );
             }
 
+            if ($playerCapacity > 20 || $playerCapacity < 2) {
+                Utils::jsonResponse(
+                    ["error" => "Invalid player capacity."],
+                    400
+                );
+            }
+
             $playerCapacity = isset($data["player_capacity"])
                 ? intval($data["player_capacity"])
                 : 10;

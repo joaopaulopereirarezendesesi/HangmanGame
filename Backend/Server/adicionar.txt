@@ -1,0 +1,18 @@
+a fazer (segurança): 
+
+Rate Limiting,
+
+IP Blocking / Geo-Blocking,
+
+captcha,
+
+Anti-Scraping,
+
+Validar Referer e Origin,
+
+Limitação de Tentativas de Login,
+
+Desabilitar Funções Inseguras:
+Funções PHP Desnecessárias: Desabilite
+funções PHP potencialmente inseguras (como exec(), system(), shell_exec(), etc.) 
+no seu servidor para evitar a execução de comandos indesejados.
